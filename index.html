@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Mr. D's Chemistry Games</title>
+  <meta name="description" content="Free chemistry practice games from Mr. D — play in the browser on a Chromebook, iPad, or phone. No accounts, no tracking.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/games.js" defer></script>
+  <script src="assets/home.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <h1 class="brand">
+        <img class="brand-mark" src="assets/favicon.svg" alt="" width="40" height="40">
+        <span>Mr. D's Chemistry Games</span>
+      </h1>
+      <a class="header-link" href="https://mrdchemistry.com">← mrdchemistry.com</a>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="intro" aria-label="Introduction">
+      <p class="eyebrow">Chemistry made fun and easy</p>
+      <p class="lead">Quick games for practicing chemistry — pick one and play right in your browser, on a Chromebook, iPad, or phone.</p>
+    </section>
+
+    <ul class="game-grid" id="game-grid" aria-label="Games"></ul>
+
+    <noscript>
+      <p class="panel notice">The game list needs JavaScript. You can still open
+        <a href="games/symbol-sprint/">Symbol Sprint</a> directly (it needs JavaScript too).</p>
+    </noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>No accounts, no tracking — scores are saved only on this device.</p>
+    </div>
+  </footer>
+</body>
+</html>

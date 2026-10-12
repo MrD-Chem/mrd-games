@@ -1,0 +1,486 @@
+/*
+  Mr. D's Chemistry Games — shared styles
+  Used by the home page and every game page.
+  Colours live in the :root block below; change them there and the whole site follows.
+*/
+
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg: #08090b;
+  --bg-raised: #111418;
+  --glass: rgba(255, 255, 255, 0.045);
+  --glass-strong: rgba(255, 255, 255, 0.075);
+  --line: rgba(255, 255, 255, 0.11);
+  --line-strong: rgba(255, 255, 255, 0.2);
+
+  /* Text */
+  --text: #f7f6f3;
+  --muted: #aeb3bb;
+  --on-accent: #06080a;
+
+  /* Chemistry accents */
+  --teal: #2dd4bf;
+  --teal-soft: rgba(45, 212, 191, 0.14);
+  --amber: #fbbf24;
+  --amber-soft: rgba(251, 191, 36, 0.14);
+  --violet: #a78bfa;
+  --violet-soft: rgba(167, 139, 250, 0.16);
+
+  /* Feedback */
+  --good: #34d399;
+  --good-soft: rgba(52, 211, 153, 0.16);
+  --bad: #fb7185;
+  --bad-soft: rgba(251, 113, 133, 0.16);
+  --focus: #fde68a;
+
+  /* Shape and type */
+  --radius: 16px;
+  --radius-sm: 10px;
+  --gutter: 16px;
+  --maxw: 1080px;
+  --serif: Georgia, "Times New Roman", Times, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh; /* phones/iPads: the height with the browser toolbar showing, so short pages don't scroll */
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(60rem 32rem at 90% -12rem, rgba(167, 139, 250, 0.10), transparent 70%),
+    radial-gradient(50rem 30rem at -10% 4rem, rgba(45, 212, 191, 0.08), transparent 70%);
+  background-repeat: no-repeat;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5em;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: var(--teal);
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: #5eead4;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+  padding: 20px 0 8px;
+}
+
+.site-header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 1.1rem + 1.6vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.brand-mark {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.brand--small {
+  font-size: 1rem;
+  gap: 8px;
+}
+
+.brand--small .brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+}
+
+.header-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.9375rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.header-link:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* ---------- Main + intro ---------- */
+
+main {
+  flex: 1 0 auto;
+}
+
+.intro {
+  padding: 20px 0 28px;
+  max-width: 40rem;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.lead {
+  font-size: 1.125rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--teal);
+  color: var(--on-accent);
+}
+
+.btn-primary:hover {
+  background: #5eead4;
+  color: var(--on-accent);
+}
+
+.btn-ghost {
+  background: var(--glass);
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+.btn-ghost:hover {
+  background: var(--glass-strong);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: var(--text);
+}
+
+.btn-lg {
+  min-height: 52px;
+  padding: 12px 32px;
+  font-size: 1.125rem;
+}
+
+.btn-sm {
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 0.875rem;
+}
+
+/* ---------- Glass panel (shared by cards and games) ---------- */
+
+.panel {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02) 40%, rgba(255, 255, 255, 0.015));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- Game cards (home page) ---------- */
+
+.game-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 16px;
+}
+
+.card {
+  --accent: var(--teal);
+  --accent-soft: var(--teal-soft);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 70% at 50% 125%, var(--accent-soft), transparent 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 14px 32px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+/* thin "meniscus" line of colour along the top edge */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.7;
+}
+
+.card[data-accent="amber"] {
+  --accent: var(--amber);
+  --accent-soft: var(--amber-soft);
+}
+
+.card[data-accent="violet"] {
+  --accent: var(--violet);
+  --accent-soft: var(--violet-soft);
+}
+
+.card-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  border: 1px solid var(--line-strong);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.card-title {
+  margin: 4px 0 0;
+  font-size: 1.375rem;
+}
+
+.card-blurb {
+  margin: 0;
+  color: var(--muted);
+}
+
+.card-actions {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.card .btn-play {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Only on devices that really hover (mouse/trackpad): phones and iPads keep
+   :hover stuck on whatever was tapped last. */
+@media (hover: hover) {
+  .card[data-status="ready"]:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .card .btn-play:hover {
+    background: var(--text);
+    color: var(--on-accent);
+  }
+}
+
+/* No transform while pressed: a transform would shrink the card-sized ::after
+   overlay below down to the button mid-click, so clicks on the card body would
+   be lost. Show the press with a shadow instead. */
+.card .btn-play:active {
+  transform: none;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* make the whole card tappable, while the Play link stays the one real link */
+.card .btn-play::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: var(--radius);
+}
+
+.card[data-status="coming-soon"] .card-icon {
+  filter: grayscale(0.6);
+  opacity: 0.85;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.notice {
+  padding: 20px;
+  color: var(--muted);
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  margin-top: 56px;
+  border-top: 1px solid var(--line);
+  padding: 20px 0 28px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0 0.35em;
+  border: 1px solid var(--line-strong);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--glass);
+  font-family: var(--sans);
+  font-size: 0.85em;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media (min-width: 720px) {
+  :root {
+    --gutter: 24px;
+  }
+
+  .site-header {
+    padding-top: 28px;
+  }
+
+  .intro {
+    padding: 28px 0 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .card[data-status="ready"]:hover,
+  .btn:active {
+    transform: none;
+  }
+}
