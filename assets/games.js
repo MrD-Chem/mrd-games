@@ -33,7 +33,7 @@ window.GAMES = [
     title: "Quiz Dash",
     blurb: "Run, jump and duck through five worlds, and answer checkpoint questions to keep going.",
     path: "games/quiz-dash/",
-    status: "coming-soon",
+    status: "ready",
     icon: "🏃",
     accent: "amber"
   },

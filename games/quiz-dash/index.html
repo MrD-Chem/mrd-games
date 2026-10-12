@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Quiz Dash — Mr. D's Chemistry Games</title>
+  <meta name="description" content="Quiz Dash: a three-lane runner with checkpoint questions about independent and dependent variables. Free, no account needed.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="questions.js" defer></script>
+  <script src="game.js" defer></script>
+</head>
+<body class="page-game qd-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../">← All games</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span>Mr. D's Chemistry Games</span>
+      </span>
+    </div>
+  </header>
+
+  <main id="main" class="wrap qd-main">
+    <h1 class="qd-title">Quiz Dash</h1>
+
+    <!-- Score bar. Numbers are written only when they change. -->
+    <div class="qd-hud" id="qd-hud">
+      <div class="qd-stat"><span class="qd-stat-label">Score</span><b class="qd-stat-value" id="qd-score">0</b></div>
+      <div class="qd-stat"><span class="qd-stat-label">Distance</span><b class="qd-stat-value"><span id="qd-dist">0</span><small>m</small></b></div>
+      <div class="qd-stat"><span class="qd-stat-label">Level</span><b class="qd-stat-value" id="qd-level">1</b></div>
+      <div class="qd-stat"><span class="qd-stat-label">Coins</span><b class="qd-stat-value" id="qd-coins">0</b></div>
+      <div class="qd-stat"><span class="qd-stat-label">Best</span><b class="qd-stat-value" id="qd-best">0</b></div>
+    </div>
+
+    <!-- Active power-ups. These four chips always exist; the game only shows/hides them. -->
+    <div class="qd-fx" id="qd-fx" aria-label="Active power-ups">
+      <span class="qd-chip qd-chip-shield" id="qd-chip-1" hidden>Shield</span>
+      <span class="qd-chip qd-chip-slow" id="qd-chip-2" hidden>Slow-mo <span class="qd-chip-t"></span></span>
+      <span class="qd-chip qd-chip-x2" id="qd-chip-3" hidden>Double points <span class="qd-chip-t"></span></span>
+      <span class="qd-chip qd-chip-moon" id="qd-chip-4" hidden>Moon jump <span class="qd-chip-t"></span></span>
+    </div>
+
+    <div class="qd-stage" id="qd-stage">
+      <canvas class="qd-canvas" id="qd-canvas" width="800" height="500" aria-label="Game area"></canvas>
+
+      <!-- Start: five info slides + custom questions -->
+      <section class="qd-overlay" id="qd-start" aria-label="How to play">
+        <div class="qd-card">
+          <div class="qd-slides" id="qd-slides">
+            <div class="qd-slide">
+              <h2>Run as far as you can</h2>
+              <p>Your runner never stops. Dodge what is in your path and your score keeps climbing.</p>
+              <ul>
+                <li>Score comes from distance, coins and quiz bonuses.</li>
+                <li>The game gets faster every <span class="qd-n-level">450</span>m.</li>
+                <li>The scenery changes every <span class="qd-n-theme">450</span>m: snow, beach, night, then back to the meadow.</li>
+                <li>Your best score is saved on this device.</li>
+              </ul>
+            </div>
+            <div class="qd-slide" hidden>
+              <h2>Move in three lanes</h2>
+              <ul>
+                <li><b>Left / Right</b> (or A / D): change lane</li>
+                <li><b>Up</b>, W or Space: jump</li>
+                <li><b>Down</b> or S: duck</li>
+                <li>On a phone, swipe in any direction or use the buttons under the game.</li>
+              </ul>
+            </div>
+            <div class="qd-slide" hidden>
+              <h2>Obstacles</h2>
+              <ul>
+                <li><span class="qd-sw qd-sw-block" aria-hidden="true"></span><b>Brown block:</b> jump over it.</li>
+                <li><span class="qd-sw qd-sw-gate" aria-hidden="true"></span><b>Red gate:</b> duck under it.</li>
+                <li><span class="qd-sw qd-sw-wall" aria-hidden="true"></span><b>Purple wall:</b> switch lanes. Only a moon jump clears it.</li>
+                <li>Hitting one ends your run unless you have a shield.</li>
+              </ul>
+            </div>
+            <div class="qd-slide" hidden>
+              <h2>Power-ups</h2>
+              <ul>
+                <li><span class="qd-sw qd-sw-shield" aria-hidden="true"></span><b>Shield:</b> absorbs one hit.</li>
+                <li><span class="qd-sw qd-sw-slow" aria-hidden="true"></span><b>Slow-mo:</b> slows the world for 6 seconds.</li>
+                <li><span class="qd-sw qd-sw-x2" aria-hidden="true"></span><b>Double points:</b> 8 seconds.</li>
+                <li><span class="qd-sw qd-sw-moon" aria-hidden="true"></span><b>Moon jump:</b> floaty, very high jumps for 8 seconds.</li>
+              </ul>
+            </div>
+            <div class="qd-slide" hidden>
+              <h2>Checkpoint questions</h2>
+              <p>Every <span class="qd-n-quiz">150</span>m the game stops and asks a question.</p>
+              <ul>
+                <li><b>Right answer:</b> +<span class="qd-n-bonus">150</span> points and you keep going.</li>
+                <li><b>Wrong answer:</b> you are knocked back <span class="qd-n-knock">50</span>m, lose that much score and lose your shield.</li>
+              </ul>
+              <p>Ready?</p>
+            </div>
+          </div>
+
+          <div class="qd-dots" id="qd-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+
+          <div class="qd-nav">
+            <button class="btn btn-ghost qd-back is-invisible" id="qd-back" type="button">Back</button>
+            <button class="btn btn-ghost" id="qd-skip" type="button">Skip</button>
+            <button class="btn btn-primary" id="qd-next" type="button">Next</button>
+          </div>
+
+          <details class="qd-custom" id="qd-custom">
+            <summary>Use your own questions</summary>
+            <p>One per line: <b>question | correct answer | wrong | wrong | wrong</b>. The correct answer always goes first; the game shuffles the order.</p>
+            <textarea id="qd-qtext" aria-label="Question pool" spellcheck="false" autocomplete="off"></textarea>
+            <div class="qd-custom-actions">
+              <button class="btn btn-ghost btn-sm" id="qd-qload" type="button">Load questions</button>
+              <button class="btn btn-ghost btn-sm" id="qd-qdefault" type="button">Restore default questions</button>
+            </div>
+            <p class="qd-qmsg" id="qd-qmsg" role="status" aria-live="polite"></p>
+          </details>
+        </div>
+      </section>
+
+      <!-- Checkpoint question -->
+      <section class="qd-overlay" id="qd-quiz" aria-labelledby="qd-quiz-title" hidden>
+        <div class="qd-card">
+          <h2 id="qd-quiz-title" tabindex="-1">Checkpoint question</h2>
+          <p class="qd-question" id="qd-question"></p>
+          <div class="qd-opts" id="qd-opts" role="group" aria-labelledby="qd-question"></div>
+          <p class="qd-result" id="qd-result" role="status" aria-live="polite"></p>
+          <button class="btn btn-primary qd-wide" id="qd-continue" type="button" hidden>Keep running</button>
+        </div>
+      </section>
+
+      <!-- Game over -->
+      <section class="qd-overlay" id="qd-over" aria-labelledby="qd-over-title" hidden>
+        <div class="qd-card">
+          <h2 id="qd-over-title">Game over</h2>
+          <p id="qd-final"></p>
+          <button class="btn btn-primary qd-wide" id="qd-again" type="button">Run again</button>
+        </div>
+      </section>
+
+      <!-- Paused (leaving the tab or window pauses the run) -->
+      <section class="qd-overlay qd-overlay-tap" id="qd-paused" aria-labelledby="qd-paused-title" hidden>
+        <div class="qd-card">
+          <h2 id="qd-paused-title">Paused</h2>
+          <p>Tap to continue, or press Space.</p>
+          <button class="btn btn-primary qd-wide" id="qd-resume" type="button">Continue</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- On-screen controls -->
+    <div class="qd-pad" id="qd-pad">
+      <button type="button" id="qd-left">Left</button>
+      <button type="button" id="qd-jump">Jump</button>
+      <button type="button" id="qd-duck">Duck</button>
+      <button type="button" id="qd-right">Right</button>
+    </div>
+
+    <noscript>
+      <p class="panel notice">Quiz Dash needs JavaScript turned on to play.</p>
+    </noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>No accounts, no tracking — scores are saved only on this device.</p>
+    </div>
+  </footer>
+</body>
+</html>
