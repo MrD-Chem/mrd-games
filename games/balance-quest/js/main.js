@@ -2,6 +2,7 @@
   Balance Quest — the game controller.
   Title screen, world select, practice equations, entering a world in 3D (or the
   Simple-mode list), the puzzle panel, world-complete screen, and the test hook.
+  The backstory (story screens, Professor Mole, the ending) lives in story.js.
   The 3D engine (and Three.js) is only loaded when a 3D world is entered.
 */
 
@@ -13,6 +14,7 @@ import { Input } from './input.js';
 import { Board2D } from './world2d.js';
 import { createScaleSVG } from './scale2d.js';
 import { el, clear, rich, starText } from './dom.js';
+import { Story } from './story.js';
 
 // ---------- Setup ----------
 
@@ -25,6 +27,8 @@ if (data.warnings.length) console.warn('[Balance Quest] notes about equations.js
 const ui = {
   title: $('bq-title'),
   worlds: $('bq-worlds'),
+  worldsTitle: $('bq-worlds-title'),
+  storyBtn: $('bq-story-btn'),
   dataError: $('bq-data-error'),
   optSimple: $('bq-opt-simple'),
   optTeacher: $('bq-opt-teacher'),
@@ -61,6 +65,7 @@ const ui = {
   complete: $('bq-complete'),
   completeTitle: $('bq-complete-title'),
   completeStars: $('bq-complete-stars'),
+  completeMole: $('bq-complete-mole'),
   completeList: $('bq-complete-list'),
   completeUnlock: $('bq-complete-unlock'),
   completeNext: $('bq-complete-next'),
@@ -244,6 +249,8 @@ async function startWorld(key, opts = {}) {
   const eqs = custom ? state.customGates : data.byWorld[key];
   if (!info || !eqs || !eqs.length) return false;
   if (panel.isOpen) panel.close();
+  story.dismiss();
+  story.hideEnding();
   const token = ++state.token;
   if (!custom) {
     const ids = eqs.map((e) => e.id);
@@ -273,6 +280,7 @@ async function startWorld(key, opts = {}) {
     enter2D(progress.simple ? '' : "This device can't show 3D, so the game is in simple mode.");
   }
   updateHud();
+  story.sayWorldStart(info.n);
   return true;
 }
 
@@ -370,6 +378,8 @@ function exitToTitle() {
   if (panel.isOpen) panel.close();
   window.clearTimeout(state.slowTimer);
   if (state.engine) state.engine.exit();
+  story.hideBubble();
+  story.hideEnding();
   state.world = null;
   state.mode = null;
   input.reset();
@@ -435,6 +445,7 @@ function openGate(i, returnFocus) {
   ui.prompt.hidden = true;
   ui.help.classList.add('is-faded');
   ui.game.classList.add('is-puzzle');
+  story.hideBubble();
   panel.open(g, {
     kicker: kicker.join(' · '),
     title: g.eq.name || (g.boss ? 'Boss gate' : `Gate ${i + 1}`),
@@ -490,6 +501,8 @@ function showComplete() {
   state.screen = 'complete';
   if (state.engine && state.mode === '3d') state.engine.setMode('idle');
   ui.prompt.hidden = true;
+  story.hideBubble();
+  story.renderCompleteLine(ui.completeMole, w.info.n);
   const total = w.gates.reduce((sum, g) => sum + (g.stars || 0), 0);
   ui.completeTitle.textContent = w.info.n ? `World ${w.info.n} complete!` : 'Practice complete!';
   rich(ui.completeStars, [{ b: `★ ${total} of ${w.gates.length * 3}` }, ' stars']);
@@ -508,7 +521,28 @@ function showComplete() {
   if (nextReady) ui.completeUnlock.textContent = `World ${nextWorld.n}: ${nextWorld.name} is open!`;
   ui.completeNext.hidden = !nextReady;
   if (nextReady) ui.completeNext.textContent = `Go to World ${nextWorld.n}`;
-  ui.complete.hidden = false;
+  // After the last world's boss, the ending comes first; its "See my stars" button shows this card.
+  const finale = w.key !== 'custom' && w.info.n === WORLDS[WORLDS.length - 1].n;
+  ui.complete.hidden = finale;
+  if (finale) {
+    let stars = 0;
+    let maxStars = 0;
+    WORLDS.forEach((x) => {
+      const st = worldStats(x.n);
+      stars += st.stars;
+      maxStars += st.gates * 3;
+    });
+    story.showEnding({
+      stars,
+      maxStars,
+      onBack: exitToTitle,
+      onStars: () => {
+        ui.complete.hidden = false;
+        ui.completeTitle.focus();
+      }
+    });
+    return;
+  }
   ui.completeTitle.focus();
   announce(`${ui.completeTitle.textContent} You earned ${total} stars.`);
 }
@@ -521,6 +555,31 @@ function onContextLost() {
 }
 
 // ---------- Wiring ----------
+
+const story = new Story({
+  progress,
+  main: $('main'),
+  title: ui.title,
+  stage: ui.stage,
+  reducedMotion,
+  onOpen: () => {
+    if (state.screen !== 'title') exitToTitle();
+    ui.title.hidden = true;
+  },
+  onClose: ({ first }) => {
+    ui.title.hidden = false;
+    window.scrollTo(0, 0);
+    // First visit: straight to the first world you can play. Replay: back to the Story button.
+    const target = first ? ui.worlds.querySelector('button:not([disabled])') || ui.worldsTitle : ui.storyBtn;
+    target.focus();
+  },
+  focusGame: () => {
+    if (state.screen !== 'world') return;
+    if (state.mode === '3d' && !ui.view.hidden) ui.view.focus({ preventScroll: true });
+    else (ui.boardList.querySelector('.is-next button:not([disabled])') || ui.menu).focus();
+  }
+});
+ui.storyBtn.addEventListener('click', () => story.show());
 
 const scaleSvg = createScaleSVG();
 ui.scaleBox.appendChild(scaleSvg.el);
@@ -686,6 +745,7 @@ window.__BQ_TEST__ = Object.freeze({
   },
   gates: () => (state.world ? state.world.gates.map((g) => ({ id: g.eq.id, solved: g.solved, stars: g.stars, boss: g.boss })) : []),
   openGate: (i) => {
+    story.dismiss();
     if (!state.world || state.screen !== 'world') return false;
     if (panel.isOpen) panel.close();
     if (state.mode === '3d' && state.engine) state.engine.teleportToGate(i);
@@ -723,8 +783,14 @@ window.__BQ_TEST__ = Object.freeze({
     return stats();
   },
   stats,
-  chem
+  chem,
+  story: Object.freeze({
+    show: () => story.show(),
+    skip: () => story.skip(),
+    isShowing: () => story.isShowing()
+  })
 });
 
 renderTitle();
+if (!progress.storySeen) story.show({ first: true });
 resolveReady(true);

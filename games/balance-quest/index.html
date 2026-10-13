@@ -47,7 +47,10 @@
 
       <p class="panel notice bq-data-error" id="bq-data-error" role="alert" hidden></p>
 
-      <h2 class="bq-section-title" id="bq-worlds-title">Choose a world</h2>
+      <div class="bq-worlds-head">
+        <h2 class="bq-section-title" id="bq-worlds-title" tabindex="-1">Choose a world</h2>
+        <button class="btn btn-ghost btn-sm bq-story-btn" id="bq-story-btn" type="button"><img class="bq-face" src="art/professor-mole.svg#face" alt="" width="30" height="30"> Story</button>
+      </div>
       <ul class="bq-worlds" id="bq-worlds" aria-labelledby="bq-worlds-title"></ul>
 
       <div class="bq-extras">
@@ -166,6 +169,7 @@
           <div class="bq-card">
             <h2 id="bq-complete-title" tabindex="-1"></h2>
             <p class="bq-complete-total" id="bq-complete-stars"></p>
+            <div class="bq-mole-say" id="bq-complete-mole" hidden></div>
             <ol class="bq-complete-list" id="bq-complete-list"></ol>
             <p class="bq-complete-unlock" id="bq-complete-unlock" hidden></p>
             <div class="bq-actions">

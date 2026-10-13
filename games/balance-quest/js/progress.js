@@ -28,7 +28,7 @@ function writeRaw(key, value) {
 }
 
 function emptyData() {
-  return { v: 1, solved: [], stars: {}, unlocked: [1], completed: [], teacher: false, simple: false, live: true };
+  return { v: 1, solved: [], stars: {}, unlocked: [1], completed: [], teacher: false, simple: false, live: true, story: false };
 }
 
 function validWorld(n) {
@@ -54,6 +54,7 @@ function validate(obj) {
   out.teacher = obj.teacher === true;
   out.simple = obj.simple === true;
   out.live = obj.live !== false;
+  out.story = obj.story === true;
   return out;
 }
 
@@ -135,6 +136,16 @@ export class Progress {
 
   set practiceLive(on) {
     this.data.live = !!on;
+    this.save();
+  }
+
+  /* Has the opening story been shown (or skipped) on this device? */
+  get storySeen() {
+    return this.data.story;
+  }
+
+  set storySeen(on) {
+    this.data.story = !!on;
     this.save();
   }
 

@@ -1326,3 +1326,542 @@
     animation: none;
   }
 }
+
+/* ---------- Story: opening screens, Professor Mole, the ending (js/story.js) ---------- */
+
+.bq-worlds-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 20px 0 12px;
+}
+
+.bq-worlds-head .bq-section-title {
+  margin: 0;
+}
+
+.bq-section-title:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.bq-face {
+  display: block;
+  border-radius: 50%;
+  background: #2a3441;
+}
+
+.bq-story-btn {
+  padding-left: 8px;
+}
+
+.bq-story-btn .bq-face {
+  width: 30px;
+  height: 30px;
+}
+
+/* The story screens */
+.bq-story {
+  padding: 4px 0 24px;
+}
+
+.bq-story-card {
+  max-width: 54rem;
+  margin: 8px auto 0;
+  padding: 16px 20px 18px;
+}
+
+.bq-story-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bq-story-kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.bq-story-skip {
+  flex: none;
+  border-color: rgba(255, 255, 255, 0.42);
+}
+
+.bq-story-body {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.bq-story-art {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  min-height: 190px;
+  overflow: hidden;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: radial-gradient(circle at 50% 55%, rgba(251, 191, 36, 0.22), transparent 66%), rgba(255, 255, 255, 0.03);
+}
+
+.bq-story-art[data-mood="violet"] {
+  background: radial-gradient(circle at 50% 55%, rgba(167, 139, 250, 0.3), transparent 66%), rgba(255, 255, 255, 0.03);
+}
+
+.bq-story-art[data-mood="teal"] {
+  background: radial-gradient(circle at 50% 55%, rgba(45, 212, 191, 0.24), transparent 66%), rgba(255, 255, 255, 0.03);
+}
+
+.bq-story-img {
+  width: 180px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+/* Professor Mole is a bust portrait: he sits on the bottom edge of the frame */
+.bq-story-img.is-bust {
+  margin-bottom: -16px;
+}
+
+.bq-story-art.is-pair .bq-story-img {
+  width: 140px;
+}
+
+.bq-story-art.is-pair .bq-story-img--small {
+  width: 120px;
+  margin-bottom: 14px;
+}
+
+.bq-story-title {
+  margin: 0 0 10px;
+  font-size: clamp(1.6rem, 1.25rem + 1.3vw, 2.2rem);
+  border-radius: 6px;
+}
+
+.bq-story-title:focus {
+  outline: none;
+}
+
+.bq-story-title:focus-visible {
+  outline: none;
+  text-decoration: underline;
+  text-decoration-color: var(--focus);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 8px;
+}
+
+.bq-story-p {
+  max-width: 38rem;
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.bq-story-p strong {
+  color: var(--amber);
+}
+
+.bq-story-worlds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bq-story-worlds li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--glass);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.bq-story-wnum {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #74c463;
+  color: var(--on-accent);
+  font-size: 0.8125rem;
+}
+
+.bq-story-worlds [data-theme="caves"] .bq-story-wnum {
+  background: #c4b5fd;
+}
+
+.bq-story-worlds [data-theme="volcano"] .bq-story-wnum {
+  background: #ff8a4c;
+}
+
+.bq-story-worlds [data-theme="ocean"] .bq-story-wnum {
+  background: #5cc8e0;
+}
+
+.bq-story-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.bq-story-nav .btn {
+  min-width: 7.5rem;
+}
+
+.bq-story-back:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.bq-story-dots {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bq-story-dots li {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background: var(--line-strong);
+  transition: width 0.25s ease, background-color 0.25s ease;
+}
+
+.bq-story-dots li.is-on {
+  width: 26px;
+  background: var(--teal);
+}
+
+.bq-story-body.is-fwd {
+  animation: bq-story-in-fwd 0.35s ease-out both;
+}
+
+.bq-story-body.is-back {
+  animation: bq-story-in-back 0.35s ease-out both;
+}
+
+@keyframes bq-story-in-fwd {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes bq-story-in-back {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (min-width: 720px) {
+  .bq-story-body {
+    grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
+    align-items: center;
+    gap: 28px;
+  }
+
+  .bq-story-art {
+    min-height: 230px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bq-story-card {
+    padding: 12px 14px 14px;
+  }
+
+  .bq-story-brand {
+    display: none;
+  }
+
+  .bq-story-art {
+    min-height: 150px;
+    padding: 10px;
+  }
+
+  .bq-story-img {
+    width: 140px;
+  }
+
+  .bq-story-img.is-bust {
+    margin-bottom: -10px;
+  }
+
+  .bq-story-art.is-pair .bq-story-img {
+    width: 120px;
+  }
+
+  .bq-story-art.is-pair .bq-story-img--small {
+    width: 104px;
+  }
+
+  .bq-story-p {
+    font-size: 1rem;
+  }
+
+  .bq-story-nav .btn {
+    min-width: 0;
+  }
+
+  .bq-story-dots {
+    order: -1;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* Professor Mole's speech bubble: floats over the 3D view, sits above the list in simple mode */
+.bq-mole-bubble {
+  position: absolute;
+  top: 60px;
+  left: 8px;
+  z-index: 5;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: min(30rem, calc(100% - 16px));
+}
+
+.bq-game.is-2d .bq-mole-bubble {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: auto;
+  max-width: 40rem;
+  margin: 0 0 12px;
+}
+
+/* On touch screens the gate prompt sits under the top bar: make room for it. */
+.bq-touch-device .bq-game.is-3d .bq-prompt:not([hidden]) ~ .bq-mole-bubble {
+  top: 140px;
+}
+
+.bq-mole-bubble.is-in {
+  animation: bq-bubble-in 0.35s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+@keyframes bq-bubble-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+.bq-face-ring {
+  flex: none;
+  display: block;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border: 3px solid var(--teal);
+  border-radius: 50%;
+  background: #2a3441;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.bq-face-ring .bq-face {
+  width: 100%;
+  height: 100%;
+}
+
+.bq-bubble-box {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 8px 48px 10px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: #0f1318;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* the little tail pointing at his face */
+.bq-bubble-box::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -8px;
+  width: 14px;
+  height: 14px;
+  border-bottom: 1px solid var(--line-strong);
+  border-left: 1px solid var(--line-strong);
+  background: #0f1318;
+  transform: rotate(45deg);
+}
+
+.bq-bubble-name {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.bq-bubble-line {
+  margin: 2px 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.bq-bubble-line strong {
+  color: var(--amber);
+}
+
+.bq-bubble-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  border-color: transparent;
+  background: transparent;
+}
+
+@media (max-width: 700px) {
+  .bq-mole-bubble {
+    gap: 10px;
+  }
+
+  .bq-face-ring {
+    width: 46px;
+    height: 46px;
+  }
+
+  .bq-bubble-box::before {
+    top: 15px;
+  }
+}
+
+/* Professor Mole's line on the world-complete card */
+.bq-mole-say {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  border-radius: var(--radius-sm);
+  background: var(--teal-soft);
+}
+
+.bq-face-ring--sm {
+  width: 46px;
+  height: 46px;
+  border-width: 2px;
+  box-shadow: none;
+}
+
+.bq-mole-say-text {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.bq-mole-say-text > strong {
+  color: var(--teal);
+}
+
+/* The ending, after the World 4 boss */
+.bq-ending {
+  z-index: 9;
+  background: rgba(8, 9, 11, 0.86);
+}
+
+.bq-ending-card {
+  max-width: 36rem;
+  max-height: none;
+  background: radial-gradient(28rem 14rem at 50% 0%, rgba(251, 191, 36, 0.16), transparent 70%), var(--bg-raised);
+}
+
+.bq-ending-art {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  margin: 0 0 6px;
+}
+
+.bq-ending-img {
+  width: 150px;
+  height: auto;
+}
+
+.bq-ending-img--mole {
+  width: 112px;
+}
+
+.bq-ending-card .bq-story-kicker,
+.bq-ending-card h2 {
+  text-align: center;
+}
+
+.bq-ending-card .bq-story-kicker {
+  margin-bottom: 4px;
+}
+
+.bq-ending-stars {
+  font-weight: 700;
+}
+
+.bq-ending-stars strong {
+  color: var(--amber);
+}
+
+.bq-ending-card .bq-actions {
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .bq-ending {
+    padding: 10px;
+  }
+
+  .bq-ending-card {
+    padding: 14px 16px 16px;
+  }
+
+  .bq-ending-card h2 {
+    font-size: 1.4rem;
+  }
+
+  .bq-ending-card p {
+    margin-bottom: 0.75em;
+    font-size: 0.9375rem;
+  }
+
+  .bq-ending-img {
+    width: 112px;
+  }
+
+  .bq-ending-img--mole {
+    width: 84px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bq-story-body.is-fwd,
+  .bq-story-body.is-back,
+  .bq-mole-bubble.is-in {
+    animation: none;
+  }
+
+  .bq-story-dots li {
+    transition: none;
+  }
+}

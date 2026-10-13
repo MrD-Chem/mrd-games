@@ -1,17 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
   <title>Professor Mole</title>
+  <!-- art/professor-mole.svg#face shows just his face (used for the speech bubble) -->
+  <view id="face" viewBox="22 8 76 76"/>
   <!-- lab coat -->
   <path d="M18 120c0-30 17-50 42-50s42 20 42 50z" fill="#f1f5f9"/>
   <path d="M60 72 47 120h26z" fill="#7a5a44"/>
   <path d="M60 71 42 82l10 38h4zM60 71l18 11-10 38h-4z" fill="#d6dee8"/>
-  <rect x="74" y="98" width="15" height="11" rx="2" fill="#d6dee8"/>
-  <rect x="77" y="91" width="3" height="10" rx="1" fill="#2dd4bf"/>
-  <rect x="82" y="92" width="3" height="9" rx="1" fill="#fbbf24"/>
-  <circle cx="60" cy="96" r="2" fill="#94a3b8"/>
-  <circle cx="60" cy="106" r="2" fill="#94a3b8"/>
-  <!-- paws -->
-  <ellipse cx="30" cy="110" rx="8" ry="6" fill="#f9a8d4"/>
-  <ellipse cx="90" cy="110" rx="8" ry="6" fill="#f9a8d4"/>
+  <!-- chest pocket with test tubes -->
+  <rect x="80" y="80" width="3" height="11" rx="1.5" fill="#2dd4bf"/>
+  <rect x="85" y="81" width="3" height="10" rx="1.5" fill="#fbbf24"/>
+  <rect x="78" y="87" width="12" height="9" rx="2" fill="#cbd5e1"/>
+  <!-- sleeves -->
+  <path d="M31 94q5 12 16 13M89 94q-5 12-16 13" fill="none" stroke="#b4c0cf" stroke-width="12" stroke-linecap="round"/>
+  <path d="M31 94q5 12 16 13M89 94q-5 12-16 13" fill="none" stroke="#e8edf3" stroke-width="9" stroke-linecap="round"/>
+  <!-- flask -->
+  <rect x="55.5" y="86" width="9" height="10" fill="#e0f2fe"/>
+  <circle cx="60" cy="104" r="11" fill="#e0f2fe"/>
+  <path d="M49.05 103h21.9a11 11 0 1 1-21.9 0z" fill="#2dd4bf"/>
+  <circle cx="57" cy="108" r="1.7" fill="#ccfbf1"/>
+  <circle cx="63" cy="105" r="1.2" fill="#ccfbf1"/>
+  <ellipse cx="54.5" cy="98.5" rx="1.4" ry="2.8" fill="#ffffff" opacity="0.8"/>
+  <rect x="53.5" y="84" width="13" height="3.5" rx="1.75" fill="#94a3b8"/>
+  <!-- paws with digging claws -->
+  <ellipse cx="48" cy="106" rx="6.5" ry="5.2" fill="#f9a8d4"/>
+  <ellipse cx="72" cy="106" rx="6.5" ry="5.2" fill="#f9a8d4"/>
+  <path d="M51.5 103.2h2.6M52.3 106h2.6M51.5 108.8h2.6M68.5 103.2h-2.6M67.7 106h-2.6M68.5 108.8h-2.6" stroke="#fdf2f8" stroke-width="1.5" stroke-linecap="round"/>
   <!-- head -->
   <ellipse cx="60" cy="47" rx="31" ry="28" fill="#8b6a52"/>
   <path d="M52 21q8-9 16 0" fill="none" stroke="#6b4f3c" stroke-width="3" stroke-linecap="round"/>
