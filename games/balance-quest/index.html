@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Balance Quest — Mr. D's Chemistry Games</title>
+  <meta name="description" content="Balance Quest: walk a 3D world and open giant balance-scale gates by balancing chemical equations. Free, no account needed.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="equations.js" defer></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body class="page-game bq-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../chemistry/">← Chemistry</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span>Mr. D's Chemistry Games</span>
+      </span>
+    </div>
+  </header>
+
+  <main id="main" class="wrap bq-main">
+    <h1 class="sr-only">Balance Quest</h1>
+
+    <!-- ===== Title screen: world select, practice, settings ===== -->
+    <section class="bq-title" id="bq-title" aria-labelledby="bq-title-heading">
+      <div class="bq-hero">
+        <svg class="bq-hero-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <path class="bq-hero-post" d="M30 12h4v40h-4z"/>
+          <path class="bq-hero-base" d="M18 52h28v5H18z"/>
+          <path class="bq-hero-beam" d="M8 15h48v4H8z"/>
+          <path class="bq-hero-pan" d="M2 34h20a10 6 0 0 1-20 0zM42 34h20a10 6 0 0 1-20 0z"/>
+          <path class="bq-hero-string" d="M12 19 4 34M12 19l8 15M52 19l-8 15M52 19l8 15"/>
+          <circle class="bq-hero-pivot" cx="32" cy="17" r="4"/>
+        </svg>
+        <div>
+          <p class="bq-logo" aria-hidden="true">Balance Quest</p>
+          <h2 class="bq-tagline" id="bq-title-heading">Walk the path. Balance the scales. Open the gates.</h2>
+        </div>
+      </div>
+      <p class="bq-intro">Every gate is a giant balance scale holding a chemical equation. Put the right <strong>coefficients</strong> in front of the formulas so each kind of atom has the same count on both sides. When the scale levels out, the gate opens.</p>
+
+      <p class="panel notice bq-data-error" id="bq-data-error" role="alert" hidden></p>
+
+      <h2 class="bq-section-title" id="bq-worlds-title">Choose a world</h2>
+      <ul class="bq-worlds" id="bq-worlds" aria-labelledby="bq-worlds-title"></ul>
+
+      <div class="bq-extras">
+        <details class="panel bq-details bq-practice" id="bq-practice">
+          <summary>Practice your own equations</summary>
+          <div class="bq-details-body">
+            <p>Type one equation per line, like <code>Fe + O2 -&gt; Fe2O3</code>. You can use <code>-&gt;</code>, <code>→</code> or <code>=</code> for the arrow. Leave out the coefficients: the game works out the answer and you fill in every box.</p>
+            <label class="bq-label" for="bq-practice-text">Your equations</label>
+            <textarea class="bq-textarea" id="bq-practice-text" rows="6" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Fe + O2 -> Fe2O3"></textarea>
+            <label class="bq-check"><input type="checkbox" id="bq-practice-live" checked> Show the atom counter while I work</label>
+            <div class="bq-actions">
+              <button class="btn btn-primary" id="bq-practice-play" type="button">Play these</button>
+              <button class="btn btn-ghost" id="bq-practice-example" type="button">Fill in examples</button>
+            </div>
+            <div class="bq-practice-report" id="bq-practice-report" role="status" aria-live="polite"></div>
+          </div>
+        </details>
+
+        <details class="panel bq-details" id="bq-howto">
+          <summary>How to play</summary>
+          <div class="bq-details-body">
+            <ul class="bq-howto-list">
+              <li><strong>Walk:</strong> <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or the arrow keys. On a tablet or phone, use the joystick.</li>
+              <li><strong>Solve a gate:</strong> walk up to it and press <kbd>E</kbd> (or tap <b>Solve</b>).</li>
+              <li><strong>Change a coefficient:</strong> press + or −, use the up and down arrow keys, or type a number from 1 to 12. A blank box counts as 1, just like in chemistry. <kbd>Tab</kbd> moves to the next box, <kbd>Enter</kbd> checks, <kbd>Esc</kbd> closes.</li>
+              <li><strong>Atom counter:</strong> shows how many of each atom are on each side. A row turns green when it matches. In Worlds 3 and 4 it appears after you press Check.</li>
+              <li><strong>Stars:</strong> 3 stars with no hints, 2 stars if you use 1 or 2 hints, 1 star if a hint shows you a number.</li>
+              <li>Coefficients must be the <strong>lowest whole numbers</strong> that balance the equation.</li>
+            </ul>
+          </div>
+        </details>
+
+        <fieldset class="panel bq-options">
+          <legend>Settings</legend>
+          <label class="bq-check"><input type="checkbox" id="bq-opt-simple"> Simple mode (no 3D), for slow computers</label>
+          <label class="bq-check"><input type="checkbox" id="bq-opt-teacher"> Teacher: unlock all worlds</label>
+          <p class="bq-note" id="bq-no3d" hidden>This device can't show 3D, so the game will use simple mode.</p>
+        </fieldset>
+      </div>
+    </section>
+
+    <!-- ===== The game: HUD, 3D view or simple list, and overlays ===== -->
+    <div class="bq-game" id="bq-game" hidden>
+      <div class="bq-stage" id="bq-stage">
+        <div class="bq-hud" id="bq-hud">
+          <button class="btn btn-ghost bq-menu" id="bq-menu" type="button">← Worlds</button>
+          <p class="bq-hud-world" id="bq-hud-world"></p>
+          <p class="bq-hud-chip"><span class="bq-hud-label">Gates</span> <b id="bq-hud-gates">0 / 0</b></p>
+          <p class="bq-hud-chip"><span class="bq-hud-label">Stars</span> <b><span aria-hidden="true">★</span> <span id="bq-hud-stars">0</span></b></p>
+          <p class="bq-slow" id="bq-slow" hidden>Running slowly? <button class="btn btn-ghost btn-sm" id="bq-slow-btn" type="button">Switch to simple mode</button></p>
+        </div>
+
+        <div class="bq-view" id="bq-view" tabindex="0" role="application" aria-roledescription="game" aria-label="Balance Quest world. Walk with W A S D or the arrow keys. Press E at a gate to solve it." hidden>
+          <canvas class="bq-canvas" id="bq-canvas" aria-hidden="true"></canvas>
+        </div>
+
+        <p class="bq-help" id="bq-help" hidden>Walk: <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrow keys · Solve a gate: <kbd>E</kbd></p>
+
+        <button class="bq-prompt" id="bq-prompt" type="button" hidden>
+          <span class="bq-prompt-gate" id="bq-prompt-gate"></span>
+          <span class="bq-prompt-action">Press <kbd>E</kbd> / Tap to solve</span>
+        </button>
+
+        <div class="bq-touch" id="bq-touch" hidden>
+          <div class="bq-joystick" id="bq-joystick" role="presentation">
+            <div class="bq-knob" id="bq-knob"></div>
+          </div>
+          <button class="bq-touch-solve" id="bq-touch-solve" type="button" disabled>Solve</button>
+        </div>
+
+        <!-- Simple mode (no 3D) -->
+        <section class="bq-board" id="bq-board" aria-labelledby="bq-board-title" hidden>
+          <h2 class="bq-board-title" id="bq-board-title"></h2>
+          <p class="bq-board-note" id="bq-board-note"></p>
+          <ol class="bq-gate-list" id="bq-gate-list"></ol>
+        </section>
+
+        <!-- Puzzle panel -->
+        <section class="bq-puzzle" id="bq-puzzle" role="dialog" aria-modal="true" aria-labelledby="bq-pz-title" aria-describedby="bq-pz-help" hidden>
+          <div class="bq-pz-card">
+            <div class="bq-pz-head">
+              <div class="bq-pz-heading">
+                <p class="bq-pz-kicker" id="bq-pz-kicker"></p>
+                <h2 class="bq-pz-title" id="bq-pz-title" tabindex="-1"></h2>
+              </div>
+              <button class="bq-close" id="bq-pz-close" type="button" aria-label="Close puzzle">✕</button>
+            </div>
+            <div class="bq-pz-grid">
+              <p class="bq-pz-help" id="bq-pz-help">Make each kind of atom match on both sides. Use <span aria-hidden="true">+ and −</span><span class="sr-only">the up and down arrow keys</span> or type a number from 1 to 12. A blank box counts as 1.</p>
+              <div class="bq-pz-scale" id="bq-pz-scale" hidden></div>
+              <div class="bq-eq" id="bq-eq" role="group" aria-label="Equation"></div>
+              <div class="bq-counter-wrap" id="bq-counter-wrap">
+                <table class="bq-counter">
+                  <caption id="bq-counter-cap">Atom counter</caption>
+                  <thead><tr><th scope="col">Atom</th><th scope="col">Left</th><th scope="col">Right</th><th scope="col"><span class="sr-only">Match?</span></th></tr></thead>
+                  <tbody id="bq-counter-body"></tbody>
+                </table>
+                <p class="bq-counter-note" id="bq-counter-note" hidden></p>
+              </div>
+              <div class="bq-pz-msgs">
+                <p class="bq-feedback" id="bq-feedback" role="status" aria-live="polite"></p>
+                <p class="bq-hint" id="bq-hint" aria-live="polite"></p>
+                <p class="bq-stars" id="bq-pz-stars" hidden></p>
+              </div>
+              <div class="bq-pz-actions">
+                <button class="btn btn-primary" id="bq-pz-check" type="button">Check</button>
+                <button class="btn btn-ghost" id="bq-pz-hint" type="button">Hint</button>
+                <button class="btn btn-primary" id="bq-pz-continue" type="button" hidden>Continue</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- World complete -->
+        <section class="bq-overlay" id="bq-complete" role="dialog" aria-modal="true" aria-labelledby="bq-complete-title" hidden>
+          <div class="bq-card">
+            <h2 id="bq-complete-title" tabindex="-1"></h2>
+            <p class="bq-complete-total" id="bq-complete-stars"></p>
+            <ol class="bq-complete-list" id="bq-complete-list"></ol>
+            <p class="bq-complete-unlock" id="bq-complete-unlock" hidden></p>
+            <div class="bq-actions">
+              <button class="btn btn-primary" id="bq-complete-next" type="button" hidden>Next world</button>
+              <button class="btn btn-ghost" id="bq-complete-again" type="button">Play this world again</button>
+              <button class="btn btn-ghost" id="bq-complete-menu" type="button">All worlds</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3D stopped (graphics context lost) -->
+        <section class="bq-overlay" id="bq-lost" role="alertdialog" aria-modal="true" aria-labelledby="bq-lost-title" aria-describedby="bq-lost-text" hidden>
+          <div class="bq-card">
+            <h2 id="bq-lost-title">The 3D view stopped</h2>
+            <p id="bq-lost-text">The computer's graphics needed a reset. Your progress is saved.</p>
+            <div class="bq-actions">
+              <button class="btn btn-primary" id="bq-lost-reload" type="button">Reload the game</button>
+              <button class="btn btn-ghost" id="bq-lost-simple" type="button">Keep playing in simple mode</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="bq-overlay bq-loading" id="bq-loading" hidden>
+          <p class="bq-card">Building the world…</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="sr-only" id="bq-announce" aria-live="polite"></p>
+
+    <noscript>
+      <p class="panel notice">Balance Quest needs JavaScript turned on to play.</p>
+    </noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>No accounts, no tracking — progress is saved only on this device. 3D graphics by <a href="vendor/three-LICENSE.txt">Three.js</a> (MIT license).</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,1328 @@
+/* Balance Quest — game-specific styles (shared look comes from ../../assets/site.css).
+   Every class here starts with "bq-" so it can't clash with the site's own classes. */
+
+.bq-page .wrap {
+  max-width: 1240px;
+}
+
+.bq-page {
+  touch-action: manipulation;
+}
+
+.bq-main {
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+
+.bq-page .site-header {
+  padding-top: 12px;
+  padding-bottom: 6px;
+}
+
+/* ---------- Title screen ---------- */
+
+.bq-title {
+  padding: 4px 0 8px;
+}
+
+.bq-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0 12px;
+}
+
+.bq-hero-icon {
+  flex: none;
+  width: 64px;
+  height: 64px;
+}
+
+.bq-hero-post,
+.bq-hero-base {
+  fill: #6b7280;
+}
+
+.bq-hero-beam {
+  fill: #cbd5e1;
+}
+
+.bq-hero-pan {
+  fill: var(--amber);
+}
+
+.bq-hero-string {
+  fill: none;
+  stroke: #94a3b8;
+  stroke-width: 1.5;
+}
+
+.bq-hero-pivot {
+  fill: var(--teal);
+}
+
+.bq-logo {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 1.5rem + 2.4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.bq-tagline {
+  margin: 4px 0 0;
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--teal);
+}
+
+.bq-intro {
+  max-width: 46rem;
+}
+
+.bq-section-title {
+  margin: 20px 0 12px;
+  font-size: 1.375rem;
+}
+
+.bq-worlds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: 14px;
+}
+
+.bq-world-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 14px 32px rgba(0, 0, 0, 0.3);
+}
+
+.bq-world-art {
+  position: relative;
+  height: 88px;
+  background: #1f2937;
+}
+
+.bq-world-card[data-theme="meadow"] .bq-world-art {
+  background:
+    radial-gradient(14px 14px at 78% 30%, #fff7cc 60%, transparent 62%),
+    linear-gradient(180deg, #7cc8f2 0%, #bfe6ff 58%, #74c463 59%, #4f9e45 100%);
+}
+
+.bq-world-card[data-theme="caves"] .bq-world-art {
+  background:
+    radial-gradient(10px 22px at 70% 72%, #c4b5fd 60%, transparent 64%),
+    radial-gradient(8px 16px at 84% 78%, #67e8f9 60%, transparent 64%),
+    radial-gradient(9px 18px at 58% 80%, #f0abfc 60%, transparent 64%),
+    linear-gradient(170deg, #34275c, #120d22);
+}
+
+.bq-world-card[data-theme="volcano"] .bq-world-art {
+  background:
+    radial-gradient(60px 26px at 75% 100%, rgba(255, 122, 46, 0.85), transparent 70%),
+    linear-gradient(135deg, transparent 58%, #2a1a14 58.5%),
+    linear-gradient(225deg, transparent 58%, #2a1a14 58.5%),
+    linear-gradient(180deg, #7a2f19, #2c1610);
+}
+
+.bq-world-card[data-theme="ocean"] .bq-world-art {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 46px, rgba(234, 228, 212, 0.75) 46px 56px, transparent 56px 120px),
+    linear-gradient(180deg, #1b7f96 0%, #0f5466 70%, #d8c591 71%, #c8b47f 100%);
+}
+
+.bq-world-num {
+  position: absolute;
+  left: 14px;
+  bottom: 6px;
+  font-family: var(--serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+}
+
+.bq-world-card[data-locked="true"] .bq-world-art {
+  filter: grayscale(0.75) brightness(0.55);
+}
+
+.bq-world-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 16px;
+}
+
+.bq-world-name {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.bq-world-kicker {
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.bq-world-blurb,
+.bq-world-lock {
+  margin: 0;
+  color: var(--muted);
+}
+
+.bq-world-progress {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.bq-world-done {
+  font-weight: 700;
+  color: var(--good);
+}
+
+.bq-world-lock {
+  font-size: 0.875rem;
+}
+
+.bq-world-card .btn {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.bq-world-card .btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.bq-extras {
+  display: grid;
+  gap: 14px;
+  max-width: 52rem;
+  margin-top: 22px;
+}
+
+.bq-details summary {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bq-details summary:focus-visible {
+  outline-offset: -3px;
+  border-radius: var(--radius);
+}
+
+.bq-details-body {
+  padding: 0 16px 16px;
+}
+
+.bq-details code {
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--glass-strong);
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.bq-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.bq-textarea {
+  display: block;
+  width: 100%;
+  min-height: 8.5rem;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  color: var(--text);
+  font: 1rem/1.5 ui-monospace, Menlo, Consolas, "Liberation Mono", monospace;
+  resize: vertical;
+}
+
+.bq-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.bq-check input {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--teal);
+}
+
+.bq-options {
+  margin: 0;
+  padding: 8px 16px 10px;
+}
+
+.bq-options legend {
+  padding: 0 6px;
+  font-weight: 700;
+}
+
+.bq-note {
+  margin: 4px 0 0;
+  color: var(--amber);
+}
+
+.bq-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.bq-practice-report p {
+  margin: 12px 0 4px;
+  font-weight: 700;
+}
+
+.bq-ok {
+  color: var(--good);
+}
+
+.bq-bad {
+  color: var(--bad);
+}
+
+.bq-problems {
+  margin: 4px 0 0;
+  padding-left: 1.2em;
+  color: var(--muted);
+}
+
+.bq-problems strong {
+  color: var(--text);
+}
+
+.bq-howto-list {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.bq-howto-list li {
+  margin-bottom: 6px;
+}
+
+.bq-data-error {
+  color: var(--bad);
+}
+
+/* ---------- Game stage ---------- */
+
+.bq-stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #0d1014;
+}
+
+.bq-game.is-2d .bq-stage {
+  overflow: visible;
+  min-height: 420px;
+  padding: 12px;
+}
+
+.bq-view {
+  position: absolute;
+  inset: 0;
+  outline: none;
+}
+
+.bq-view:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+
+.bq-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* HUD: floats over the 3D view, sits on top of the list in simple mode */
+.bq-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.bq-game.is-3d .bq-hud {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.bq-game.is-3d .bq-hud > * {
+  pointer-events: auto;
+}
+
+.bq-game.is-2d .bq-hud {
+  margin-bottom: 12px;
+}
+
+.bq-hud p {
+  margin: 0;
+}
+
+.bq-menu {
+  background: rgba(8, 9, 11, 0.78);
+}
+
+.bq-hud-world,
+.bq-hud-chip,
+.bq-slow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 6px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(8, 9, 11, 0.78);
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.bq-hud-world {
+  font-weight: 700;
+}
+
+.bq-hud-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bq-hud-chip b [aria-hidden="true"] {
+  color: var(--amber);
+}
+
+.bq-slow {
+  border-color: var(--amber);
+}
+
+.bq-help {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  z-index: 2;
+  max-width: calc(100% - 24px);
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(8, 9, 11, 0.78);
+  font-size: 0.875rem;
+  text-align: center;
+  transform: translateX(-50%);
+  transition: opacity 0.5s ease;
+}
+
+.bq-help.is-faded {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bq-help kbd {
+  margin: 0 1px;
+}
+
+.bq-prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 58px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 44px;
+  max-width: calc(100% - 24px);
+  padding: 10px 22px;
+  border: 2px solid var(--amber);
+  border-radius: 16px;
+  background: rgba(8, 9, 11, 0.88);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transform: translateX(-50%);
+  animation: bq-pulse 1.8s ease-in-out infinite;
+}
+
+.bq-prompt-gate {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.bq-prompt-action {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+@keyframes bq-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.35); }
+  50% { box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); }
+}
+
+/* Touch controls */
+.bq-touch {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  pointer-events: none;
+}
+
+.bq-joystick {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(8, 9, 11, 0.45);
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.bq-knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.bq-touch-solve {
+  width: 88px;
+  height: 88px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--amber);
+  color: var(--on-accent);
+  font: 800 1.0625rem/1 var(--sans);
+  pointer-events: auto;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.bq-touch-solve:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* On touch screens the prompt sits under the top bar, away from the thumbs. */
+.bq-touch-device .bq-game.is-3d .bq-prompt {
+  top: 64px;
+  bottom: auto;
+}
+
+.bq-touch-device .bq-help {
+  bottom: 150px;
+}
+
+/* While a puzzle is open the walking controls step aside. */
+.bq-game.is-puzzle .bq-touch,
+.bq-game.is-puzzle .bq-help {
+  display: none;
+}
+
+/* ---------- Simple mode list ---------- */
+
+.bq-board-title {
+  margin: 0 0 4px;
+  font-size: 1.4rem;
+}
+
+.bq-board-note {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+.bq-gate-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bq-gate2d {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--glass);
+}
+
+.bq-gate2d.is-next {
+  border-color: var(--teal);
+  background: var(--teal-soft);
+}
+
+.bq-gate2d.is-locked {
+  opacity: 0.62;
+}
+
+.bq-gate2d.is-boss {
+  border-width: 2px;
+  border-color: #f472b6;
+}
+
+.bq-gate2d-badge {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--glass-strong);
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+
+.bq-gate2d.is-solved .bq-gate2d-badge {
+  color: var(--amber);
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.bq-gate2d-title {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+}
+
+.bq-gate2d-eq {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.bq-gate2d-meta {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+/* ---------- Puzzle panel ---------- */
+
+.bq-puzzle {
+  z-index: 6;
+}
+
+.bq-game.is-3d .bq-puzzle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  max-height: 62%;
+  padding: 0 10px 10px;
+  pointer-events: none;
+}
+
+.bq-game.is-2d .bq-puzzle {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.62);
+}
+
+.bq-puzzle[hidden] {
+  display: none !important;
+}
+
+.bq-pz-card {
+  width: 100%;
+  max-width: 980px;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px 16px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(14, 17, 22, 0.95);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+
+.bq-game.is-2d .bq-pz-card {
+  max-width: 760px;
+  max-height: calc(100vh - 24px);
+  max-height: calc(100svh - 24px);
+  background: var(--bg-raised);
+}
+
+.bq-puzzle.is-boss .bq-pz-card {
+  border-color: #f472b6;
+}
+
+.bq-pz-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bq-pz-kicker {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.bq-puzzle.is-boss .bq-pz-kicker {
+  color: #f9a8d4;
+}
+
+.bq-pz-title {
+  margin: 2px 0 0;
+  font-size: clamp(1.15rem, 1rem + 0.8vw, 1.5rem);
+}
+
+.bq-pz-title:focus {
+  outline: none;
+}
+
+.bq-pz-title:focus-visible {
+  outline: 3px solid var(--focus);
+}
+
+.bq-close {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--glass);
+  color: var(--text);
+  font: 700 1.05rem/1 var(--sans);
+  cursor: pointer;
+}
+
+.bq-close:hover {
+  background: var(--glass-strong);
+}
+
+.bq-pz-help {
+  margin: 2px 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Short screens: keep the help for screen readers only, to save room. */
+@media (max-height: 820px) {
+  .bq-game.is-3d .bq-pz-help {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+
+.bq-pz-scale {
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.bq-svg-scale {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.bq-svg-base,
+.bq-svg-post {
+  fill: #4b5563;
+}
+
+.bq-svg-bar {
+  fill: #a8b1bb;
+}
+
+.bq-svg-pivot {
+  fill: var(--teal);
+}
+
+.bq-svg-needle {
+  stroke: var(--amber);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.bq-svg-string {
+  stroke: #9ca3af;
+  stroke-width: 1.5;
+}
+
+.bq-svg-dish {
+  fill: #d9b45a;
+}
+
+.bq-svg-dot {
+  stroke: rgba(0, 0, 0, 0.45);
+  stroke-width: 1;
+}
+
+.bq-svg-label {
+  fill: var(--text);
+  font: 700 11px var(--sans);
+}
+
+.bq-svg-beam {
+  transform-box: view-box;
+  transform-origin: 160px 34px;
+  transition: transform 0.5s cubic-bezier(0.3, 1.35, 0.5, 1);
+}
+
+.bq-svg-pan {
+  transform-box: view-box;
+  transition: transform 0.5s cubic-bezier(0.3, 1.35, 0.5, 1);
+}
+
+/* Equation with coefficient boxes */
+.bq-eq {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  padding: 6px 2px 8px;
+  font-size: clamp(1.25rem, 1rem + 1.1vw, 1.85rem);
+}
+
+.bq-eq.is-long {
+  gap: 6px 8px;
+  font-size: clamp(1.1rem, 0.9rem + 0.5vw, 1.3rem);
+}
+
+.bq-term {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bq-formula {
+  font-family: var(--serif);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.bq-formula sub {
+  font-size: 0.62em;
+  line-height: 0;
+  vertical-align: -0.32em;
+}
+
+.bq-plus,
+.bq-arrow {
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.bq-plus {
+  padding-right: 2px;
+}
+
+.bq-arrow {
+  padding: 0 6px 0 2px;
+  font-size: 1.2em;
+  color: var(--teal);
+}
+
+/* "yields" arrow between reactants and products (built by js/arrow.js):
+   a bold amber arrow with the word "yields" under it, set apart from the + signs. */
+.bq-yields {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin: 0 10px;
+  line-height: 1;
+}
+
+.bq-yields-arrow {
+  display: block;
+  width: 2.4em;
+  height: 0.9em;
+  fill: var(--amber);
+}
+
+.bq-yields-word {
+  font-family: var(--sans);
+  font-size: 0.42em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.bq-eq-yields {
+  margin: 0 14px;
+}
+
+.bq-eq.is-long .bq-eq-yields {
+  margin: 0 8px;
+}
+
+/* Smaller version inside the Simple-mode gate list */
+.bq-yields--inline {
+  vertical-align: middle;
+  margin: 0 6px;
+}
+
+.bq-yields--inline .bq-yields-arrow {
+  width: 1.8em;
+  height: 0.7em;
+}
+
+.bq-yields--inline .bq-yields-word {
+  font-size: 0.55em;
+}
+
+@media (max-width: 480px) {
+  .bq-eq-yields {
+    margin: 0 6px;
+  }
+}
+
+.bq-coef {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.bq-step {
+  width: 48px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--glass-strong);
+  color: var(--text);
+  font: 700 1.5rem/1 var(--sans);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bq-step:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.bq-step:active {
+  background: var(--teal-soft);
+}
+
+.bq-step:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.bq-coef-input {
+  width: 54px;
+  height: 52px;
+  padding: 0;
+  border: 2px solid var(--teal);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font: 700 1.6rem/1 var(--sans);
+  text-align: center;
+  caret-color: var(--teal);
+}
+
+.bq-coef-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 1;
+}
+
+.bq-coef-input:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.bq-coef-input[readonly] {
+  border-color: var(--line-strong);
+}
+
+.bq-coef.is-revealed .bq-coef-input {
+  border-color: var(--violet);
+  color: var(--violet);
+}
+
+.bq-puzzle.is-solved .bq-coef-input {
+  border-color: var(--good);
+  color: var(--good);
+}
+
+.bq-coef-fixed {
+  min-width: 0.8em;
+  font: 700 1em/1 var(--sans);
+  text-align: right;
+}
+
+.bq-coef-fixed.is-one {
+  color: rgba(255, 255, 255, 0.34);
+}
+
+/* Panel layout: one column on phones; on wide screens the counter and buttons
+   sit to the right of the equation so the 3D scale stays visible above. */
+.bq-pz-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+@media (min-width: 860px) {
+  .bq-pz-grid {
+    grid-template-columns: minmax(0, 1fr) 15.5rem;
+    grid-template-areas:
+      "help help"
+      "scale counter"
+      "eq counter"
+      "msgs actions";
+    column-gap: 18px;
+    align-items: start;
+  }
+
+  .bq-pz-help { grid-area: help; }
+  .bq-pz-scale { grid-area: scale; }
+  .bq-eq { grid-area: eq; }
+  .bq-counter-wrap { grid-area: counter; }
+  .bq-pz-msgs { grid-area: msgs; }
+  .bq-pz-actions { grid-area: actions; align-self: end; }
+}
+
+.bq-counter {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.bq-counter caption {
+  padding-bottom: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bq-counter th,
+.bq-counter td {
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+
+.bq-counter thead th {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.bq-counter tbody th {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+}
+
+.bq-counter tr.is-equal {
+  background: var(--good-soft);
+}
+
+.bq-counter tr.is-equal .bq-counter-mark {
+  color: var(--good);
+  font-weight: 800;
+}
+
+.bq-counter tr.is-off .bq-counter-mark {
+  color: var(--bad);
+  font-weight: 800;
+}
+
+.bq-counter tr.is-empty .bq-counter-mark {
+  color: var(--muted);
+}
+
+.bq-counter-wrap.is-waiting .bq-counter {
+  display: none;
+}
+
+.bq-counter-wrap.is-stale .bq-counter {
+  opacity: 0.5;
+}
+
+.bq-counter-note {
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.bq-feedback {
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+.bq-feedback:empty {
+  display: none;
+}
+
+.bq-feedback.is-yes {
+  color: var(--good);
+}
+
+.bq-feedback.is-no {
+  color: #fda4af;
+}
+
+.bq-feedback.is-almost {
+  color: var(--amber);
+}
+
+.bq-hint {
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--violet);
+  border-radius: 0 8px 8px 0;
+  background: var(--violet-soft);
+}
+
+.bq-hint:empty {
+  display: none;
+}
+
+.bq-stars {
+  margin: 0;
+  font-weight: 700;
+}
+
+.bq-stars-icons {
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+  color: var(--amber);
+  vertical-align: middle;
+}
+
+.bq-pz-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.bq-pz-actions .btn {
+  min-width: 6.25rem;
+}
+
+/* ---------- Overlays (complete, lost, loading) ---------- */
+
+.bq-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 16px;
+  background: rgba(8, 9, 11, 0.74);
+}
+
+.bq-game.is-2d .bq-overlay {
+  position: fixed;
+  z-index: 60;
+}
+
+.bq-overlay[hidden] {
+  display: none !important;
+}
+
+.bq-card {
+  width: 100%;
+  max-width: 34rem;
+  max-height: 100%;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.bq-card h2 {
+  font-size: 1.6rem;
+}
+
+.bq-card h2:focus {
+  outline: none;
+}
+
+.bq-loading .bq-card {
+  max-width: 18rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.bq-complete-total {
+  font-size: 1.25rem;
+}
+
+.bq-complete-total strong {
+  color: var(--amber);
+}
+
+.bq-complete-list {
+  max-height: 38vh;
+  margin: 0 0 12px;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.bq-complete-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.bq-complete-stars {
+  white-space: nowrap;
+  color: var(--amber);
+}
+
+.bq-complete-unlock {
+  font-weight: 700;
+  color: var(--good);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 700px) {
+  .bq-game.is-3d .bq-puzzle {
+    max-height: 72%;
+    padding: 0 6px 6px;
+  }
+
+  .bq-pz-card {
+    padding: 10px 12px 12px;
+  }
+
+  .bq-eq {
+    gap: 4px 8px;
+  }
+
+  .bq-step {
+    width: 44px;
+  }
+
+  .bq-coef-input {
+    width: 48px;
+    height: 48px;
+  }
+
+  .bq-hud-label {
+    display: none;
+  }
+
+  .bq-hud-world {
+    display: none;
+  }
+
+  .bq-help {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .bq-gate2d {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .bq-gate2d .btn {
+    grid-column: 1 / -1;
+  }
+
+  .bq-hero-icon {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (max-height: 560px) and (min-width: 701px) {
+  .bq-game.is-3d .bq-puzzle {
+    max-height: 70%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bq-prompt {
+    animation: none;
+  }
+}

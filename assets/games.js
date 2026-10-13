@@ -112,7 +112,7 @@ window.SUBJECTS = [
             title: "Balance Quest",
             blurb: "A 3D puzzle adventure where you balance chemical equations to open the way forward.",
             path: "games/balance-quest/",
-            status: "coming-soon",
+            status: "ready",
             icon: "⚖️",
             accent: "violet"
           }

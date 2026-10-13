@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 0 128 120" width="128" height="120">
+  <title>The Imbalancer</title>
+  <!-- stand -->
+  <rect x="56" y="38" width="8" height="66" rx="2" fill="#6b7280"/>
+  <rect x="36" y="102" width="48" height="10" rx="3" fill="#4b5563"/>
+  <!-- tipped beam: heavy on the left -->
+  <path d="M12 52 108 20" stroke="#c084fc" stroke-width="8" stroke-linecap="round"/>
+  <!-- left pan (too full) -->
+  <path d="M12 52 1 80M12 52l11 28" stroke="#94a3b8" stroke-width="1.6"/>
+  <path d="M-2 80h28a14 8 0 0 1-28 0z" fill="#fbbf24"/>
+  <circle cx="5" cy="76" r="4.5" fill="#f87171"/>
+  <circle cx="13" cy="74" r="4.5" fill="#f87171"/>
+  <circle cx="21" cy="76" r="4.5" fill="#60a5fa"/>
+  <circle cx="9" cy="69" r="4" fill="#f8fafc"/>
+  <circle cx="17" cy="68" r="4" fill="#f8fafc"/>
+  <!-- right pan (almost empty) -->
+  <path d="M108 20 97 48M108 20l11 28" stroke="#94a3b8" stroke-width="1.6"/>
+  <path d="M94 48h28a14 8 0 0 1-28 0z" fill="#fbbf24"/>
+  <circle cx="108" cy="44" r="4" fill="#f8fafc"/>
+  <!-- atoms vanishing into nothing -->
+  <circle cx="30" cy="96" r="3" fill="#f87171" opacity="0.6"/>
+  <circle cx="36" cy="88" r="2" fill="#f87171" opacity="0.35"/>
+  <path d="M100 66l4 4m0-4-4 4M112 72l3 3m0-3-3 3" stroke="#fde68a" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- the face on the pivot: lopsided eyes, sneaky grin -->
+  <circle cx="60" cy="36" r="17" fill="#a78bfa"/>
+  <circle cx="53" cy="33" r="6" fill="#ffffff"/>
+  <circle cx="68" cy="31" r="4" fill="#ffffff"/>
+  <circle cx="54.5" cy="34" r="2.6" fill="#1e1b4b"/>
+  <circle cx="69" cy="32" r="1.8" fill="#1e1b4b"/>
+  <path d="M46 25l11 3M64 23l9-2" stroke="#1e1b4b" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M50 42q10 9 20-2" fill="#1e1b4b"/>
+  <path d="M54 43.5h3v3h-3zM61 44h3v3h-3z" fill="#ffffff"/>
+</svg>

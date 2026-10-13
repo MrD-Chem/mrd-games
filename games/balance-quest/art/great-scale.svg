@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 120" width="128" height="120">
+  <title>The Great Scale</title>
+  <!-- sparkles -->
+  <path d="M20 14l2 5 5 2-5 2-2 5-2-5-5-2 5-2zM108 8l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5z" fill="#fde68a"/>
+  <!-- stand -->
+  <rect x="60" y="30" width="8" height="74" rx="2" fill="#6b7280"/>
+  <rect x="40" y="102" width="48" height="10" rx="3" fill="#4b5563"/>
+  <!-- level beam -->
+  <path d="M16 34h96" stroke="#cbd5e1" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="64" cy="34" r="7" fill="#2dd4bf"/>
+  <!-- pans with the same atoms -->
+  <path d="M16 34 5 64M16 34l11 30M112 34l-11 30M112 34l11 30" stroke="#94a3b8" stroke-width="1.6"/>
+  <path d="M2 64h28a14 8 0 0 1-28 0zM98 64h28a14 8 0 0 1-28 0z" fill="#fbbf24"/>
+  <circle cx="10" cy="60" r="4.5" fill="#f87171"/>
+  <circle cx="22" cy="60" r="4.5" fill="#f8fafc"/>
+  <circle cx="16" cy="53" r="4.5" fill="#60a5fa"/>
+  <circle cx="106" cy="60" r="4.5" fill="#60a5fa"/>
+  <circle cx="118" cy="60" r="4.5" fill="#f87171"/>
+  <circle cx="112" cy="53" r="4.5" fill="#f8fafc"/>
+</svg>
