@@ -1,5 +1,5 @@
 /*
- * Quiz Dash — Mr. D's Chemistry Games
+ * Experimental Design Variable Dash (folder: quiz-dash, first called "Quiz Dash") — Mr. D's Chemistry Games
  * A three-lane pseudo-3D runner with a checkpoint question every 150 m.
  *
  * Rebuilt from the original single-file game so it stays light on Chromebooks and iPads:

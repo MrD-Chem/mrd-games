@@ -1,5 +1,5 @@
 /*
- * Quiz Dash — default question pool (Mr. D's Chemistry Games)
+ * Experimental Design Variable Dash (folder: quiz-dash) — default question pool (Mr. D's Chemistry Games)
  *
  * One question per line:  question | correct answer | wrong | wrong | wrong
  * The correct answer always goes first; the game shuffles the order.

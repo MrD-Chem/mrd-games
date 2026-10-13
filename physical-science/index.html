@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Physical Science — Mr. D's Chemistry Games</title>
+  <meta name="description" content="Free physical science practice games from Mr. D, sorted by unit. Play in the browser on a Chromebook, iPad, or phone.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/games.js" defer></script>
+  <script src="../assets/home.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../">← All subjects</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../assets/favicon.svg" alt="" width="28" height="28">
+        <span>Mr. D's Chemistry Games</span>
+      </span>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Subject</p>
+      <h1 class="page-title" id="page-title">Physical Science</h1>
+      <p class="lead">Games sorted by unit. Pick one and play right in your browser.</p>
+    </section>
+
+    <!-- The units and game cards are drawn here from the list in assets/games.js.
+         data-subject must match the subject's id in that list. -->
+    <div class="units" id="units" data-subject="physical-science" data-root="../"></div>
+
+    <noscript>
+      <p class="panel notice">The game list needs JavaScript turned on. You can still open
+        <a href="../games/quiz-dash/">Experimental Design Variable Dash</a> directly (it needs JavaScript too).</p>
+    </noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>No accounts, no tracking — scores are saved only on this device.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,6 +1,6 @@
 /*
   Mr. D's Chemistry Games — shared styles
-  Used by the home page and every game page.
+  Used by the home page, the subject pages and every game page.
   Colours live in the :root block below; change them there and the whole site follows.
 */
 
@@ -271,8 +271,9 @@ main {
   font-size: 1.125rem;
 }
 
+/* smaller text, but still 44px tall so it is easy to tap on a phone or iPad */
 .btn-sm {
-  min-height: 36px;
+  min-height: 44px;
   padding: 6px 14px;
   font-size: 0.875rem;
 }
@@ -288,7 +289,7 @@ main {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 40px rgba(0, 0, 0, 0.35);
 }
 
-/* ---------- Game cards (home page) ---------- */
+/* ---------- Game cards (subject pages; the home page's subject buttons build on these) ---------- */
 
 .game-grid {
   list-style: none;
@@ -424,6 +425,117 @@ main {
 
 .notice {
   padding: 20px;
+  color: var(--muted);
+}
+
+/* ---------- Subject buttons (home page) ---------- */
+
+.subject-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 20px;
+}
+
+.card--subject {
+  gap: 14px;
+  padding: 28px 24px 24px;
+}
+
+.card--subject .card-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  font-size: 40px;
+}
+
+.card--subject .card-title {
+  font-size: clamp(1.75rem, 1.45rem + 1.2vw, 2.25rem);
+}
+
+.card--subject .card-blurb {
+  font-size: 1.0625rem;
+}
+
+.card-meta {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+.card--subject .btn-play {
+  width: 100%;
+}
+
+/* Phones: icon beside the name, so both subject buttons fit on one screen */
+@media (max-width: 599px) {
+  .card--subject {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px 14px;
+    padding: 20px;
+  }
+
+  .card--subject > :not(.card-icon):not(.card-title) {
+    grid-column: 1 / -1;
+  }
+
+  .card--subject .card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 15px;
+    font-size: 32px;
+  }
+
+  .card--subject .card-title {
+    margin: 0;
+  }
+
+  .card--subject .card-actions {
+    padding-top: 4px;
+  }
+}
+
+.btn-arrow {
+  transition: transform 0.15s ease;
+}
+
+@media (hover: hover) {
+  .card--subject[data-status="ready"]:hover .btn-arrow {
+    transform: translateX(3px);
+  }
+}
+
+/* ---------- Subject pages: one section per unit ---------- */
+
+.page-title {
+  margin: 0 0 10px;
+  font-size: clamp(2rem, 1.6rem + 2vw, 2.75rem);
+}
+
+.units {
+  display: grid;
+  gap: 40px;
+}
+
+.unit-header {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.unit-title {
+  margin: 0;
+  font-size: clamp(1.4rem, 1.25rem + 0.8vw, 1.75rem);
+}
+
+.unit-blurb {
+  margin: 4px 0 0;
   color: var(--muted);
 }
 
