@@ -4,9 +4,9 @@
   something is moving or animating, and stops when the tab is hidden.
 */
 
-import * as THREE from '../vendor/three.module.min.js';
-import { buildWorld, updatePans, placePans, HALF_WIDTH, PIVOT_Y, BURST_COUNT } from './scene3d.js';
-import { scaleTilt } from './chem.js';
+import * as THREE from '../vendor/three.module.min.js?v=r170';
+import { buildWorld, updatePans, placePans, HALF_WIDTH, PIVOT_Y, BURST_COUNT } from './scene3d.js?v=20261014T1252';
+import { scaleTilt } from './chem.js?v=20261014T1252';
 
 const SPEED = 6.4;
 const SIDE_SPEED = 4.8;

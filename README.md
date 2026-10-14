@@ -47,6 +47,8 @@ mrd-games/
 ├── CNAME                 Holds games.mrdchemistry.com (leave it alone)
 ├── .nojekyll             Tells GitHub Pages to serve the files as they are (leave it alone)
 ├── README.md             This file
+├── tools/
+│   └── stamp_version.py  Run it after changing any file (see "After changing any file")
 ├── assets/
 │   ├── games.js          THE LIST of subjects, units and games – edit this one
 │   ├── home.js           Draws the buttons and cards from that list (no need to edit)
@@ -76,7 +78,9 @@ best scores. Students only ever see the new name.
    explain each line. Use `"ready"` to show a **Play** button, or `"coming-soon"` to
    show a grey "Coming soon" badge (no link, so it is fine if the folder isn't
    finished yet).
-4. **Upload / commit** the changes to GitHub. The site updates within a minute or two
+4. **Run the version stamp:** `python3 tools/stamp_version.py` (see
+   [After changing any file](#after-changing-any-file-run-the-version-stamp)).
+5. **Upload / commit** the changes to GitHub. The site updates within a minute or two
    (refresh the page if you don't see it).
 
 Paths in `games.js` are always written from the top of the site, like
@@ -114,12 +118,44 @@ Units appear on the subject page in the same order as in the list.
 3. Optional: on the home page (`index.html`) there is a short note for computers with
    JavaScript turned off that links to each subject. Add the new subject there too.
 
+## After changing any file: run the version stamp
+
+**After changing any game file, run `python3 tools/stamp_version.py`** – then upload
+or commit as usual. (Changing a page, a game, `games.js`, a `.css` or `.js` file: any
+change at all.)
+
+How: open Terminal in the `mrd-games` folder, type the line below and press Return.
+
+```
+python3 tools/stamp_version.py
+```
+
+It prints the files it updated. Upload/commit those along with your own changes.
+
+Why: browsers keep a saved copy of each file for up to 10 minutes. Without the stamp,
+a student who visits right after an update can get the new page with old style or
+script files, so the page can look broken or a game can fail to start. The tool adds
+a version tag to every style and script link, like `style.css?v=20261014T1530`; a new
+tag makes browsers fetch the new files.
+
+- It is safe to run as many times as you like: it replaces the old tag, it never adds
+  a second one. It changes nothing except those tags.
+- The 3D library Three.js (`games/balance-quest/vendor/`) never changes, so it keeps a
+  fixed tag, `?v=r170`, and students don't download it again after every update.
+- If it prints a line starting with `WARNING`, read it: it means a link points to a
+  file that doesn't exist, or something similar worth fixing.
+- Forgot to run it? Nothing breaks for long: browsers catch up within 10 minutes. Just
+  run it and upload again.
+
 ## Rules that keep everything working
 
 - **Links and file paths inside the site must be relative**, like
   `games/mole-match/` or `../../assets/site.css`. Never start them with `/` or with
   the full web address. That is what lets the same files work on the real site and
   when you preview it on your own computer.
+- **The `?v=...` at the end of style and script links is normal** – it is the version
+  stamp (see above). Leave it there; `tools/stamp_version.py` keeps it up to date. If
+  you copy a link and forget it, the tool adds it next time you run it.
 - **Keep the quotes, commas and brackets** in `games.js` exactly as in the examples.
   A missing comma stops the whole list from loading; the pages then show a short
   notice instead of the cards, so you'll know to look there.
