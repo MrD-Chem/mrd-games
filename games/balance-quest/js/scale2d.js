@@ -3,8 +3,8 @@
   The beam tilts toward the heavier side; each pan shows one dot per molecule.
 */
 
-import { scaleTilt, parseFormula, prettyFormula } from './chem.js?v=20261014T1252';
-import { atomColor } from './molecule.js?v=20261014T1252';
+import { scaleTilt, parseFormula, prettyFormula } from './chem.js?v=20261021T1624';
+import { atomColor } from './molecule.js?v=20261021T1624';
 
 const NS = 'http://www.w3.org/2000/svg';
 const CAP = 8;

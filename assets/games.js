@@ -115,6 +115,15 @@ window.SUBJECTS = [
             status: "ready",
             icon: "⚖️",
             accent: "violet"
+          },
+          {
+            id: "mole-rush",
+            title: "Mole Rush",
+            blurb: "Stoichiometry practice: set up conversions with the right units and chemicals. Races coming soon!",
+            path: "games/mole-rush/",
+            status: "ready",
+            icon: "🏁",
+            accent: "teal"
           }
         ]
       }

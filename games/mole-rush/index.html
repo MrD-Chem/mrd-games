@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Mole Rush — Mr. D's Chemistry Games</title>
+  <meta name="description" content="Mole Rush: a stoichiometry racing game. Set up dimensional analysis with the right units and chemicals, watch the units cancel, and race to the answer. Free, no account needed.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css?v=20261021T1624">
+  <link rel="stylesheet" href="style.css?v=20261021T1624">
+  <script src="data/bank.js?v=20261021T1624" defer></script>
+  <script type="module" src="js/main.js?v=20261021T1624"></script>
+</head>
+<body class="page-game mr-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../chemistry/">← Chemistry</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span>Mr. D's Chemistry Games</span>
+      </span>
+    </div>
+  </header>
+
+  <main id="main" class="wrap mr-main">
+    <h1 class="sr-only">Mole Rush</h1>
+
+    <!-- ===== Title ===== -->
+    <section class="mr-screen mr-title" id="mr-title" aria-labelledby="mr-title-heading">
+      <div class="mr-hero">
+        <svg class="mr-hero-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <path class="mr-hero-speed" d="M2 30h12M5 38h9M8 46h7"/>
+          <rect class="mr-hero-crown" x="27" y="5" width="10" height="6" rx="2"/>
+          <circle class="mr-hero-face" cx="37" cy="37" r="21"/>
+          <path class="mr-hero-tick" d="M37 20v4M54 37h-4M37 54v-4M20 37h4"/>
+          <path class="mr-hero-hand" d="M37 37 46 28"/>
+          <circle class="mr-hero-pin" cx="37" cy="37" r="3"/>
+        </svg>
+        <div>
+          <p class="mr-logo" aria-hidden="true">Mole Rush</p>
+          <h2 class="mr-tagline" id="mr-title-heading" tabindex="-1">Set up the units. Cancel them out. Race to the answer.</h2>
+        </div>
+      </div>
+      <p class="mr-intro">Every stoichiometry problem is a chain of fractions. Each fraction cancels the unit before it, until only the unit the question asks for is left. Build the chain, watch the units cancel, and beat your best score.</p>
+
+      <p class="panel notice mr-error" id="mr-error" role="alert" hidden></p>
+
+      <div class="mr-start" id="mr-start">
+        <button class="btn btn-primary btn-lg mr-start-btn" id="mr-practice" type="button">Practice</button>
+        <button class="btn btn-ghost btn-lg mr-start-btn" id="mr-code-toggle" type="button" aria-expanded="false" aria-controls="mr-code-form">Use a race code</button>
+      </div>
+
+      <form class="panel mr-code-form" id="mr-code-form" hidden novalidate>
+        <label class="mr-field-label" for="mr-code-input">Race code</label>
+        <p class="mr-code-help" id="mr-code-help">Type the code your teacher or a classmate gives you, like <b>MOLE-38</b>. Everyone who uses the same code on the same map gets the same questions in the same order.</p>
+        <div class="mr-code-row">
+          <input class="mr-input" id="mr-code-input" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="MOLE-38" aria-describedby="mr-code-help mr-code-error">
+          <button class="btn btn-primary" id="mr-code-go" type="submit">Go</button>
+        </div>
+        <p class="mr-code-error" id="mr-code-error" aria-live="polite"></p>
+      </form>
+
+      <div class="mr-extras">
+        <details class="panel mr-details">
+          <summary>How to play</summary>
+          <div class="mr-details-body">
+            <ul class="mr-howto-list">
+              <li><strong>Read the problem.</strong> The balanced equation and the molar masses are always given.</li>
+              <li><strong>Build the setup.</strong> Start with what you are given. Each fraction's bottom must cancel the unit on top before it. The last top must be the unit the question asks for.</li>
+              <li><strong>Place tiles:</strong> tap a tile, then tap a box. You can also drag a tile into a box. Tap a filled box to move its tile, or tap its × to clear it.</li>
+              <li><strong>Keyboard:</strong> <kbd>Tab</kbd> to a tile, <kbd>Enter</kbd> to pick it up, <kbd>Tab</kbd> or the arrow keys to a box, <kbd>Enter</kbd> to place it. <kbd>Backspace</kbd> clears a box, <kbd>Esc</kbd> puts a tile back.</li>
+              <li><strong>Check:</strong> green boxes are right, red ones come with a hint. After two tries you can press <b>Show me</b>.</li>
+              <li><strong>Points:</strong> 100 for a first-try answer (plus a streak bonus), 60 on the second try, 30 after that.</li>
+            </ul>
+          </div>
+        </details>
+        <p class="panel mr-soon"><span class="mr-soon-tag">Coming soon</span> Race computer racers (Easy, Medium, Hard), team up 2 vs 2, and race rooms that classmates can join.</p>
+      </div>
+    </section>
+
+    <!-- ===== Map select ===== -->
+    <section class="mr-screen mr-maps" id="mr-maps" aria-labelledby="mr-maps-title" hidden>
+      <div class="mr-screen-head">
+        <button class="btn btn-ghost btn-sm" id="mr-maps-back" type="button">← Back</button>
+        <h2 class="mr-section-title" id="mr-maps-title" tabindex="-1">Choose a map</h2>
+      </div>
+      <div class="mr-mode" id="mr-mode"></div>
+      <ul class="mr-map-list" id="mr-map-list"></ul>
+    </section>
+
+    <!-- ===== Play ===== -->
+    <section class="mr-screen mr-play" id="mr-play" aria-label="Mole Rush game" hidden>
+      <div class="mr-hud" id="mr-hud">
+        <button class="btn btn-ghost btn-sm mr-quit" id="mr-quit" type="button">← Maps</button>
+        <div class="mr-hud-mid">
+          <p class="mr-hud-pos" id="mr-hud-pos"></p>
+          <ol class="mr-progress" id="mr-progress" aria-hidden="true"></ol>
+        </div>
+        <p class="mr-hud-chip"><span class="mr-hud-label">Score</span> <b id="mr-hud-score">0</b></p>
+        <p class="mr-hud-chip"><span class="mr-hud-label">Streak</span> <b id="mr-hud-streak">0</b></p>
+      </div>
+      <div class="mr-stage" id="mr-stage"></div>
+      <div class="mr-next-bar" id="mr-next-bar" hidden>
+        <p class="mr-next-msg" id="mr-next-msg"></p>
+        <button class="btn btn-primary btn-lg mr-next" id="mr-next" type="button">Next question →</button>
+      </div>
+    </section>
+
+    <!-- ===== Results ===== -->
+    <section class="mr-screen mr-results" id="mr-results" aria-labelledby="mr-results-title" hidden>
+      <div class="panel mr-results-card">
+        <p class="mr-results-kicker" id="mr-results-kicker"></p>
+        <h2 class="mr-results-title" id="mr-results-title" tabindex="-1">Finished!</h2>
+        <p class="mr-results-msg" id="mr-results-msg"></p>
+        <dl class="mr-stats" id="mr-stats"></dl>
+        <div class="mr-code-box" id="mr-results-code"></div>
+        <details class="mr-details mr-results-details">
+          <summary>Question by question</summary>
+          <ol class="mr-results-list" id="mr-results-list"></ol>
+        </details>
+        <div class="mr-actions mr-results-actions">
+          <button class="btn btn-primary btn-lg" id="mr-again" type="button">Play again</button>
+          <button class="btn btn-ghost btn-lg" id="mr-to-maps" type="button">Back to maps</button>
+        </div>
+      </div>
+    </section>
+
+    <p class="sr-only" id="mr-announce" aria-live="polite"></p>
+
+    <noscript>
+      <p class="panel notice">Mole Rush needs JavaScript turned on to play.</p>
+    </noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>No accounts, no tracking — best scores are saved only on this device.</p>
+    </div>
+  </footer>
+</body>
+</html>
