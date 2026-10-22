@@ -5,11 +5,11 @@
   rule in session.js (MAP_RULES).
 */
 
-import * as map1 from './map1.js?v=20261021T1624';
-import * as map2 from './map2.js?v=20261021T1624';
-import * as map3 from './map3.js?v=20261021T1624';
-import * as map4 from './map4.js?v=20261021T1624';
-import * as balance from './balance.js?v=20261021T1624';
+import * as map1 from './map1.js?v=20261022T1604';
+import * as map2 from './map2.js?v=20261022T1604';
+import * as map3 from './map3.js?v=20261022T1604';
+import * as map4 from './map4.js?v=20261022T1604';
+import * as balance from './balance.js?v=20261022T1604';
 
 export const MAPS = Object.freeze([
   {

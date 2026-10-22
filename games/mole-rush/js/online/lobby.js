@@ -12,14 +12,20 @@
   lobby is showing (school networks and the database both limit connections per device).
 */
 
-import { el, clear, announce } from '../dom.js?v=20261021T1624';
-import { signIn } from './firebase.js?v=20261021T1624';
-import { watchOpenRooms, createRoom, joinRoom, normalizeRoomCode } from './rooms.js?v=20261021T1624';
-import { checkNickname, loadNickname, saveNickname } from './nickname.js?v=20261021T1624';
-import { friendly } from './messages.js?v=20261021T1624';
-import { getMap } from '../maps/index.js?v=20261021T1624';
+import { el, clear, announce } from '../dom.js?v=20261022T1604';
+import { signIn } from './firebase.js?v=20261022T1604';
+import { watchOpenRooms, createRoom, joinRoom, normalizeRoomCode } from './rooms.js?v=20261022T1604';
+import { checkNickname, loadNickname, saveNickname } from './nickname.js?v=20261022T1604';
+import { friendly } from './messages.js?v=20261022T1604';
+import { getMap } from '../maps/index.js?v=20261022T1604';
+import { MAP_RULES } from '../session.js?v=20261022T1604';
 
 export const QUESTION_COUNT = 10;
+
+/* A race's question count must match the map's round length, or racers can't reach the finish. */
+export function questionCountFor(map) {
+  return (MAP_RULES[map] && MAP_RULES[map].length) || QUESTION_COUNT;
+}
 
 export function modeLabel(mode) {
   return mode === 'teams' ? 'Teams 2 v 2' : 'Solo';
@@ -290,7 +296,7 @@ export function createLobby(ctx) {
     ui.createError.textContent = '';
     setBusy(true, 'create');
     try {
-      const code = await createRoom({ name, map, mode, maxPlayers, questionCount: QUESTION_COUNT });
+      const code = await createRoom({ name, map, mode, maxPlayers, questionCount: questionCountFor(map) });
       ctx.log('created', code);
       close();
       setBusy(false);

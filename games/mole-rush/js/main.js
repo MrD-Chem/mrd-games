@@ -8,12 +8,12 @@
     turns the same code into the same questions on every device.
 */
 
-import { loadBank, formulaText } from './bank.js?v=20261021T1624';
-import { el, clear, announce } from './dom.js?v=20261021T1624';
-import { MAPS, getMap, isPlayable, rendererFor } from './maps/index.js?v=20261021T1624';
-import { createSession, buildSequence } from './session.js?v=20261021T1624';
-import { normalizeCode, randomCode, codeToSeed } from './rng.js?v=20261021T1624';
-import { getBest, recordResult } from './storage.js?v=20261021T1624';
+import { loadBank, formulaText } from './bank.js?v=20261022T1604';
+import { el, clear, announce } from './dom.js?v=20261022T1604';
+import { MAPS, getMap, isPlayable, rendererFor } from './maps/index.js?v=20261022T1604';
+import { createSession, buildSequence } from './session.js?v=20261022T1604';
+import { normalizeCode, randomCode, codeToSeed } from './rng.js?v=20261022T1604';
+import { getBest, recordResult } from './storage.js?v=20261022T1604';
 
 const $ = (id) => document.getElementById(id);
 
@@ -337,7 +337,7 @@ let onlineApi = null;
 
 function loadOnline() {
   if (!onlinePromise) {
-    onlinePromise = import('./online/online.js?v=20261021T1624')
+    onlinePromise = import('./online/online.js?v=20261022T1604')
       .then((mod) => {
         onlineApi = mod.initOnline({
           show,

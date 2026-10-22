@@ -11,7 +11,7 @@
   Names are user content: they only ever go in through textContent.
 */
 
-import { el, clear } from '../dom.js?v=20261021T1624';
+import { el, clear } from '../dom.js?v=20261022T1604';
 
 const ORD = ['th', 'st', 'nd', 'rd'];
 export function ordinal(n) {

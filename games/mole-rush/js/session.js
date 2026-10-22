@@ -12,7 +12,7 @@
   Each on...() returns a function that unsubscribes.
 */
 
-import { mulberry32, deriveSeed, seededShuffle, randInt, codeToSeed, normalizeCode } from './rng.js?v=20261021T1624';
+import { mulberry32, deriveSeed, seededShuffle, randInt, codeToSeed, normalizeCode } from './rng.js?v=20261022T1604';
 
 /*
   How each map builds its round. balanceEvery: put one balancing item after every
