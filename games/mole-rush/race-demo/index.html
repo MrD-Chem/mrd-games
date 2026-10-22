@@ -1,0 +1,60 @@
+<!doctype html>
+<!-- Standalone race-layer demo. demo.js wires the track, CPUs and countdown. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Mole Rush · Race demo — Mr. D's Chemistry Games</title>
+  <meta name="description" content="Standalone test track for Mole Rush, a stoichiometry racing game.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../assets/site.css?v=20261014T1252">
+  <link rel="stylesheet" href="demo.css?v=race-1">
+  <script type="module" src="demo.js?v=race-1"></script>
+</head>
+<body class="page-game">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../../chemistry/">← Chemistry</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../../assets/favicon.svg" alt="" width="28" height="28">
+        <span>Mr. D's Chemistry Games</span>
+      </span>
+    </div>
+  </header>
+  <main id="main" class="wrap demo-main">
+    <div class="demo-heading">
+      <div><p class="eyebrow">THE MOLE CUP · RACE LAYER DEMO</p><h1>Mole Rush<span class="title-dot">.</span></h1></div>
+      <p class="demo-tagline">Small moles.<br>Big chemistry energy.</p>
+    </div>
+    <p>Every correct answer moves you one step. A wrong answer costs no ground.</p>
+    <section class="panel demo-settings" aria-labelledby="setup-heading">
+      <h2 id="setup-heading">Set the starting grid</h2>
+      <fieldset id="settings">
+        <legend class="sr-only">Race settings</legend>
+        <label>Race mode<select id="mode"><option value="solo">Solo · every mole for itself</option><option value="teams">Teams · 2 versus 2</option></select></label>
+        <label>Steps to finish<select id="steps"><option value="3">3 · quick test</option><option value="6" selected>6 · short race</option><option value="10">10 · full race</option></select></label>
+        <label>Pip · CPU 1<select id="cpu-1"><option value="easy" selected>Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></label>
+        <label>Dot · CPU 2<select id="cpu-2"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select></label>
+        <label>Mo · CPU 3<select id="cpu-3"><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard" selected>Hard</option></select></label>
+      </fieldset>
+      <p id="rules" class="demo-note"></p>
+      <p class="demo-note">CPU pace: Easy 20–30 s / 55% correct · Medium 13–20 s / 72% · Hard 8–13 s / 88%. Each restart repeats the same seeds.</p>
+    </section>
+    <section class="track-panel" aria-label="Race track">
+      <div class="race-hud"><span id="phase">READY AT THE START</span><span id="countdown" role="status" aria-live="polite" aria-atomic="true">Ready</span></div>
+      <canvas id="track" width="1000" height="540" role="img" aria-label="Four-lane Mole Rush track. Racer positions are listed below.">Racer positions are listed below this track.</canvas>
+    </section>
+    <div class="demo-actions">
+      <button id="start" class="btn btn-primary" type="button">Start race · 5 second countdown</button>
+      <button id="correct" class="btn btn-primary" type="button" disabled>Correct · +1 step</button>
+      <button id="wrong" class="btn btn-ghost" type="button" disabled>Wrong · try again</button>
+    </div>
+    <p id="feedback" role="status" aria-live="polite">Choose your opponents, then start your engines.</p>
+    <ol id="results" aria-label="Final standings" hidden></ol>
+    <noscript><p class="panel notice">Mole Rush needs JavaScript turned on to race.</p></noscript>
+  </main>
+  <footer class="site-footer"><div class="wrap"><p>Testing only · No accounts, no tracking, no saved scores. <a href="tests.html">Run race checks</a></p></div></footer>
+</body>
+</html>
