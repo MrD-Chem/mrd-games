@@ -66,9 +66,9 @@
   does not follow the nickname rules (a modified page can write anything) shows as 'Racer'.
 */
 
-import { signIn, currentUid, get, put, patch, del, sendOnExit, watchValue, serverNow, clockInfo, syncClock, TIMESTAMP, OnlineError, isOnlineError } from './firebase.js?v=20261022T1604';
-import { randomCode } from '../rng.js?v=20261022T1604';
-import { displayName } from './nickname.js?v=20261022T1604';
+import { signIn, currentUid, get, put, patch, del, sendOnExit, watchValue, serverNow, clockInfo, syncClock, TIMESTAMP, OnlineError, isOnlineError } from './firebase.js?v=20261022T1625';
+import { randomCode } from '../rng.js?v=20261022T1625';
+import { displayName } from './nickname.js?v=20261022T1625';
 
 export const HEARTBEAT_MS = 15000;
 export const DISCONNECT_MS = 45000;

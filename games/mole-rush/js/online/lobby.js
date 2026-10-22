@@ -12,13 +12,13 @@
   lobby is showing (school networks and the database both limit connections per device).
 */
 
-import { el, clear, announce } from '../dom.js?v=20261022T1604';
-import { signIn } from './firebase.js?v=20261022T1604';
-import { watchOpenRooms, createRoom, joinRoom, normalizeRoomCode } from './rooms.js?v=20261022T1604';
-import { checkNickname, loadNickname, saveNickname } from './nickname.js?v=20261022T1604';
-import { friendly } from './messages.js?v=20261022T1604';
-import { getMap } from '../maps/index.js?v=20261022T1604';
-import { MAP_RULES } from '../session.js?v=20261022T1604';
+import { el, clear, announce } from '../dom.js?v=20261022T1625';
+import { signIn } from './firebase.js?v=20261022T1625';
+import { watchOpenRooms, createRoom, joinRoom, normalizeRoomCode } from './rooms.js?v=20261022T1625';
+import { checkNickname, loadNickname, saveNickname } from './nickname.js?v=20261022T1625';
+import { friendly } from './messages.js?v=20261022T1625';
+import { getMap } from '../maps/index.js?v=20261022T1625';
+import { MAP_RULES } from '../session.js?v=20261022T1625';
 
 export const QUESTION_COUNT = 10;
 
@@ -285,6 +285,15 @@ export function createLobby(ctx) {
   }
   for (const r of ui.createForm.querySelectorAll('input[name="mr-mode"]')) r.addEventListener('change', syncPlayers);
   syncPlayers();
+
+  /* Show the chosen map's round length (Map 4 races have 8 questions). */
+  const countOut = ui.createForm.querySelector('.mr-create-fixed strong');
+  function syncCount() {
+    const checked = ui.createForm.querySelector('input[name="mr-map"]:checked');
+    if (countOut) countOut.textContent = String(questionCountFor(Number(checked && checked.value) || 1));
+  }
+  for (const r of ui.createForm.querySelectorAll('input[name="mr-map"]')) r.addEventListener('change', syncCount);
+  syncCount();
 
   ui.createForm.addEventListener('submit', async (e) => {
     e.preventDefault();

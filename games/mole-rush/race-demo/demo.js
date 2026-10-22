@@ -1,9 +1,9 @@
 /** Demo controller: creates disposable races, seeded CPUs and a five-second GO.
  * The track owns its accessible summary. This file owns controls and results.
  */
-import { createRace } from '../js/race/track.js?v=race-1';
-import { createCpu } from '../js/race/cpu.js?v=race-1';
-import { countdownFor } from '../js/race/countdown.js?v=race-1';
+import { createRace } from '../js/race/track.js?v=20261022T1625';
+import { createCpu } from '../js/race/cpu.js?v=20261022T1625';
+import { countdownFor } from '../js/race/countdown.js?v=20261022T1625';
 
 const canvas = document.querySelector('#track');
 const mode = document.querySelector('#mode');

@@ -5,10 +5,10 @@
   gate keeps the student's numbers and hints.
 */
 
-import { check, hintTarget, pickRevealIndex, polyatomicGroups } from './chem.js?v=20261022T1604';
-import { el, clear, formulaNode, rich, starText } from './dom.js?v=20261022T1604';
-import { MAX_COEFFICIENT } from './data.js?v=20261022T1604';
-import { yieldsArrow } from './arrow.js?v=20261022T1604';
+import { check, hintTarget, pickRevealIndex, polyatomicGroups } from './chem.js?v=20261022T1625';
+import { el, clear, formulaNode, rich, starText } from './dom.js?v=20261022T1625';
+import { MAX_COEFFICIENT } from './data.js?v=20261022T1625';
+import { yieldsArrow } from './arrow.js?v=20261022T1625';
 
 const MIN = 1;
 const MAX = MAX_COEFFICIENT;

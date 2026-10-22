@@ -2,9 +2,10 @@
  * Fake clocks make CPU, countdown and animation checks immediate/reproducible.
  * Globals are restored after every test; no external requests are made.
  */
-import { createRace } from '../js/race/track.js?v=race-1';
-import { createCpu, CPU_DIFFICULTIES } from '../js/race/cpu.js?v=race-1';
-import { countdownTo, countdownFor } from '../js/race/countdown.js?v=race-1';
+import { fakeClock } from './fake-clock.js?v=20261022T1625';
+import { createRace } from '../js/race/track.js?v=20261022T1625';
+import { createCpu, CPU_DIFFICULTIES } from '../js/race/cpu.js?v=20261022T1625';
+import { countdownTo, countdownFor } from '../js/race/countdown.js?v=20261022T1625';
 
 const output = document.querySelector('#test-results');
 const canvas = document.querySelector('#track');
@@ -20,57 +21,6 @@ function racers(count = 4) {
     color: '#6ee7cf', isPlayer: i === 0, team: i < 2 ? 'A' : 'B' }));
 }
 
-function fakeClock() {
-  let now = 100000;
-  let serial = 0;
-  let hidden = false;
-  const tasks = new Map();
-  const frames = new Map();
-  const originals = {
-    setTimeout, clearTimeout, requestAnimationFrame, cancelAnimationFrame,
-    dateNow: Date.now, perf: Object.getOwnPropertyDescriptor(performance, 'now'),
-    hidden: Object.getOwnPropertyDescriptor(document, 'hidden')
-  };
-  globalThis.setTimeout = (fn, delay = 0) => { const id = ++serial; tasks.set(id, { fn, due: now + Math.max(0, delay) }); return id; };
-  globalThis.clearTimeout = id => tasks.delete(id);
-  globalThis.requestAnimationFrame = fn => { const id = ++serial; frames.set(id, fn); return id; };
-  globalThis.cancelAnimationFrame = id => frames.delete(id);
-  Date.now = () => now;
-  Object.defineProperty(performance, 'now', { configurable: true, value: () => now });
-  Object.defineProperty(document, 'hidden', { configurable: true, get: () => hidden });
-  function advance(ms) {
-    const target = now + ms;
-    let guard = 0;
-    while (true) {
-      let first = null;
-      for (const pair of tasks) if (pair[1].due <= target && (!first || pair[1].due < first[1].due)) first = pair;
-      if (!first) break;
-      assert(++guard < 100000, 'Timer failed to settle');
-      now = first[1].due;
-      tasks.delete(first[0]);
-      first[1].fn();
-    }
-    now = target;
-  }
-  return {
-    tasks, frames, advance,
-    jump(ms) { now += ms; },
-    flush() { const pending = [...tasks.values()]; tasks.clear(); for (const task of pending) task.fn(); },
-    frame(ms = 16) { now += ms; const pending = [...frames.values()]; frames.clear(); for (const fn of pending) fn(now); },
-    visibility(value) { hidden = value; document.dispatchEvent(new Event('visibilitychange')); },
-    restore() {
-      globalThis.setTimeout = originals.setTimeout;
-      globalThis.clearTimeout = originals.clearTimeout;
-      globalThis.requestAnimationFrame = originals.requestAnimationFrame;
-      globalThis.cancelAnimationFrame = originals.cancelAnimationFrame;
-      Date.now = originals.dateNow;
-      if (originals.perf) Object.defineProperty(performance, 'now', originals.perf);
-      else delete performance.now;
-      if (originals.hidden) Object.defineProperty(document, 'hidden', originals.hidden);
-      else delete document.hidden;
-    }
-  };
-}
 
 function test(name, run) {
   const clock = fakeClock();
@@ -161,6 +111,19 @@ test('2–4 racer validation, invalid teams and pixel-ratio cap', ({ race }) => 
   race();
   // The test canvas can be 0px wide (the renderer keeps a 1px minimum), so check the height.
   assert(canvas.height <= Math.round(Math.max(1, canvas.getBoundingClientRect().height) * 1.5), 'DPR over cap');
+});
+
+test('Live rooms accept depleted/uneven rosters and keep racing after a team finishes', ({ race }) => {
+  const r = race({ live: true, mode: 'teams', racers: racers(3) }); r.start();
+  r.correct('r2'); r.correct('r2'); r.correct('r0');
+  r.syncStatus([{ id: 'r0', place: 2, finished: true }, { id: 'r2', place: 1, finished: true }],
+    [{ team: 'A', place: 2, done: false }, { team: 'B', place: 1, done: true }]);
+  const order = r.standings();
+  assert(order[0].team === 'B' && order[0].totalSteps === 2, 'Wrong live team target/order');
+  assert(order[1].steps === 1 && order[1].members[0].finished, 'Live status/progress lost');
+  r.destroy();
+  const solo = race({ live: true, racers: racers(1) }); solo.start(); solo.correct('r0');
+  assert(solo.standings().length === 1, 'Last remaining racer missing');
 });
 
 test('CPU seeded answer sequence and timing repeat; all tuning ranges hold', ({ clock, cpu }) => {

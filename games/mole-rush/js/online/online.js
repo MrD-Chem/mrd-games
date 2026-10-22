@@ -15,14 +15,14 @@
   The countdown runs on server time: everyone sees GO at the room's startAt.
 */
 
-import { announce } from '../dom.js?v=20261022T1604';
-import { serverNow, clockInfo } from './firebase.js?v=20261022T1604';
-import { watchRoom, leaveRoom, startRace, endRace, reportStep, reportFinish, standings, currentRoom, hostGone } from './rooms.js?v=20261022T1604';
-import { createLobby } from './lobby.js?v=20261022T1604';
-import { createRoomView } from './room.js?v=20261022T1604';
-import { createResultsView } from './results.js?v=20261022T1604';
-import { createStandings } from './standings.js?v=20261022T1604';
-import { friendly, MSG } from './messages.js?v=20261022T1604';
+import { announce } from '../dom.js?v=20261022T1625';
+import { serverNow, clockInfo } from './firebase.js?v=20261022T1625';
+import { watchRoom, leaveRoom, startRace, endRace, reportStep, reportFinish, standings, currentRoom, hostGone } from './rooms.js?v=20261022T1625';
+import { createLobby } from './lobby.js?v=20261022T1625';
+import { createRoomView } from './room.js?v=20261022T1625';
+import { createResultsView } from './results.js?v=20261022T1625';
+import { createStandings } from './standings.js?v=20261022T1625';
+import { friendly, MSG } from './messages.js?v=20261022T1625';
 
 const GO_HOLD_MS = 700; /* "GO!" stays up this long, then the first question appears (same for everyone) */
 const KEEPER_MAX_MS = 25 * 60 * 1000;
@@ -301,6 +301,10 @@ export function initOnline(app) {
       quitLabel: 'Leave race',
       finishLabel: 'Finish race →',
       onQuit: askLeave,
+      onDispose: () => {
+        if (st.panel) st.panel.destroy();
+        st.panel = null;
+      },
       onSession: (session) => {
         st.session = session;
         st.ids = session.items.map((i) => i.id);

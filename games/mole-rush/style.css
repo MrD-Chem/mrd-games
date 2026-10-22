@@ -2492,7 +2492,7 @@
 @media (min-width: 1100px) {
   .mr-play.is-online {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 17rem;
+    grid-template-columns: minmax(0, 1fr) 22rem;
     grid-template-areas:
       "hud side"
       "leave side"
@@ -2578,220 +2578,47 @@
   color: var(--muted);
 }
 
-.mr-sp-teams {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
-  margin: 0 0 8px;
-}
-
-.mr-sp-teamtotal {
-  display: grid;
-  gap: 2px 6px;
-  padding: 6px 8px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-}
-
-.mr-sp-teamtotal.is-mine {
-  border-color: var(--line-strong);
-  background: var(--glass);
-}
-
-.mr-sp-teamname {
-  font-size: 0.8125rem;
-  font-weight: 800;
-}
-
-.mr-sp-teamtotal[data-team="A"] .mr-sp-teamname {
-  color: var(--teal);
-}
-
-.mr-sp-teamtotal[data-team="B"] .mr-sp-teamname {
-  color: var(--violet);
-}
-
-.mr-sp-teamsteps {
-  font-size: 0.8125rem;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.mr-sp-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 6px;
-}
-
-.mr-sp-row {
-  display: grid;
-  grid-template-columns: 1.4em minmax(0, 1fr) auto auto;
-  grid-template-areas:
-    "place name team count"
-    "place bar bar bar";
-  align-items: center;
-  gap: 3px 6px;
-  padding: 6px 8px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-}
-
-.mr-sp-row.is-me {
-  border-color: rgba(45, 212, 191, 0.6);
-  background: var(--teal-soft);
-}
-
-.mr-sp-row.is-away {
-  opacity: 0.55;
-}
-
-.mr-sp-place {
-  grid-area: place;
-  font-weight: 900;
-  color: var(--muted);
-  text-align: center;
-}
-
-.mr-sp-row.is-me .mr-sp-place {
-  color: var(--teal);
-}
-
-.mr-sp-name {
-  grid-area: name;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  font-weight: 700;
-  font-size: 0.9375rem;
-}
-
-.mr-sp-name-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.mr-sp-team {
-  grid-area: team;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: var(--muted);
-}
-
-.mr-sp-row[data-team="A"] .mr-sp-team {
-  color: var(--teal);
-}
-
-.mr-sp-row[data-team="B"] .mr-sp-team {
-  color: var(--violet);
-}
-
-.mr-sp-count {
-  grid-area: count;
-  font-size: 0.875rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.mr-sp-row.is-done .mr-sp-count {
-  color: var(--good);
-}
-
-.mr-sp-bar {
-  grid-area: bar;
-  display: block;
-  height: 8px;
-  overflow: hidden;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.mr-sp-teamtotal .mr-sp-bar {
-  height: 6px;
-}
-
-.mr-sp-fill {
+/* Canvas dimensions are CSS pixels; the renderer caps its backing-store DPR. */
+.mr-race-canvas {
   display: block;
   width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  background: var(--amber);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.45s ease;
+  height: 460px;
+  border-radius: 10px;
 }
 
-.mr-sp-row.is-me .mr-sp-fill {
-  background: var(--teal);
+.mr-sp .race-summary,
+.mr-race-away {
+  margin: 10px 0 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
 }
 
-.mr-sp-row.is-done .mr-sp-fill {
-  background: var(--good);
+.mr-race-side,
+.mr-play > .mr-stage {
+  min-width: 0;
 }
 
-.mr-sp.is-teams [data-team="A"] .mr-sp-fill {
-  background: var(--teal);
-}
-
-.mr-sp.is-teams [data-team="B"] .mr-sp-fill {
-  background: var(--violet);
-}
-
-/* Phones and tablets: the standings sit above the question, two racers per line. */
-@media (max-width: 1099px) {
-  .mr-sp {
-    padding: 8px 10px 10px;
-  }
-
-  .mr-sp-title {
-    margin-bottom: 6px;
-  }
-
-  .mr-sp-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4px 6px;
-  }
-
-  .mr-sp-row {
-    grid-template-columns: 1em minmax(0, 1fr) auto auto;
-    gap: 3px 4px;
-    padding: 4px 6px;
-  }
-
-  .mr-sp-name {
-    gap: 4px;
-    font-size: 0.875rem;
-  }
-
-  .mr-sp-count {
-    font-size: 0.8125rem;
+/* Question subpanels stack when the track occupies the desktop sidebar. */
+@media (min-width: 1100px) {
+  .mr-play.is-online .mr-q,
+  .mr-play.is-online .mr-bal-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-/* Phones: with two racers per line each one is only ~160px wide. The name gets the whole top line
-   (and wraps instead of being cut off with an ellipsis); the team letter and the count move down
-   beside the bar. */
-@media (max-width: 599px) {
-  .mr-sp-row {
-    grid-template-areas:
-      "place name name name"
-      "place bar team count";
-  }
+#mr-cpu-settings > .mr-section-title,
+#mr-cpu-countdown > .mr-section-title,
+#mr-cpu-results > .mr-section-title {
+  margin-bottom: 16px;
+}
 
-  .mr-sp-name {
-    flex-wrap: wrap;
-    row-gap: 2px;
-  }
+#mr-cpu-settings > .btn {
+  margin-bottom: 12px;
+}
 
-  .mr-sp-name-text {
-    white-space: normal;
-    overflow-wrap: anywhere;
-    line-height: 1.2;
-  }
+#mr-cpu-wait .mr-sp {
+  max-width: 52rem;
 }
 
 /* ---------- Race results ---------- */

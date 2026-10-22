@@ -10,7 +10,7 @@ The renderer inserts a visible `.race-summary` paragraph immediately after the
 canvas with `aria-live="polite"`; the host can style that class. Label the canvas
 for assistive technology. Names, lane labels and step counts supplement colors.
 
-`createRace({ canvas, racers, totalSteps, mode, reducedMotion, onFinish })`:
+`createRace({ canvas, racers, totalSteps, mode, reducedMotion, onFinish, live })`:
 
 - `racers`: 2–4 objects with unique string `id`, string `name`, CSS `color`,
   `isPlayer`, and `team` (`'A'`, `'B'` or `null`). Teams requires exactly two on
@@ -38,6 +38,13 @@ for assistive technology. Names, lane labels and step counts supplement colors.
   settle afterward. The callback may safely destroy the race. `destroy()` stops
   rendering, removes the live summary and releases listeners/observers; repeated
   calls are safe. To reset, construct a new race.
+- Optional `live: true` is for room-driven races. It accepts 1–4 racers, including
+  uneven teams after departures. Team targets use the actual member count.
+  It never freezes or calls `onFinish`; the room controller owns ending the race.
+  `syncStatus(entries, teams)` sets the room's authoritative places and finish
+  flags without changing steps. Entries are `{ id, place, finished }`; teams are
+  `{ team, place, done }`. This preserves server finish-time ordering, ties and
+  finishes after using Show me. In ordinary races this method does nothing.
 
 `createCpu({ racerId, difficulty, seed, onAnswer })` emits
 `onAnswer(racerId, isCorrect)`. Difficulty names are case insensitive. Tune accuracy
@@ -59,4 +66,44 @@ Open `../../race-demo/` via the repository's static HTTP server for manual testi
 or `../../race-demo/tests.html` for deterministic browser checks with fake clocks.
 An optional package-free Node runner is available at
 `games/mole-rush/race-demo/run-tests.mjs`; it also exercises the demo controller in
-both modes. Its DOM/canvas doubles do not replace a real-browser visual/CSP check.
+both modes, the standings adapter and the computer controller with real Session
+events. Its DOM/canvas doubles do not replace a real-browser visual/CSP check.
+
+## Live game integration
+
+`../online/standings.js` keeps `createStandings(host, opts)` returning
+`{ el, update, destroy }` (plus read-only `standings()` for checks). It keys racers
+by room slot and uses nicknames as text. On each snapshot it calls `correct(id)`
+once per new step, then synchronizes room places/status. A roster, mode, target
+or backward-step change destroys/rebuilds the track and replays current steps.
+No Firebase calls are made by the adapter. `online.js` owns room lifecycle.
+
+`computer.js` connects the normal map sessions to a track and three CPUs. The
+3-second countdown runs before the session starts. CPU seeds combine the session
+seed, map, mode, difficulty and racer id. Race again reuses the code; starting from
+settings creates a fresh round. Solo waits for every CPU to finish (a shown
+answer leaves the player short of the finish); Teams ends on the first team win.
+Every exit removes timers, session listeners and the track. The shared session
+hook `onDispose` handles external teardown; normal `onFinish` hands control back
+to the race controller so unfinished CPUs can keep racing on the waiting screen.
+
+## Running checks
+
+From the repository root:
+
+```sh
+node games/mole-rush/race-demo/run-tests.mjs
+python3 -m http.server 8000
+```
+
+Open `http://localhost:8000/games/mole-rush/race-demo/tests.html` for the API
+checks and `http://localhost:8000/games/mole-rush/race-demo/integration.html` for
+`PASS n/n` integration checks. The integration page loads the real game in a
+same-origin iframe with `?mrtest=1`, substitutes fake clocks, exercises every map,
+checks CPU/adapter behavior and restores clocks after each check. It never opens
+Firebase. `window.__MR_TEST__.computer()` exposes `start(settings, code)`,
+`current()`, `settings()` and `leave()`; `current()` returns snapshots only.
+
+Manually check the title/settings, play, waiting and results screens at 375px and
+1366px, keyboard focus and reduced motion. Live Firebase room lifecycle still
+needs a real multi-device online smoke check before publishing.

@@ -1,11 +1,11 @@
 /* Standalone manual demo and full-bank regression check. No site navigation link. */
 
-import { el, clear, announce } from '../js/dom.js?v=20261022T1604';
-import { loadBank } from '../js/bank.js?v=20261022T1604';
-import { hashString } from '../js/rng.js?v=20261022T1604';
-import * as map2 from '../js/maps/map2.js?v=20261022T1604';
-import * as map3 from '../js/maps/map3.js?v=20261022T1604';
-import * as map4 from '../js/maps/map4.js?v=20261022T1604';
+import { el, clear, announce } from '../js/dom.js?v=20261022T1625';
+import { loadBank } from '../js/bank.js?v=20261022T1625';
+import { hashString } from '../js/rng.js?v=20261022T1625';
+import * as map2 from '../js/maps/map2.js?v=20261022T1625';
+import * as map3 from '../js/maps/map3.js?v=20261022T1625';
+import * as map4 from '../js/maps/map4.js?v=20261022T1625';
 
 const maps = [
   { id: 2, name: 'Numbers', renderer: map2 },

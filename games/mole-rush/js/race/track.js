@@ -6,11 +6,11 @@
 const TEAM_COLORS = { A: '#6ee7cf', B: '#c4b5fd' };
 const ORDINAL = ['1st', '2nd', '3rd', '4th'];
 
-export function createRace({ canvas, racers, totalSteps, mode = 'solo', reducedMotion, onFinish = () => {} }) {
-  if (!canvas || !Array.isArray(racers) || racers.length < 2 || racers.length > 4 ||
+export function createRace({ canvas, racers, totalSteps, mode = 'solo', reducedMotion, onFinish = () => {}, live = false }) {
+  if (!canvas || !Array.isArray(racers) || racers.length < (live ? 1 : 2) || racers.length > 4 ||
       !Number.isSafeInteger(totalSteps) || totalSteps < 1 || totalSteps > Number.MAX_SAFE_INTEGER / 2 ||
       !['solo', 'teams'].includes(mode) || typeof onFinish !== 'function') {
-    throw new TypeError('Race needs a canvas, 2–4 racers, positive totalSteps and a valid mode.');
+    throw new TypeError('Race needs a canvas, 2–4 racers (1–4 live), positive totalSteps and a valid mode.');
   }
   const ids = new Set();
   for (const racer of racers) {
@@ -21,24 +21,27 @@ export function createRace({ canvas, racers, totalSteps, mode = 'solo', reducedM
     }
     ids.add(racer.id);
   }
-  if (mode === 'teams' && (racers.length !== 4 ||
+  if (mode === 'teams' && !live && (racers.length !== 4 ||
       racers.filter(r => r.team === 'A').length !== 2 ||
       racers.filter(r => r.team === 'B').length !== 2)) {
     throw new TypeError('Teams mode requires two racers on each of teams A and B.');
   }
+  if (mode === 'teams' && racers.some(r => !r.team)) throw new TypeError('Teams need A or B.');
   const ctx = canvas.getContext('2d', { alpha: false });
   if (!ctx) throw new Error('Canvas 2D is unavailable.');
   const media = window.matchMedia('(prefers-reduced-motion: reduce)');
   let quiet = reducedMotion === undefined ? media.matches : Boolean(reducedMotion);
   const lanes = racers.map((r, index) => ({
     id: r.id, name: r.name, color: r.color, isPlayer: Boolean(r.isPlayer), team: r.team,
-    index, steps: 0, position: 0, finishOrder: 0, shake: 0, image: null,
+    index, place: null, liveFinished: false, steps: 0, position: 0, finishOrder: 0, shake: 0, image: null,
     spriteReady: false, label: r.name + (r.isPlayer ? ' · YOU' : '') +
       (mode === 'teams' ? ' · TEAM ' + r.team : ''), counter: '0 / ' + totalSteps
   }));
-  const teams = ['A', 'B'].map(team => ({
-    team, steps: 0, label: 'TEAM ' + team + '   0 / ' + totalSteps * 2
-  }));
+  const teams = ['A', 'B'].map(team => {
+    const target = totalSteps * racers.filter(r => r.team === team).length;
+    return { team, steps: 0, place: null, liveFinished: false, totalSteps: target,
+      label: 'TEAM ' + team + '   0 / ' + target };
+  });
   const byId = new Map(lanes.map(r => [r.id, r]));
   const summary = document.createElement('p');
   summary.className = 'race-summary';
@@ -58,16 +61,17 @@ export function createRace({ canvas, racers, totalSteps, mode = 'solo', reducedM
 
   function standings() {
     if (mode === 'teams') {
-      return teams.slice().sort((a, b) => b.steps - a.steps).map((t, i, list) => ({
-        team: t.team, place: i && t.steps === list[0].steps ? 1 : i + 1,
-        steps: t.steps, totalSteps: totalSteps * 2, finished: t.team === winningTeam,
+      return teams.slice().sort((a, b) => live && a.place !== null && b.place !== null ? a.place - b.place : b.steps - a.steps).map((t, i, list) => ({
+        team: t.team, place: live && t.place !== null ? t.place : i && t.steps === list[0].steps ? 1 : i + 1,
+        steps: t.steps, totalSteps: t.totalSteps, finished: live ? t.liveFinished : t.team === winningTeam,
         members: lanes.filter(r => r.team === t.team).map(r => ({
           id: r.id, name: r.name, steps: r.steps, isPlayer: r.isPlayer,
-          finished: r.steps === totalSteps
+          finished: live ? r.liveFinished : r.steps === totalSteps
         }))
       }));
     }
     const sorted = lanes.slice().sort((a, b) => {
+      if (live && a.place !== null && b.place !== null) return a.place - b.place;
       if (a.finishOrder && b.finishOrder) return a.finishOrder - b.finishOrder;
       return b.steps - a.steps || a.index - b.index;
     });
@@ -75,7 +79,7 @@ export function createRace({ canvas, racers, totalSteps, mode = 'solo', reducedM
     return sorted.map((r, i) => {
       if (i === 0 || r.finishOrder || r.steps !== sorted[i - 1].steps) place = i + 1;
       return { id: r.id, name: r.name, team: r.team, isPlayer: r.isPlayer,
-        place, steps: r.steps, totalSteps, finished: Boolean(r.finishOrder) };
+        place: live && r.place !== null ? r.place : place, steps: r.steps, totalSteps, finished: live ? r.liveFinished : Boolean(r.finishOrder) };
     });
   }
 
@@ -90,11 +94,11 @@ export function createRace({ canvas, racers, totalSteps, mode = 'solo', reducedM
         (tied ? 'tied for ' : '') + ORDINAL[entry.place - 1] + ' of ' + order.length + '. ';
     }
     text += order.map(r => mode === 'teams'
-      ? 'Team ' + r.team + ': ' + r.steps + '/' + r.totalSteps
+      ? 'Team ' + r.team + ': ' + r.steps + '/' + r.totalSteps + ' (' + r.members.map(m => m.name + ': ' + m.steps).join(', ') + ')'
       : r.name + ': ' + r.steps + '/' + r.totalSteps + (r.finished ? ' (finished ' + ORDINAL[r.place - 1] + ')' : '')
     ).join('; ') + '.';
     if (ended) text += ' Race complete. ' + (mode === 'teams' ? 'Team ' + winningTeam : order[0].name) + ' wins!';
-    else if (finishedCount && mode === 'solo') text += ' ' + order[0].name + ' wins; racing continues for the remaining places.';
+    else if (!live && finishedCount && mode === 'solo') text += ' ' + order[0].name + ' wins; racing continues for the remaining places.';
     summary.textContent = text;
   }
 
@@ -160,7 +164,7 @@ export function createRace({ canvas, racers, totalSteps, mode = 'solo', reducedM
         ctx.fillStyle = '#31434c';
         ctx.fillRect(x, 38, barWidth, 10);
         ctx.fillStyle = TEAM_COLORS[t.team];
-        ctx.fillRect(x, 38, barWidth * t.steps / (totalSteps * 2), 10);
+        ctx.fillRect(x, 38, barWidth * t.steps / Math.max(1, t.totalSteps), 10);
       }
     } else {
       ctx.fillStyle = '#b9d1ce';
@@ -202,10 +206,11 @@ export function createRace({ canvas, racers, totalSteps, mode = 'solo', reducedM
       ctx.fillStyle = mode === 'teams' ? TEAM_COLORS[r.team] : r.color;
       ctx.fillRect(12, y, 4, laneHeight - 6);
       ctx.fillStyle = '#f1f7f3';
-      ctx.fillText(r.label, 24, y + 21, Math.max(40, width - 124));
+      ctx.fillText(r.label, 24, y + 21, Math.max(1, width - 164));
       ctx.textAlign = 'right';
       ctx.fillStyle = '#c4d6d8';
-      ctx.fillText(r.counter, width - 24, y + 21, 66);
+      // Reserve a separate text area left of the checkered stripe.
+      ctx.fillText(r.counter, finishX - 10, y + 21, 66);
       let x = 44 + (finishX - 44) * r.position / totalSteps;
       if (!quiet && r.shake > 0) x += Math.sin(r.shake * 0.075) * 3;
       mole(r, x, y + laneHeight * 0.62);
@@ -282,9 +287,9 @@ export function createRace({ canvas, racers, totalSteps, mode = 'solo', reducedM
     if (mode === 'teams') {
       const t = teams[r.team === 'A' ? 0 : 1];
       t.steps++;
-      t.label = 'TEAM ' + t.team + '   ' + t.steps + ' / ' + totalSteps * 2;
-      if (t.steps === totalSteps * 2) { winningTeam = t.team; ended = true; }
-    } else ended = finishedCount === lanes.length;
+      t.label = 'TEAM ' + t.team + '   ' + t.steps + ' / ' + t.totalSteps;
+      if (!live && t.steps === t.totalSteps) { winningTeam = t.team; ended = true; }
+    } else ended = !live && finishedCount === lanes.length;
     announce();
     draw();
     wake();
@@ -326,6 +331,20 @@ export function createRace({ canvas, racers, totalSteps, mode = 'solo', reducedM
   return {
     start() { if (!destroyed && !ended) started = true; },
     correct, wrong, standings,
+    // Room order includes server finish times, ties and revealed questions. Progress
+    // still comes through correct(); only live races accept authoritative statuses.
+    syncStatus(entries, teamEntries = []) {
+      if (!live || destroyed) return;
+      for (const entry of entries) {
+        const r = byId.get(entry.id);
+        if (r) { r.place = entry.place; r.liveFinished = Boolean(entry.finished); }
+      }
+      for (const entry of teamEntries) {
+        const t = teams.find(t => t.team === entry.team);
+        if (t) { t.place = entry.place; t.liveFinished = Boolean(entry.done); }
+      }
+      announce();
+    },
     destroy() {
       if (destroyed) return;
       destroyed = true;

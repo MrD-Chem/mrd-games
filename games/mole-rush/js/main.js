@@ -8,12 +8,13 @@
     turns the same code into the same questions on every device.
 */
 
-import { loadBank, formulaText } from './bank.js?v=20261022T1604';
-import { el, clear, announce } from './dom.js?v=20261022T1604';
-import { MAPS, getMap, isPlayable, rendererFor } from './maps/index.js?v=20261022T1604';
-import { createSession, buildSequence } from './session.js?v=20261022T1604';
-import { normalizeCode, randomCode, codeToSeed } from './rng.js?v=20261022T1604';
-import { getBest, recordResult } from './storage.js?v=20261022T1604';
+import { loadBank, formulaText } from './bank.js?v=20261022T1625';
+import { el, clear, announce } from './dom.js?v=20261022T1625';
+import { MAPS, getMap, isPlayable, rendererFor } from './maps/index.js?v=20261022T1625';
+import { createSession, buildSequence } from './session.js?v=20261022T1625';
+import { normalizeCode, randomCode, codeToSeed } from './rng.js?v=20261022T1625';
+import { initComputer } from './race/computer.js?v=20261022T1625';
+import { getBest, recordResult } from './storage.js?v=20261022T1625';
 
 const $ = (id) => document.getElementById(id);
 
@@ -68,7 +69,7 @@ const state = {
   session: null,
   board: null,
   unsub: [],
-  hooks: null, // set for an online race (see online/online.js); null for practice and race codes
+  hooks: null, // online/computer race controller; null for practice and race codes
   lastSummary: null
 };
 
@@ -101,6 +102,7 @@ function initTitle() {
     ui.start.hidden = true;
     return;
   }
+  $('mr-computer').addEventListener('click', () => computer.open());
   ui.practice.addEventListener('click', () => {
     state.mode = 'practice';
     state.code = null;
@@ -220,15 +222,17 @@ function openMaps() {
 
 // ---------- Play ----------
 
-function endSession() {
+function endSession(keepRace = false) {
+  const previousHooks = state.hooks;
+  state.hooks = null;
+  if (!keepRace && previousHooks && previousHooks.onDispose) previousHooks.onDispose();
   state.unsub.forEach((fn) => fn());
   state.unsub = [];
   if (state.board) state.board.destroy();
   state.board = null;
   state.session = null;
   ui.nextBar.hidden = true;
-  if (state.hooks) {
-    state.hooks = null;
+  if (previousHooks) {
     ui.quit.textContent = '← Maps';
     ui.play.classList.remove('is-online');
   }
@@ -236,7 +240,7 @@ function endSession() {
 
 /*
   Start a round. code: a race code, or null/undefined for a fresh practice code.
-  hooks (online races only): { quitLabel, finishLabel, onQuit(), onSession(session), onFinish(summary) }
+  hooks (online/computer): { quitLabel, finishLabel, onQuit(), onSession(session), onFinish(summary), onDispose?() }
   With hooks, the round ends in hooks.onFinish instead of the practice results screen.
 */
 function startMap(mapId, code, hooks) {
@@ -326,7 +330,7 @@ function goNext() {
 /* An online race's round is over: tidy the board away and hand the summary to the race layer. */
 function finishHooked(summary) {
   const hooks = state.hooks;
-  endSession();
+  endSession(true);
   if (hooks && hooks.onFinish) hooks.onFinish(summary);
 }
 
@@ -337,7 +341,7 @@ let onlineApi = null;
 
 function loadOnline() {
   if (!onlinePromise) {
-    onlinePromise = import('./online/online.js?v=20261022T1604')
+    onlinePromise = import('./online/online.js?v=20261022T1625')
       .then((mod) => {
         onlineApi = mod.initOnline({
           show,
@@ -363,6 +367,15 @@ function loadOnline() {
   }
   return onlinePromise;
 }
+
+// ---------- Computer races ----------
+
+const computer = initComputer({
+  host: $('main'), sidebar: ui.raceSide, show,
+  openTitle: () => openTitle(false),
+  startRace: startMap, stopRace: endSession
+});
+window.addEventListener('pagehide', () => endSession());
 
 // ---------- Results ----------
 
@@ -478,6 +491,7 @@ window.__MR_TEST__ = Object.freeze({
   ready,
   startMap: (mapId, code) => startMap(mapId, code),
   current,
+  computer: () => computer.test,
   solveCurrent: () => (state.board && answering() ? state.board.solve() : null),
   answerWrong: () => (state.board && answering() ? state.board.answerWrong() : null),
   next: () => {
