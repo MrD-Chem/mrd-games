@@ -1,0 +1,160 @@
+/* Maps 2–4 only. Load after style.css; Map 1 keeps its existing styles. */
+
+.mr-board-entry .mr-frac {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 100%;
+}
+
+.mr-entry-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 48px;
+  padding: 4px;
+}
+
+.mr-entry-field {
+  display: inline-flex;
+  position: relative;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.mr-number-input,
+.mr-blank-label {
+  min-height: 48px;
+  max-width: 100%;
+  border: 2px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font: 700 1.0625rem/1.3 var(--sans);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.mr-number-input {
+  width: 7rem;
+  min-width: 0;
+  padding: 8px 10px;
+  caret-color: var(--teal);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.mr-blank-label {
+  min-width: 6rem;
+  padding: 8px 12px;
+  border-style: dashed;
+  cursor: pointer;
+}
+
+.mr-board-entry .mr-tile {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.mr-number-input:focus-visible,
+.mr-blank-label:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.mr-entry-field.is-bad > input,
+.mr-entry-field.is-bad > button {
+  border-color: var(--bad);
+  background: var(--bad-soft);
+}
+
+.mr-entry-field.is-ok > input,
+.mr-entry-field.is-ok > button {
+  border-color: var(--good);
+  background: var(--good-soft);
+}
+
+.mr-entry-mark {
+  position: absolute;
+  top: -9px;
+  right: -6px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 0.8125rem;
+  font-weight: 900;
+  color: var(--on-accent);
+  pointer-events: none;
+}
+
+.mr-entry-mark:empty {
+  display: none;
+}
+
+.mr-entry-field.is-bad .mr-entry-mark {
+  background: var(--bad);
+}
+
+.mr-entry-field.is-ok .mr-entry-mark {
+  background: var(--good);
+}
+
+.mr-final-entry {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  font-weight: 700;
+}
+
+.mr-final-entry .mr-number-input {
+  width: 10rem;
+}
+
+.mr-board-entry .mr-seg,
+.mr-board-entry .mr-term {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mr-board-entry .mr-term {
+  flex-wrap: wrap;
+  white-space: normal;
+}
+
+.mr-board-entry .mr-worked,
+.mr-board-entry .mr-hints {
+  overflow-wrap: anywhere;
+}
+
+.mr-board-entry .mr-blank-label:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+@media (max-width: 599px) {
+  .mr-board-entry .mr-tray {
+    position: static;
+  }
+
+  .mr-board-entry .mr-number-input {
+    width: 6rem;
+  }
+
+  .mr-board-entry .mr-final-entry .mr-number-input {
+    width: 9rem;
+  }
+}
+
+/* Shared cancellation already observes this preference in setup-view.js. */
+@media (prefers-reduced-motion: reduce) {
+  .mr-board-entry *,
+  .mr-board-entry *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

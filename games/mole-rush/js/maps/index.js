@@ -6,6 +6,9 @@
 */
 
 import * as map1 from './map1.js?v=20261021T1624';
+import * as map2 from './map2.js?v=20261021T1624';
+import * as map3 from './map3.js?v=20261021T1624';
+import * as map4 from './map4.js?v=20261021T1624';
 import * as balance from './balance.js?v=20261021T1624';
 
 export const MAPS = Object.freeze([
@@ -19,23 +22,23 @@ export const MAPS = Object.freeze([
   {
     id: 2,
     name: 'Numbers',
-    status: 'coming-soon',
+    status: 'ready',
     blurb: 'The units are already in place. You fill in the numbers.',
-    renderers: {}
+    renderers: { setup: map2 }
   },
   {
     id: 3,
     name: 'Blanks',
-    status: 'coming-soon',
+    status: 'ready',
     blurb: 'A few blanks hide anywhere in the setup: units, chemicals or numbers.',
-    renderers: {}
+    renderers: { setup: map3 }
   },
   {
     id: 4,
     name: 'Word problem',
-    status: 'coming-soon',
+    status: 'ready',
     blurb: 'Just the question. Work it out and give the final answer.',
-    renderers: {}
+    renderers: { setup: map4 }
   }
 ]);
 
