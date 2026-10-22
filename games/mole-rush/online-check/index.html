@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'self' https://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Online race check — Mole Rush — Mr. D's Chemistry Games</title>
+  <meta name="description" content="Checks whether this device and network can run Mole Rush online races: internet, sign-in, database, live updates and clock.">
+  <meta name="theme-color" content="#08090b">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../assets/site.css?v=20261021T1624">
+  <link rel="stylesheet" href="check.css?v=20261021T1624">
+  <script type="module" src="check.js?v=20261021T1624"></script>
+</head>
+<body class="page-game oc-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../">← Mole Rush</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../../assets/favicon.svg" alt="" width="28" height="28">
+        <span>Mr. D's Chemistry Games</span>
+      </span>
+    </div>
+  </header>
+
+  <main id="main" class="wrap oc-main">
+    <div class="intro oc-intro">
+      <p class="eyebrow">Mole Rush · for teachers</p>
+      <h1 class="page-title" id="oc-title" tabindex="-1">Can this network run online races?</h1>
+      <p class="lead">Open this page on a school Chromebook, on the school Wi-Fi. It tests each thing an online race needs, one at a time, and tells you in plain words if anything is blocked.</p>
+    </div>
+
+    <section class="panel oc-panel" aria-labelledby="oc-list-title">
+      <div class="oc-panel-head">
+        <h2 class="oc-list-title" id="oc-list-title">Checks</h2>
+        <button class="btn btn-primary" id="oc-run" type="button" disabled>Checking…</button>
+      </div>
+      <ol class="oc-list" id="oc-list" aria-describedby="oc-privacy"></ol>
+      <p class="oc-privacy" id="oc-privacy">The test signs in as an anonymous test player (no account, no names, no email), makes a hidden practice room, and deletes it again.</p>
+    </section>
+
+    <section class="panel oc-summary" id="oc-summary" aria-live="polite" hidden>
+      <p class="oc-summary-icon" id="oc-summary-icon" aria-hidden="true"></p>
+      <div class="oc-summary-body">
+        <h2 class="oc-summary-title" id="oc-summary-title" tabindex="-1"></h2>
+        <p class="oc-summary-text" id="oc-summary-text"></p>
+        <ul class="oc-summary-list" id="oc-summary-list"></ul>
+      </div>
+    </section>
+
+    <details class="panel oc-it" id="oc-it">
+      <summary>Details for your IT department</summary>
+      <div class="oc-it-body">
+        <p>Online races in Mole Rush use Google Firebase over normal HTTPS (port 443). The web filter needs to allow these addresses:</p>
+        <ul class="oc-hosts">
+          <li><code>identitytoolkit.googleapis.com</code> and <code>securetoken.googleapis.com</code> (anonymous sign-in)</li>
+          <li><code>mr-d-chemistry-default-rtdb.firebaseio.com</code> (the race database)</li>
+          <li><code>*.firebaseio.com</code> (live updates can be redirected to another Firebase server)</li>
+        </ul>
+        <p>Live updates are a long-lived HTTPS stream (<code>text/event-stream</code>). A filter or proxy that holds back streaming responses until they end will make races freeze, even if the addresses are allowed.</p>
+        <pre class="oc-report" id="oc-report" tabindex="0" aria-label="Test report">No results yet.</pre>
+        <p class="oc-copy-row">
+          <button class="btn btn-ghost btn-sm" id="oc-copy" type="button">Copy this report</button>
+          <span class="oc-copy-msg" id="oc-copy-msg" aria-live="polite"></span>
+        </p>
+      </div>
+    </details>
+
+    <noscript>
+      <p class="panel notice">This check needs JavaScript turned on. Online races need it too.</p>
+    </noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>No accounts, no tracking. The test room is deleted as soon as the check finishes.</p>
+    </div>
+  </footer>
+</body>
+</html>

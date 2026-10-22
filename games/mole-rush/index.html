@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'self' https://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>Mole Rush — Mr. D's Chemistry Games</title>
   <meta name="description" content="Mole Rush: a stoichiometry racing game. Set up dimensional analysis with the right units and chemicals, watch the units cancel, and race to the answer. Free, no account needed.">
   <meta name="theme-color" content="#08090b">
@@ -50,7 +50,9 @@
       <div class="mr-start" id="mr-start">
         <button class="btn btn-primary btn-lg mr-start-btn" id="mr-practice" type="button">Practice</button>
         <button class="btn btn-ghost btn-lg mr-start-btn" id="mr-code-toggle" type="button" aria-expanded="false" aria-controls="mr-code-form">Use a race code</button>
+        <button class="btn btn-ghost btn-lg mr-start-btn mr-online-btn" id="mr-online" type="button">Race online</button>
       </div>
+      <p class="mr-code-error" id="mr-online-error" role="alert" hidden></p>
 
       <form class="panel mr-code-form" id="mr-code-form" hidden novalidate>
         <label class="mr-field-label" for="mr-code-input">Race code</label>
@@ -73,10 +75,12 @@
               <li><strong>Keyboard:</strong> <kbd>Tab</kbd> to a tile, <kbd>Enter</kbd> to pick it up, <kbd>Tab</kbd> or the arrow keys to a box, <kbd>Enter</kbd> to place it. <kbd>Backspace</kbd> clears a box, <kbd>Esc</kbd> puts a tile back.</li>
               <li><strong>Check:</strong> green boxes are right, red ones come with a hint. After two tries you can press <b>Show me</b>.</li>
               <li><strong>Points:</strong> 100 for a first-try answer (plus a streak bonus), 60 on the second try, 30 after that.</li>
+              <li><strong>Race online:</strong> pick a nickname, then join an open race or create one and share its room code. Everyone gets the same questions, and each correct answer moves you up the standings.</li>
             </ul>
+            <p class="mr-howto-check"><a href="online-check/">Check online races</a> <span>· tests whether this device and network can race online</span></p>
           </div>
         </details>
-        <p class="panel mr-soon"><span class="mr-soon-tag">Coming soon</span> Race computer racers (Easy, Medium, Hard), team up 2 vs 2, and race rooms that classmates can join.</p>
+        <p class="panel mr-soon"><span class="mr-soon-tag">Coming soon</span> Race computer racers (Easy, Medium, Hard), a race track to watch everyone move, and more maps online.</p>
       </div>
     </section>
 
@@ -101,6 +105,17 @@
         <p class="mr-hud-chip"><span class="mr-hud-label">Score</span> <b id="mr-hud-score">0</b></p>
         <p class="mr-hud-chip"><span class="mr-hud-label">Streak</span> <b id="mr-hud-streak">0</b></p>
       </div>
+      <!-- Online races only: leave confirmation, live standings and sync notes (js/online/) -->
+      <div class="panel mr-leave-confirm" id="mr-leave-confirm" role="group" aria-labelledby="mr-leave-text" hidden>
+        <p class="mr-leave-text" id="mr-leave-text">Leave this race? Your answers so far stay in the standings.</p>
+        <div class="mr-leave-actions">
+          <button class="btn btn-primary btn-sm" id="mr-leave-no" type="button">Keep racing</button>
+          <button class="btn btn-ghost btn-sm" id="mr-leave-yes" type="button">Leave race</button>
+        </div>
+      </div>
+      <aside class="mr-race-side" id="mr-race-side" aria-label="Race">
+        <p class="mr-race-sync" id="mr-race-sync" role="status" hidden></p>
+      </aside>
       <div class="mr-stage" id="mr-stage"></div>
       <div class="mr-next-bar" id="mr-next-bar" hidden>
         <p class="mr-next-msg" id="mr-next-msg"></p>
@@ -123,6 +138,144 @@
         <div class="mr-actions mr-results-actions">
           <button class="btn btn-primary btn-lg" id="mr-again" type="button">Play again</button>
           <button class="btn btn-ghost btn-lg" id="mr-to-maps" type="button">Back to maps</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Online: nickname ===== -->
+    <section class="mr-screen mr-nick" id="mr-nick" aria-labelledby="mr-nick-title" hidden>
+      <div class="mr-screen-head">
+        <button class="btn btn-ghost btn-sm" id="mr-nick-back" type="button">← Back</button>
+        <h2 class="mr-section-title" id="mr-nick-title" tabindex="-1">Race online</h2>
+      </div>
+      <form class="panel mr-online-card mr-nick-form" id="mr-nick-form" novalidate>
+        <label class="mr-field-label" for="mr-nick-input">Your nickname</label>
+        <p class="mr-field-help" id="mr-nick-help"><strong>Use a nickname, not your full name.</strong> 1 to 16 letters, numbers or spaces. The other racers in your room will see it.</p>
+        <div class="mr-code-row">
+          <input class="mr-input mr-input-text" id="mr-nick-input" type="text" maxlength="16" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="go" placeholder="Mole Master" aria-describedby="mr-nick-help mr-nick-error">
+          <button class="btn btn-primary" id="mr-nick-go" type="submit">Continue</button>
+        </div>
+        <p class="mr-code-error" id="mr-nick-error" aria-live="polite"></p>
+        <p class="mr-field-help mr-nick-privacy">Only your nickname and your race progress are sent (through Google Firebase). No real name, email or sign-up is needed.</p>
+      </form>
+    </section>
+
+    <!-- ===== Online: lobby ===== -->
+    <section class="mr-screen mr-lobby" id="mr-lobby" aria-labelledby="mr-lobby-title" hidden>
+      <div class="mr-screen-head">
+        <button class="btn btn-ghost btn-sm" id="mr-lobby-back" type="button">← Back</button>
+        <h2 class="mr-section-title" id="mr-lobby-title" tabindex="-1">Race online</h2>
+        <p class="mr-lobby-me">Racing as <strong id="mr-lobby-name"></strong> <button class="btn btn-ghost btn-sm" id="mr-lobby-rename" type="button">Change nickname</button></p>
+      </div>
+      <p class="panel mr-online-notice" id="mr-lobby-notice" hidden></p>
+      <div class="panel mr-online-alert" id="mr-lobby-alert" role="alert" hidden>
+        <p class="mr-online-alert-text" id="mr-lobby-alert-text"></p>
+        <div class="mr-online-alert-actions">
+          <button class="btn btn-primary btn-sm" id="mr-lobby-retry" type="button">Try again</button>
+          <button class="btn btn-ghost btn-sm" id="mr-lobby-practice" type="button">Play Practice</button>
+        </div>
+      </div>
+      <div class="mr-lobby-grid">
+        <section class="panel mr-online-card mr-open" aria-labelledby="mr-open-title">
+          <div class="mr-card-head">
+            <h3 class="mr-card-title" id="mr-open-title">Open races</h3>
+            <span class="mr-live" id="mr-open-state" data-state="connecting">Connecting…</span>
+          </div>
+          <p class="mr-code-error" id="mr-open-error" aria-live="polite"></p>
+          <ul class="mr-open-list" id="mr-open-list" aria-labelledby="mr-open-title"></ul>
+          <p class="mr-open-empty" id="mr-open-empty" hidden>No open races right now. Create one and tell your classmates the room code!</p>
+        </section>
+        <div class="mr-lobby-side">
+          <form class="panel mr-online-card mr-join" id="mr-join-form" novalidate>
+            <label class="mr-field-label" for="mr-join-input">Join with a code</label>
+            <p class="mr-field-help" id="mr-join-help">The host can see the room code on their screen.</p>
+            <div class="mr-code-row">
+              <input class="mr-input" id="mr-join-input" type="text" maxlength="10" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" placeholder="K7RM" aria-describedby="mr-join-help mr-join-error">
+              <button class="btn btn-primary" id="mr-join-go" type="submit">Join</button>
+            </div>
+            <p class="mr-code-error" id="mr-join-error" aria-live="polite"></p>
+          </form>
+          <form class="panel mr-online-card mr-create" id="mr-create-form" novalidate>
+            <h3 class="mr-card-title">Create a race</h3>
+            <fieldset class="mr-choice">
+              <legend class="mr-choice-legend">Map</legend>
+              <div class="mr-pills">
+                <label class="mr-pill"><input type="radio" name="mr-map" value="1" checked><span class="mr-pill-face">Map 1 · Setup</span></label>
+                <label class="mr-pill is-soon"><input type="radio" name="mr-map" value="2" disabled><span class="mr-pill-face">Map 2 <small>coming soon</small></span></label>
+                <label class="mr-pill is-soon"><input type="radio" name="mr-map" value="3" disabled><span class="mr-pill-face">Map 3 <small>coming soon</small></span></label>
+                <label class="mr-pill is-soon"><input type="radio" name="mr-map" value="4" disabled><span class="mr-pill-face">Map 4 <small>coming soon</small></span></label>
+              </div>
+            </fieldset>
+            <fieldset class="mr-choice">
+              <legend class="mr-choice-legend">Mode</legend>
+              <div class="mr-pills">
+                <label class="mr-pill"><input type="radio" name="mr-mode" value="solo" checked><span class="mr-pill-face">Solo <small>1 v 1 v 1 v 1</small></span></label>
+                <label class="mr-pill"><input type="radio" name="mr-mode" value="teams"><span class="mr-pill-face">Teams <small>2 v 2</small></span></label>
+              </div>
+            </fieldset>
+            <fieldset class="mr-choice">
+              <legend class="mr-choice-legend">Players</legend>
+              <div class="mr-pills">
+                <label class="mr-pill"><input type="radio" name="mr-players" value="2"><span class="mr-pill-face">2</span></label>
+                <label class="mr-pill"><input type="radio" name="mr-players" value="3"><span class="mr-pill-face">3</span></label>
+                <label class="mr-pill"><input type="radio" name="mr-players" value="4" checked><span class="mr-pill-face">4</span></label>
+              </div>
+              <p class="mr-field-help" id="mr-create-players-hint"></p>
+            </fieldset>
+            <p class="mr-create-fixed">Questions: <strong>10</strong></p>
+            <button class="btn btn-primary btn-lg mr-create-go" id="mr-create-go" type="submit">Create race</button>
+            <p class="mr-code-error" id="mr-create-error" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Online: room ===== -->
+    <section class="mr-screen mr-room" id="mr-room" aria-labelledby="mr-room-title" hidden>
+      <div class="mr-screen-head">
+        <button class="btn btn-ghost btn-sm" id="mr-room-leave" type="button">← Leave</button>
+        <h2 class="mr-section-title" id="mr-room-title" tabindex="-1">Race room</h2>
+      </div>
+      <div class="panel mr-online-card mr-room-card">
+        <div class="mr-room-codebox">
+          <p class="mr-room-codelabel">Room code</p>
+          <p class="mr-room-code" id="mr-room-code"></p>
+          <p class="mr-field-help">Classmates can find this race under <b>Open races</b>, or type the code.</p>
+        </div>
+        <div class="mr-room-main">
+          <p class="mr-room-info" id="mr-room-info"></p>
+          <div class="mr-room-players" id="mr-room-players"></div>
+          <p class="mr-room-status" id="mr-room-status" aria-live="polite"></p>
+          <div class="mr-room-actions">
+            <button class="btn btn-primary btn-lg" id="mr-room-start" type="button" hidden disabled>Start race</button>
+            <p class="mr-field-help" id="mr-room-start-hint" aria-live="polite" hidden></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Online: countdown ===== -->
+    <section class="mr-screen mr-countdown" id="mr-countdown" aria-labelledby="mr-cd-title" hidden>
+      <div class="panel mr-online-card mr-cd-card">
+        <p class="mr-results-kicker" id="mr-cd-kicker"></p>
+        <h2 class="mr-cd-title" id="mr-cd-title" tabindex="-1">Get ready!</h2>
+        <p class="mr-cd-num" id="mr-cd-num" aria-hidden="true"></p>
+        <p class="mr-cd-note" id="mr-cd-note"></p>
+        <ul class="mr-cd-racers" id="mr-cd-racers" aria-label="Racers"></ul>
+      </div>
+    </section>
+
+    <!-- ===== Online: race results ===== -->
+    <section class="mr-screen mr-race-results" id="mr-race-results" aria-labelledby="mr-rr-title" hidden>
+      <div class="panel mr-results-card mr-rr-card">
+        <p class="mr-results-kicker" id="mr-rr-kicker"></p>
+        <h2 class="mr-results-title" id="mr-rr-title" tabindex="-1">Finished!</h2>
+        <p class="mr-results-msg" id="mr-rr-msg"></p>
+        <div class="mr-rr-teams" id="mr-rr-teams" hidden></div>
+        <ol class="mr-rr-list" id="mr-rr-list" aria-label="Standings"></ol>
+        <dl class="mr-stats mr-rr-stats" id="mr-rr-stats" aria-label="Your game"></dl>
+        <div class="mr-actions mr-results-actions">
+          <button class="btn btn-primary btn-lg" id="mr-rr-lobby" type="button">Back to lobby</button>
         </div>
       </div>
     </section>

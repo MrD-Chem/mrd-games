@@ -1,0 +1,277 @@
+/* Mole Rush — online race check page. Builds on ../../../assets/site.css (colours live there). */
+
+.oc-main {
+  padding-bottom: 40px;
+}
+
+.oc-intro {
+  padding-top: 24px;
+  padding-bottom: 20px;
+}
+
+.oc-intro .page-title {
+  font-size: clamp(1.6rem, 1.2rem + 2vw, 2.3rem);
+}
+
+.oc-intro .page-title:focus {
+  outline: none;
+}
+
+.oc-panel,
+.oc-summary,
+.oc-it {
+  max-width: 46rem;
+  margin: 0 0 20px;
+  padding: 20px;
+}
+
+.oc-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.oc-list-title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.oc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.oc-check {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.oc-check:first-child {
+  border-top: 0;
+}
+
+.oc-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--line-strong);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.oc-check[data-state="running"] .oc-icon {
+  border-color: var(--amber);
+  color: var(--amber);
+  animation: oc-pulse 1.2s ease-in-out infinite;
+}
+
+.oc-check[data-state="pass"] .oc-icon {
+  border-color: var(--good);
+  background: var(--good-soft);
+  color: var(--good);
+}
+
+.oc-check[data-state="fail"] .oc-icon {
+  border-color: var(--bad);
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+
+.oc-check[data-state="skip"] .oc-icon {
+  border-style: dashed;
+}
+
+.oc-check-title {
+  margin: 0 0 4px;
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  letter-spacing: 0;
+}
+
+.oc-check-text {
+  margin: 0;
+  color: var(--muted);
+}
+
+.oc-check[data-state="fail"] .oc-check-text {
+  color: var(--text);
+}
+
+.oc-privacy {
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.oc-summary {
+  display: grid;
+  grid-template-columns: 3.25rem 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.oc-summary-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin: 0;
+  border-radius: 50%;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.oc-summary[data-state="pass"] {
+  border-color: var(--good);
+}
+
+.oc-summary[data-state="pass"] .oc-summary-icon {
+  background: var(--good-soft);
+  color: var(--good);
+}
+
+.oc-summary[data-state="fail"] {
+  border-color: var(--bad);
+}
+
+.oc-summary[data-state="fail"] .oc-summary-icon {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+
+.oc-summary-title {
+  margin: 4px 0 6px;
+  font-size: 1.375rem;
+}
+
+.oc-summary-title:focus {
+  outline: none;
+}
+
+.oc-summary-text {
+  margin: 0;
+  color: var(--muted);
+}
+
+.oc-summary-list {
+  margin: 10px 0 0;
+  padding-left: 1.25rem;
+}
+
+.oc-summary-list:empty {
+  display: none;
+}
+
+.oc-summary-list li + li {
+  margin-top: 4px;
+}
+
+.oc-it {
+  padding: 0;
+}
+
+.oc-it > summary {
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 12px 20px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+.oc-it-body {
+  padding: 0 20px 20px;
+  color: var(--muted);
+}
+
+.oc-hosts {
+  margin: 0 0 1em;
+  padding-left: 1.25rem;
+}
+
+.oc-hosts li + li {
+  margin-top: 6px;
+}
+
+.oc-it code {
+  color: var(--text);
+  font-size: 0.9375em;
+  overflow-wrap: anywhere;
+}
+
+.oc-report {
+  margin: 0 0 12px;
+  padding: 12px;
+  max-height: 18rem;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.oc-copy-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+}
+
+.oc-copy-msg {
+  font-size: 0.875rem;
+}
+
+@keyframes oc-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (max-width: 479px) {
+  .oc-panel,
+  .oc-summary {
+    padding: 16px;
+  }
+
+  .oc-summary {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .oc-it > summary {
+    padding: 12px 16px;
+  }
+
+  .oc-it-body {
+    padding: 0 16px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oc-check[data-state="running"] .oc-icon {
+    animation: none;
+  }
+}

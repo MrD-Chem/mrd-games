@@ -23,6 +23,8 @@ const ui = {
   error: $('mr-error'),
   start: $('mr-start'),
   practice: $('mr-practice'),
+  online: $('mr-online'),
+  onlineError: $('mr-online-error'),
   codeToggle: $('mr-code-toggle'),
   codeForm: $('mr-code-form'),
   codeInput: $('mr-code-input'),
@@ -33,6 +35,7 @@ const ui = {
   mode: $('mr-mode'),
   mapList: $('mr-map-list'),
   play: $('mr-play'),
+  raceSide: $('mr-race-side'),
   hud: $('mr-hud'),
   quit: $('mr-quit'),
   hudPos: $('mr-hud-pos'),
@@ -65,15 +68,16 @@ const state = {
   session: null,
   board: null,
   unsub: [],
+  hooks: null, // set for an online race (see online/online.js); null for practice and race codes
   lastSummary: null
 };
 
 // ---------- Screens ----------
 
-const SCREENS = ['title', 'maps', 'play', 'results'];
-
+/* Every <section class="mr-screen" id="mr-NAME">: title, maps, play, results, and the online
+   screens (nick, lobby, room, countdown, race-results). */
 function show(screen, focusTarget) {
-  for (const name of SCREENS) ui[name].hidden = name !== screen;
+  for (const section of document.querySelectorAll('.mr-screen')) section.hidden = section.id !== 'mr-' + screen;
   state.screen = screen;
   window.scrollTo(0, 0);
   if (focusTarget) focusTarget.focus({ preventScroll: true });
@@ -101,6 +105,22 @@ function initTitle() {
     state.mode = 'practice';
     state.code = null;
     openMaps();
+  });
+  ui.online.addEventListener('click', () => {
+    ui.onlineError.hidden = true;
+    ui.online.disabled = true;
+    loadOnline()
+      .then((online) => {
+        endSession();
+        online.open();
+      })
+      .catch(() => {
+        ui.onlineError.textContent = 'Online races didn’t load. Check the internet connection and try again, or play Practice.';
+        ui.onlineError.hidden = false;
+      })
+      .finally(() => {
+        ui.online.disabled = false;
+      });
   });
   ui.codeToggle.addEventListener('click', () => {
     const open = ui.codeForm.hidden;
@@ -207,10 +227,19 @@ function endSession() {
   state.board = null;
   state.session = null;
   ui.nextBar.hidden = true;
+  if (state.hooks) {
+    state.hooks = null;
+    ui.quit.textContent = '← Maps';
+    ui.play.classList.remove('is-online');
+  }
 }
 
-/* Start a round. code: a race code, or null/undefined for a fresh practice code. */
-function startMap(mapId, code) {
+/*
+  Start a round. code: a race code, or null/undefined for a fresh practice code.
+  hooks (online races only): { quitLabel, finishLabel, onQuit(), onSession(session), onFinish(summary) }
+  With hooks, the round ends in hooks.onFinish instead of the practice results screen.
+*/
+function startMap(mapId, code, hooks) {
   const map = getMap(mapId);
   if (!bank) return { ok: false, reason: 'The question bank did not load.' };
   if (!isPlayable(map)) return { ok: false, reason: `Map ${mapId} is not playable yet.` };
@@ -223,7 +252,13 @@ function startMap(mapId, code) {
   state.map = map;
   state.unsub.push(session.onItem((item, index) => renderItem(item, index)));
   state.unsub.push(session.onAnswer(() => updateHud()));
-  state.unsub.push(session.onFinish((summary) => showResults(summary)));
+  state.unsub.push(session.onFinish((summary) => (state.hooks ? finishHooked(summary) : showResults(summary))));
+  if (hooks) {
+    state.hooks = hooks;
+    ui.quit.textContent = hooks.quitLabel || '← Leave';
+    ui.play.classList.add('is-online');
+    if (hooks.onSession) hooks.onSession(session);
+  }
   buildProgress();
   show('play');
   session.start();
@@ -276,7 +311,7 @@ function onResult(r) {
   else if (rec && rec.firstTry) ui.nextMsg.textContent = `First try! +${rec.points} points${s.streak > 1 ? ` · streak ${s.streak}` : ''}`;
   else ui.nextMsg.textContent = `Got it! +${rec ? rec.points : 0} points`;
   ui.nextBar.classList.toggle('is-shown-answer', !!(rec && rec.revealed));
-  ui.next.textContent = last ? 'See results →' : 'Next question →';
+  ui.next.textContent = last ? (state.hooks && state.hooks.finishLabel) || 'See results →' : 'Next question →';
   ui.nextBar.hidden = false;
   ui.next.focus({ preventScroll: true });
 }
@@ -286,6 +321,47 @@ function goNext() {
   if (!s || !s.record || !s.record.done) return false;
   s.next(); // fires onItem (next question) or onFinish (results)
   return true;
+}
+
+/* An online race's round is over: tidy the board away and hand the summary to the race layer. */
+function finishHooked(summary) {
+  const hooks = state.hooks;
+  endSession();
+  if (hooks && hooks.onFinish) hooks.onFinish(summary);
+}
+
+// ---------- Online races (loaded only when "Race online" is pressed) ----------
+
+let onlinePromise = null;
+let onlineApi = null;
+
+function loadOnline() {
+  if (!onlinePromise) {
+    onlinePromise = import('./online/online.js?v=20261021T1624')
+      .then((mod) => {
+        onlineApi = mod.initOnline({
+          show,
+          openTitle: () => openTitle(false),
+          openPractice: () => {
+            state.mode = 'practice';
+            state.code = null;
+            openMaps();
+          },
+          startRace: (mapId, code, hooks) => startMap(mapId, code, hooks),
+          stopRace: () => endSession(),
+          focusBoard: () => {
+            if (state.board) state.board.focus();
+          },
+          sidebar: ui.raceSide
+        });
+        return onlineApi;
+      })
+      .catch((err) => {
+        onlinePromise = null; // let the student try again (e.g. after the Wi-Fi comes back)
+        throw err;
+      });
+  }
+  return onlinePromise;
 }
 
 // ---------- Results ----------
@@ -352,7 +428,7 @@ function showResults(summary) {
 // ---------- Wiring ----------
 
 ui.mapsBack.addEventListener('click', () => openTitle(false));
-ui.quit.addEventListener('click', () => openMaps());
+ui.quit.addEventListener('click', () => (state.hooks && state.hooks.onQuit ? state.hooks.onQuit() : openMaps()));
 ui.next.addEventListener('click', () => goNext());
 ui.toMaps.addEventListener('click', () => openMaps());
 ui.again.addEventListener('click', () => {
@@ -387,12 +463,23 @@ const ready = new Promise((resolve) => {
   resolveReady = resolve;
 });
 
+// The helpers that answer for you would be cheating in an online race, so during one they only work
+// when the page was opened with ?mrtest=1 (the automated checks do that; students never see it).
+const checking = (() => {
+  try {
+    return new URLSearchParams(window.location.search).has('mrtest');
+  } catch (err) {
+    return false;
+  }
+})();
+const answering = () => !state.hooks || checking;
+
 window.__MR_TEST__ = Object.freeze({
   ready,
   startMap: (mapId, code) => startMap(mapId, code),
   current,
-  solveCurrent: () => (state.board ? state.board.solve() : null),
-  answerWrong: () => (state.board ? state.board.answerWrong() : null),
+  solveCurrent: () => (state.board && answering() ? state.board.solve() : null),
+  answerWrong: () => (state.board && answering() ? state.board.answerWrong() : null),
   next: () => {
     if (!goNext()) return { ok: false, reason: 'The current question is not finished.', ...current() };
     return state.screen === 'results' ? { ok: true, finished: true, summary: state.lastSummary } : { ok: true, ...current() };
@@ -409,7 +496,10 @@ window.__MR_TEST__ = Object.freeze({
     warnings: loaded.warnings.slice()
   }),
   screen: () => state.screen,
-  showMe: () => (state.board ? (state.board.showMe ? state.board.showMe() : null) : null)
+  showMe: () => (state.board && answering() ? (state.board.showMe ? state.board.showMe() : null) : null),
+  // Online races: loadOnline() resolves once the online code is in; online() gives its read-only hooks.
+  loadOnline: () => loadOnline().then(() => true),
+  online: () => (onlineApi ? onlineApi.test : null)
 });
 
 resolveReady({ ok: loaded.ok, error: loaded.error || null });
