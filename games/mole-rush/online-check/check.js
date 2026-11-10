@@ -7,8 +7,8 @@
   The page sets data-oc-state on <body> to 'running', then 'pass' or 'fail' (used by tests).
 */
 
-import { signIn, get, put, patch, del, stream, syncClock, TIMESTAMP, isOnlineError, lastCspViolation } from '../js/online/firebase.js?v=20261022T1625';
-import { el, clear } from '../js/dom.js?v=20261022T1625';
+import { signIn, get, put, patch, del, stream, syncClock, TIMESTAMP, isOnlineError, lastCspViolation } from '../js/online/firebase.js?v=20261110T0301';
+import { el, clear } from '../js/dom.js?v=20261110T0301';
 
 const DB_HOST = 'mr-d-chemistry-default-rtdb.firebaseio.com';
 const CODE_CHARS = 'CDFGHJKMNPQRTVWXY234679';

@@ -91,6 +91,22 @@ window.SUBJECTS = [
             accent: "amber"
           }
         ]
+      },
+      {
+        id: "graphing-data",
+        title: "Graphing Data",
+        blurb: "Take data in a lab and make a graph: labels, scale, points, lines and a legend.",
+        games: [
+          {
+            id: "graph-lab",
+            title: "Graph Lab",
+            blurb: "Measure springs and hot water, then build your own graph step by step. Word help in 6 languages.",
+            path: "games/graph-lab/",
+            status: "ready",
+            icon: "📈",
+            accent: "teal"
+          }
+        ]
       }
     ]
   },

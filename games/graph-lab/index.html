@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Graph Lab</title>
+  <meta name="description" content="Graph Lab: measure springs and hot water, then build a graph step by step: labels, scale, points, lines and a legend. Word help in 6 languages.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css?v=20261110T0301">
+  <link rel="stylesheet" href="style.css?v=20261110T0301">
+  <script src="labs.js?v=20261110T0301" defer></script>
+  <script src="glossary.js?v=20261110T0301" defer></script>
+  <script src="game.js?v=20261110T0301" defer></script>
+</head>
+<body class="gl-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../physical-science/" data-copy="back"></a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span data-copy="brand"></span>
+      </span>
+      <button type="button" class="gl-button" id="gl-help" data-copy="wordHelp" hidden></button>
+    </div>
+  </header>
+  <main class="wrap gl-main" id="main">
+    <div class="gl-heading">
+      <div><p class="gl-eyebrow" data-copy="appName"></p><h1 id="gl-lab-name"></h1></div>
+      <div class="gl-menu">
+        <label for="gl-lab" data-copy="chooseLab"></label>
+        <select id="gl-lab"></select>
+        <button type="button" class="gl-button" id="gl-restart" data-copy="startOver"></button>
+      </div>
+    </div>
+    <p class="gl-progress" id="gl-progress"></p>
+    <ol class="gl-steps" id="gl-steps"></ol>
+    <div class="gl-workspace">
+      <div class="gl-left">
+        <section class="gl-panel gl-coach" aria-labelledby="gl-coach-title">
+          <div class="gl-panel-heading"><h2 id="gl-coach-title" data-copy="coach"></h2>
+            <button type="button" class="gl-button" id="gl-read" data-copy="readAloud"></button></div>
+          <h3 id="gl-stage-title" tabindex="-1"></h3>
+          <div id="gl-instruction"></div>
+          <div id="gl-hint" hidden></div>
+          <p id="gl-feedback" class="gl-feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+        </section>
+        <section class="gl-panel gl-table-panel" aria-labelledby="gl-table-title">
+          <h2 id="gl-table-title"></h2>
+          <div id="gl-table"></div>
+        </section>
+      </div>
+      <section class="gl-panel gl-right" aria-labelledby="gl-view-title">
+        <h2 id="gl-view-title" class="gl-view-title"></h2>
+        <div id="gl-equipment-controls" class="gl-controls"></div>
+        <div id="gl-equipment"></div>
+        <div id="gl-graph-wrap" hidden>
+          <svg id="gl-graph" viewBox="0 0 600 530" xmlns="http://www.w3.org/2000/svg" aria-describedby="gl-graph-instructions"></svg>
+          <p id="gl-graph-instructions" class="gl-graph-instructions"></p>
+          <p id="gl-readout" class="gl-readout" role="status" aria-live="polite"></p>
+        </div>
+        <div id="gl-activity"></div>
+      </section>
+    </div>
+    <div class="gl-actions">
+      <button type="button" class="gl-button" id="gl-hint-button" data-copy="hint"></button>
+      <button type="button" class="gl-button" id="gl-undo" data-copy="undo"></button>
+      <button type="button" class="gl-button gl-primary" id="gl-check" data-copy="check"></button>
+    </div>
+  </main>
+  <dialog id="gl-words" class="gl-dialog" aria-labelledby="gl-words-title">
+    <div class="gl-panel-heading"><h2 id="gl-words-title" data-copy="wordHelp"></h2><button type="button" class="gl-button" id="gl-close-words" data-copy="close"></button></div>
+    <label for="gl-language" data-copy="chooseLanguage"></label>
+    <select id="gl-language"></select>
+    <h3 data-copy="allWords"></h3>
+    <div id="gl-word-list"></div>
+  </dialog>
+  <dialog id="gl-definition" class="gl-dialog gl-definition" aria-labelledby="gl-term-title">
+    <div class="gl-panel-heading"><h2 id="gl-term-title"></h2><button type="button" class="gl-button" id="gl-close-definition" data-copy="close"></button></div>
+    <p id="gl-term-english"></p>
+    <div id="gl-translation"><h3 id="gl-term-word"></h3><p id="gl-term-meaning"></p></div>
+    <button type="button" class="gl-button" id="gl-term-speak" data-copy="readAloud" hidden></button>
+  </dialog>
+  <footer class="site-footer"><div class="wrap"><p data-copy="footer"></p></div></footer>
+</body>
+</html>

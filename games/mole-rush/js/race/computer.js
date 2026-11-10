@@ -1,11 +1,11 @@
 /* Offline race controller. The ordinary map session owns every question/answer. */
-import { el, clear } from '../dom.js?v=20261022T1625';
-import { MAPS } from '../maps/index.js?v=20261022T1625';
-import { MAP_RULES } from '../session.js?v=20261022T1625';
-import { randomCode, normalizeCode, deriveSeed } from '../rng.js?v=20261022T1625';
-import { createRace } from './track.js?v=20261022T1625';
-import { createCpu, CPU_DIFFICULTIES } from './cpu.js?v=20261022T1625';
-import { countdownFor } from './countdown.js?v=20261022T1625';
+import { el, clear } from '../dom.js?v=20261110T0301';
+import { MAPS } from '../maps/index.js?v=20261110T0301';
+import { MAP_RULES } from '../session.js?v=20261110T0301';
+import { randomCode, normalizeCode, deriveSeed } from '../rng.js?v=20261110T0301';
+import { createRace } from './track.js?v=20261110T0301';
+import { createCpu, CPU_DIFFICULTIES } from './cpu.js?v=20261110T0301';
+import { countdownFor } from './countdown.js?v=20261110T0301';
 
 const PLAYER = 'you';
 const COLORS = ['#6ee7cf', '#fcd779', '#c4b5fd', '#fda4af'];
