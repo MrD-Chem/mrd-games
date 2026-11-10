@@ -1,4 +1,4 @@
-/* Graph Lab: plain browser JavaScript. No requests, timers, or libraries.
+/* Graph Lab: plain browser JavaScript. No requests or libraries. One cancellable waiting timer.
    Text and measurements come from labs.js. Glossary data is optional. */
 (() => {
   'use strict';
@@ -17,9 +17,18 @@
   let history = [];
   let tries = [];
   let lastTerm = null;
-  let selectedCard = null;
   let cursor = { x: 0, y: 0 };
   let pointerStart = null;
+  let dismissedIntros = new Set();
+  let actionMistakes = new Map();
+  let nudgedActions = new Set();
+  let nudgeTimer = null;
+  let guideActionKey = '';
+  let guideTarget = null;
+  let guideUpdateQueued = false;
+  let pageAway = false;
+  let plotExample = null;
+  const demonstrations = new Set();
 
   // These checks are pure: useful when changing a lab's numbers.
   function validateScale(choice, maximum, boxes = 10) {
@@ -33,16 +42,16 @@
     return Math.hypot((actual.x - expected.x) / scale.x, (actual.y - expected.y) / scale.y) <= tolerance;
   }
   // Small public surface for teacher/developer checks; it does not change play.
-  window.GRAPH_LAB_CHECKS = Object.freeze({ validateScale, pointWithinTolerance });
+  window.GRAPH_LAB_CHECKS = Object.freeze({ validateScale, pointWithinTolerance, nextAction });
 
   function readSave() {
     try {
       const value = JSON.parse(localStorage.getItem(STORAGE_KEY));
       if (value && value.v === 1 && value.labs && typeof value.labs === 'object') {
-        return { v: 1, labs: value.labs, lang: typeof value.lang === 'string' ? value.lang : 'es' };
+        return { v: 1, labs: value.labs, lang: typeof value.lang === 'string' ? value.lang : 'es', guide: value.guide !== false };
       }
     } catch (_) { /* Storage may be blocked on school devices. */ }
-    return { v: 1, labs: {}, lang: 'es' };
+    return { v: 1, labs: {}, lang: 'es', guide: true };
   }
   function writeSave() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch (_) { /* Play still works. */ }
@@ -103,8 +112,11 @@
   function feedback(text = '', isError = false) {
     rich($('gl-feedback'), text);
     $('gl-feedback').className = `gl-feedback ${isError ? 'gl-error' : 'gl-success'}`;
+    requestGuideUpdate();
   }
   function mistake(text) {
+    const action = nextAction({ ...state, introOpen: false }, lab);
+    actionMistakes.set(action.key, (actionMistakes.get(action.key) || 0) + 1);
     tries[state.step].wrong++;
     feedback(text, true);
   }
@@ -121,19 +133,24 @@
     window.speechSynthesis.speak(utterance);
   }
   function startLab(id) {
+    stopGuideWork();
+    dismissedIntros = new Set();
+    actionMistakes = new Map();
+    nudgedActions = new Set();
+    guideActionKey = '';
     cancelSpeech();
     lab = DATA.labs.find(item => item.id === id) || DATA.labs[0];
     state = {
-      step: 0, ready: false, series: 0, measured: [0, 0], viewing: [0, 0],
+      step: 0, ready: false, selectedCard: null, claimReview: null, series: 0, measured: [0, 0], viewing: [0, 0],
       readings: lab.series.map(series => series.values.map((value, i) => i === 0 ? String(value) : '')),
       cells: lab.series.map(() => Array(6).fill('')),
       labels: { x: '', y: '', xUnit: '', yUnit: '', titleX: '', titleY: '' },
       scale: { x: 0, y: 0 }, ticks: { x: 0, y: 0 },
       points: [[], []], lineCounts: [0, 0], legend: ['', ''], claims: ['', ''], stars: []
     };
-    tries = Array.from({ length: 8 }, () => ({ wrong: 0, hints: 0 }));
+    tries = Array.from({ length: 8 }, () => ({ wrong: 0, hints: 0, shown: false }));
     history = [];
-    selectedCard = null;
+    state.selectedCard = null;
     cursor = { x: 0, y: 0 };
     $('gl-equipment').replaceChildren();
     $('gl-lab').value = lab.id;
@@ -197,6 +214,8 @@
     $('gl-undo').hidden = state.step === 8;
     $('gl-undo').disabled = history.length === 0 || state.ready;
     $('gl-check').textContent = state.step === 8 ? (lab.id === 'spring' ? T.nextLab : T.playAgain) : state.ready ? T.next : T.check;
+    renderIntro();
+    updateGuide();
   }
   function renderTable() {
     const table = element('table', 'gl-table');
@@ -269,6 +288,7 @@
     });
     table.append(head, body);
     $('gl-table').replaceChildren(table, element('p', 'gl-table-note', state.step < 2 ? `${T.example} ${T.review}` : T.example));
+    requestGuideUpdate();
   }
   function svgNode(tag, attrs = {}, text) {
     const node = document.createElementNS(NS, tag);
@@ -288,6 +308,7 @@
     controls.replaceChildren();
     lab.series.forEach((series, s) => {
       const toggle = button(series.name, () => { state.series = s; renderTable(); renderEquipment(); });
+      toggle.dataset.equipmentSeries = s;
       toggle.setAttribute('aria-pressed', String(state.series === s));
       controls.append(toggle);
     });
@@ -305,6 +326,7 @@
       renderTable(); renderEquipment(); feedback();
       if (state.measured.every(row => row === 5)) feedback(T.testDone);
     }, 'gl-button gl-primary');
+    advance.id = 'gl-advance';
     advance.disabled = state.measured[state.series] >= 5 || state.ready;
     controls.append(advance);
     const s = state.series;
@@ -370,6 +392,7 @@
     svgLine(zoom, 380, 220, 428, 220, { stroke: lab.series[s].colour, 'stroke-width': 4 });
     zoom.append(svgNode('path', { d: 'M 428 220 l -10 -6 v 12 Z', fill: lab.series[s].colour }));
     $('gl-reading-caption').textContent = plain(format(T.reading, { name: lab.x.name, value: lab.xs[row], unit: lab.x.unit }));
+    requestGuideUpdate();
   }
 
   function graphPosition(x, y) {
@@ -452,6 +475,8 @@
     }
     rich($('gl-graph-instructions'), current.step === 4 ? `${T.keyboard}\n${format(T.fineMove, { x: round(current.scale.x / 10), y: round(current.scale.y / 10) })}` : current.step === 5 ? T.lineKeyboard : '');
     $('gl-readout').hidden = current.step !== 4;
+    if (plotExample && current.step === 4) renderPlotExample(svg);
+    requestGuideUpdate();
   }
   function round(n) { return Math.round(n * 100) / 100; }
   function drawCursor(announce = true) {
@@ -503,11 +528,12 @@
   function cardGroup(parent, heading, values, kind) {
     const headingNode = element('h3', 'gl-activity-heading', heading);
     const group = element('div', 'gl-cards');
+    group.id = `gl-${kind}-cards`;
     group.setAttribute('role', 'group');
     group.setAttribute('aria-label', heading);
     values.forEach(value => {
       const card = button(value, () => {
-        selectedCard = { kind, value };
+        state.selectedCard = { kind, value };
         renderActivity();
         feedback(T.selectedCard);
         // Keep keyboard focus on the selected card after rebuilding cards.
@@ -518,31 +544,33 @@
       card.disabled = state.ready;
       card.dataset.card = value;
       card.dataset.kind = kind;
-      card.setAttribute('aria-pressed', String(!!selectedCard && selectedCard.kind === kind && selectedCard.value === value));
+      card.setAttribute('aria-pressed', String(!!state.selectedCard && state.selectedCard.kind === kind && state.selectedCard.value === value));
       card.addEventListener('dragstart', event => {
-        selectedCard = { kind, value };
-        event.dataTransfer.setData('text/plain', JSON.stringify(selectedCard));
+        state.selectedCard = { kind, value };
+        event.dataTransfer.setData('text/plain', JSON.stringify(state.selectedCard));
         event.dataTransfer.effectAllowed = 'copy';
+        requestGuideUpdate();
       });
       group.append(card);
     });
     parent.append(headingNode, group);
   }
-  function target(label, value, kind, apply) {
+  function target(label, value, kind, apply, field) {
     const targetId = `${kind}:${plain(label)}`;
     const node = button('', () => {
-      if (!selectedCard || selectedCard.kind !== kind) { feedback(T.chooseCard); return; }
-      snapshot(); apply(selectedCard.value); selectedCard = null;
+      if (!state.selectedCard || state.selectedCard.kind !== kind) { feedback(T.chooseCard); return; }
+      snapshot(); apply(state.selectedCard.value); state.selectedCard = null;
       renderActivity(); renderGraph(state); feedback();
       const replacement = [...$('gl-activity').querySelectorAll('[data-target]')].find(item => item.dataset.target === targetId);
       if (replacement) replacement.focus();
     }, `gl-target${value ? ' gl-filled' : ''}`);
     node.dataset.target = targetId;
+    node.dataset.field = field;
     node.disabled = state.ready;
     node.append(element('span', 'gl-target-title', plain(label)), element('span', '', value || T.chooseCard));
     node.setAttribute('aria-label', format(T.labelTarget, { target: plain(label), value: value || T.chooseCard }));
     node.addEventListener('dragover', event => {
-      if (selectedCard && selectedCard.kind === kind && !state.ready) event.preventDefault();
+      if (state.selectedCard && state.selectedCard.kind === kind && !state.ready) event.preventDefault();
     });
     node.addEventListener('drop', event => { event.preventDefault(); node.click(); });
     return node;
@@ -554,15 +582,18 @@
     if (state.step === 2) {
       cardGroup(activity, T.variableCards, [lab.x.name, lab.y.name, ...lab.distractors], 'variable');
       const axes = element('div', 'gl-targets');
-      ['x', 'y'].forEach(axis => axes.append(target(T[axis === 'x' ? 'axisX' : 'axisY'], state.labels[axis], 'variable', value => { state.labels[axis] = value; })));
+      axes.id = 'gl-variable-targets';
+      ['x', 'y'].forEach(axis => axes.append(target(T[axis === 'x' ? 'axisX' : 'axisY'], state.labels[axis], 'variable', value => { state.labels[axis] = value; }, axis)));
       activity.append(axes);
       cardGroup(activity, T.unitCards, DATA.units, 'unit');
       const units = element('div', 'gl-targets');
-      ['x', 'y'].forEach(axis => units.append(target(`${T[axis === 'x' ? 'axisX' : 'axisY']} · ${T.unit}`, state.labels[`${axis}Unit`], 'unit', value => { state.labels[`${axis}Unit`] = value; })));
+      units.id = 'gl-unit-targets';
+      ['x', 'y'].forEach(axis => units.append(target(`${T[axis === 'x' ? 'axisX' : 'axisY']} · ${T.unit}`, state.labels[`${axis}Unit`], 'unit', value => { state.labels[`${axis}Unit`] = value; }, `${axis}Unit`)));
       activity.append(units);
       cardGroup(activity, T.titleCards, [lab.x.short, lab.y.short, ...lab.distractors], 'title');
       const title = element('div', 'gl-title-builder');
-      title.append(target(T.titleY, state.labels.titleY, 'title', value => { state.labels.titleY = value; }), element('span', '', T.versus), target(T.titleX, state.labels.titleX, 'title', value => { state.labels.titleX = value; }));
+      title.id = 'gl-title-targets';
+      title.append(target(T.titleY, state.labels.titleY, 'title', value => { state.labels.titleY = value; }, 'titleY'), element('span', '', T.versus), target(T.titleX, state.labels.titleX, 'title', value => { state.labels.titleX = value; }, 'titleX'));
       activity.append(title);
     }
     if (state.step === 3) {
@@ -571,6 +602,7 @@
         const max = axisMaximum(axis);
         section.append(rich(element('p'), format(T.scaleTask, { axis: T[axis === 'x' ? 'axisX' : 'axisY'], max })));
         const choices = element('div', 'gl-cards');
+        choices.id = `gl-${axis}-choices`;
         choices.setAttribute('role', 'group');
         choices.setAttribute('aria-label', format(T.scaleFor, { axis: plain(T[axis === 'x' ? 'axisX' : 'axisY']) }));
         DATA.scaleChoices.forEach(value => {
@@ -619,7 +651,7 @@
     if (state.step === 6) {
       cardGroup(activity, T.variableCards, lab.series.map(series => series.name), 'legend');
       lab.series.forEach((series, s) => {
-        const row = target(series.symbolName, state.legend[s], 'legend', value => { state.legend[s] = value; });
+        const row = target(series.symbolName, state.legend[s], 'legend', value => { state.legend[s] = value; }, `legend-${s}`);
         row.classList.add(`gl-series-${s}`);
         activity.append(row);
       });
@@ -636,12 +668,13 @@
         const pieces = frame.split('{answer}');
         label.append(rich(element('span'), pieces[0]));
         const select = element('select');
+        select.dataset.claim = index;
         select.append(new Option(T.choose, ''));
         lab.claimOptions[index].forEach(value => select.append(new Option(value, value)));
         select.value = state.claims[index];
         select.disabled = state.ready;
         select.setAttribute('aria-label', plain(frame.replace('{answer}', '…')));
-        select.addEventListener('change', () => { snapshot(); state.claims[index] = select.value; feedback(); });
+        select.addEventListener('change', () => { snapshot(); state.claims[index] = select.value; state.claimReview = null; feedback(); });
         label.append(select, rich(element('span'), pieces[1]));
         activity.append(label);
       });
@@ -656,6 +689,7 @@
       T.steps.forEach((step, index) => list.append(element('li', '', `${state.stars[index] ? '★' : '☆'} ${step}`)));
       activity.append(list);
     }
+    requestGuideUpdate();
   }
   function axisMaximum(axis) { return axis === 'x' ? Math.max(...lab.xs) : Math.max(...lab.series.flatMap(series => series.values)); }
   function scaleMessage(result, axis) {
@@ -663,7 +697,7 @@
   }
   function acceptStep(message) {
     state.ready = true;
-    state.stars[state.step] = tries[state.step].wrong === 0 && tries[state.step].hints <= 1;
+    state.stars[state.step] = tries[state.step].wrong === 0 && tries[state.step].hints <= 1 && !tries[state.step].shown;
     saveProgress();
     render();
     feedback(message);
@@ -671,8 +705,9 @@
   function check() {
     if (state.step === 8) { startLab(lab.id === 'spring' ? 'cooling' : 'spring'); return; }
     if (state.ready) {
+      stopGuideWork();
       cancelSpeech();
-      state.step++; state.ready = false; history = []; selectedCard = null;
+      state.step++; state.ready = false; history = []; state.selectedCard = null;
       cursor = { x: 0, y: 0 };
       saveProgress(); render(); $('gl-stage-title').focus();
       return;
@@ -735,11 +770,393 @@
       case 7: {
         const wrong = state.claims.findIndex((value, index) => value !== lab.claimAnswers[index]);
         if (state.claims.some(value => !value)) mistake(T.claimMissing);
-        else if (wrong !== -1) mistake(lab.claimFix[wrong]);
+        else if (wrong !== -1) { state.claimReview = wrong; mistake(lab.claimFix[wrong]); }
         else acceptStep(T.claimGood);
         break;
       }
     }
+  }
+
+  // Guide decisions use only their arguments and the editable text constants.
+  function readingMatches(value, expected) {
+    const text = String(value).trim().replace(',', '.');
+    return text !== '' && Number(text) === expected;
+  }
+  function labelTasks(currentLab) {
+    return [
+      { field: 'x', kind: 'variable', value: currentLab.x.name, prompt: T.guide.xBox },
+      { field: 'y', kind: 'variable', value: currentLab.y.name, prompt: T.guide.yBox },
+      { field: 'xUnit', kind: 'unit', value: currentLab.x.unit, prompt: T.guide.xUnit },
+      { field: 'yUnit', kind: 'unit', value: currentLab.y.unit, prompt: T.guide.yUnit },
+      { field: 'titleY', kind: 'title', value: currentLab.y.short, prompt: T.guide.titleFirst },
+      { field: 'titleX', kind: 'title', value: currentLab.x.short, prompt: T.guide.titleLast }
+    ];
+  }
+  function nextAction(current, currentLab) {
+    const action = (key, selector, prompt, detail = {}, verb = 'tap') => ({
+      key: `${current.step}:${key}`, selector, verb, prompt, ...detail
+    });
+    const checkAction = () => action('check', '#gl-check', T.guide.check);
+    const cell = (series, row, repair = false) => action(`cell-${series}-${row}`,
+      `#gl-table input[data-series="${series}"][data-row="${row}"]`,
+      repair ? T.guide.repair : T.guide.record, { kind: 'reading', series, row }, 'type');
+    const toggle = series => action(`switch-${series}`, `[data-equipment-series="${series}"]`,
+      format(T.guide.switch, { series: currentLab.series[series].name }), { kind: 'switch', series });
+    if (current.step >= 8) return action('finish', '#gl-check', T.guide.finish);
+    if (current.ready) return action('next', '#gl-check', T.guide.next);
+    if (current.introOpen) return action('intro', '#gl-intro-start', T.guide.begin);
+    const last = currentLab.xs.length - 1;
+    if (current.step === 0) {
+      const series = current.series;
+      const other = 1 - series;
+      const missing = s => current.readings[s].findIndex((value, row) => row > 0 && row <= current.measured[s] && !String(value).trim());
+      const row = missing(series);
+      if (row !== -1) return cell(series, row);
+      // Waiting changes both cups: record both readings before waiting again.
+      if (currentLab.id === 'cooling' && missing(other) !== -1) return toggle(other);
+      if (current.measured[series] < last) return action(`measure-${series}-${current.measured[series] + 1}`,
+        '#gl-advance', currentLab.id === 'spring' ? T.guide.add : T.guide.wait, { kind: 'measure' });
+      if (current.measured[other] < last || missing(other) !== -1) return toggle(other);
+      return checkAction();
+    }
+    if (current.step === 1) {
+      for (let series = 0; series < currentLab.series.length; series++) {
+        const row = current.readings[series].findIndex((value, i) => !readingMatches(value, currentLab.series[series].values[i]));
+        if (row !== -1) return cell(series, row, true);
+      }
+      return checkAction();
+    }
+    if (current.step === 2) {
+      const tasks = labelTasks(currentLab);
+      const pending = tasks.filter(task => current.labels[task.field] !== task.value);
+      if (!pending.length) return checkAction();
+      const selected = current.selectedCard;
+      const chosen = selected && pending.find(task => task.kind === selected.kind && task.value === selected.value);
+      const task = chosen || pending[0];
+      const detail = { kind: 'label', field: task.field };
+      if (!selected || selected.kind !== task.kind) {
+        const prompts = { variable: T.guide.names, unit: T.guide.units, title: T.guide.titles };
+        return action(`label-${task.field}`, `#gl-${task.kind}-cards`, prompts[task.kind], detail);
+      }
+      // Never single out a correct card before the learner chooses one.
+      return action(`label-${task.field}`, chosen ? `[data-field="${task.field}"]` : `#gl-${task.kind}-targets`,
+        chosen ? task.prompt : T.guide.boxes, detail);
+    }
+    if (current.step === 3) {
+      for (const axis of ['x', 'y']) {
+        const maximum = axis === 'x' ? Math.max(...currentLab.xs) : Math.max(...currentLab.series.flatMap(series => series.values));
+        if (validateScale(current.scale[axis], maximum) !== 'ok') return action(`scale-${axis}`, `#gl-${axis}-choices`,
+          format(T.guide.scale, { axis: T[axis === 'x' ? 'axisX' : 'axisY'] }), { kind: 'scale', axis });
+        if (current.ticks[axis] < 10) return action(`count-${axis}-${current.ticks[axis]}`, `[data-count="${axis}"]`,
+          format(T.guide.fill, { number: (current.ticks[axis] + 1) * current.scale[axis] }), { kind: 'scale', axis });
+      }
+      return checkAction();
+    }
+    if (current.step === 4 || current.step === 5) {
+      const counts = current.step === 4 ? current.points.map(points => points.length) : current.lineCounts;
+      const series = counts.findIndex(count => count <= last);
+      if (series === -1) return checkAction();
+      const row = counts[series];
+      const plotting = current.step === 4;
+      return action(`point-${series}-${row}`, plotting ? '#gl-graph' : `#gl-graph [data-point="${row}"]`,
+        plotting ? format(T.guide.plot, { x: currentLab.xs[row], y: currentLab.series[series].values[row] }) : T.guide.line,
+        { kind: plotting ? 'plot' : 'line', series, row });
+    }
+    if (current.step === 6) {
+      const pending = current.legend.findIndex((name, index) => name !== currentLab.series[index].name);
+      if (pending === -1) return checkAction();
+      const selected = current.selectedCard;
+      const match = selected && selected.kind === 'legend' ? currentLab.series.findIndex(series => series.name === selected.value) : -1;
+      const series = match === -1 ? pending : match;
+      return action(`legend-${series}`, match === -1 ? '#gl-legend-cards' : `[data-field="legend-${series}"]`,
+        match === -1 ? T.guide.legend : format(T.guide.symbol, { symbol: currentLab.series[series].symbolName }), { kind: 'legend', series });
+    }
+    if (current.step === 7) {
+      const empty = current.claims.findIndex(value => !value);
+      const index = empty === -1 ? current.claimReview : empty;
+      if (index !== null && index !== undefined && index !== -1) return action(`claim-${index}`, `[data-claim="${index}"]`, T.guide.claim, { kind: 'claim', index });
+    }
+    return checkAction();
+  }
+
+  function renderIntro() {
+    const card = $('gl-intro');
+    card.hidden = state.step >= 8 || state.ready || dismissedIntros.has(state.step);
+    if (card.hidden) return;
+    const key = `${lab.id}-${state.step}`;
+    if (card.dataset.step === key) return;
+    card.dataset.step = key;
+    const intro = T.guide.intros[state.step];
+    $('gl-intro-title').textContent = format(T.guide.step, { number: state.step + 1, name: T.steps[state.step] });
+    rich($('gl-intro-goal'), intro.goal);
+    rich($('gl-intro-why'), format(T.guide.why, { reason: intro.why }));
+    $('gl-intro-read').hidden = !('speechSynthesis' in window && window.SpeechSynthesisUtterance);
+    renderIntroPicture();
+  }
+  function renderIntroPicture() {
+    const svg = $('gl-intro-picture');
+    svg.replaceChildren();
+    const step = state.step;
+    if (step === 0) {
+      const number = lab.series[0].values[1];
+      for (let i = -1; i <= 1; i++) {
+        svgLine(svg, 75, 55 + i * 25, 105, 55 + i * 25, { stroke: '#aeb3bb', 'stroke-width': 2 });
+        svgText(svg, 115, 60 + i * 25, number + (lab.id === 'spring' ? i : -i));
+      }
+      svgText(svg, 45, 62, '→', { fill: lab.series[0].colour, 'font-size': 26 });
+      svgText(svg, 155, 62, lab.y.unit);
+    } else if (step === 1) {
+      svg.append(svgNode('rect', { x: 15, y: 8, width: 210, height: 104, rx: 5, fill: 'none', stroke: '#aeb3bb' }));
+      svgLine(svg, 120, 8, 120, 112);
+      for (const y of [42, 76]) svgLine(svg, 15, y, 225, y);
+      svgText(svg, 65, 30, lab.x.unit, { 'text-anchor': 'middle' });
+      svgText(svg, 170, 30, lab.y.unit, { 'text-anchor': 'middle' });
+      for (let i = 0; i < 2; i++) {
+        svgText(svg, 65, 65 + i * 34, lab.xs[i], { 'text-anchor': 'middle' });
+        svgText(svg, 170, 65 + i * 34, lab.series[0].values[i], { 'text-anchor': 'middle' });
+      }
+    } else if (step === 6) {
+      svg.append(svgNode('rect', { x: 10, y: 15, width: 220, height: 90, rx: 8, fill: 'none', stroke: '#aeb3bb' }));
+      lab.series.forEach((series, i) => { graphSymbol(svg, i, 28, 44 + i * 35); svgText(svg, 44, 49 + i * 35, series.name, { 'font-size': 13 }); });
+    } else if (step === 7) {
+      svgText(svg, 120, 45, `${lab.series[0].values[0]} → ${lab.series[0].values[5]} ${lab.y.unit}`, { 'text-anchor': 'middle', 'font-size': 20 });
+      svgText(svg, 120, 85, T.guide.exampleClaim, { 'text-anchor': 'middle' });
+    } else {
+      svgLine(svg, 30, 10, 30, 85, { class: 'gl-axis' });
+      svgLine(svg, 30, 85, 215, 85, { class: 'gl-axis' });
+      if (step === 2) svgText(svg, 120, 111, format(T.guide.exampleAxis, { name: lab.x.short, unit: lab.x.unit }), { 'text-anchor': 'middle' });
+      if (step === 3) [0, 5, 10, 15].forEach((n, i) => {
+        svgLine(svg, 30 + i * 60, 81, 30 + i * 60, 90);
+        svgText(svg, 30 + i * 60, 109, n, { 'text-anchor': 'middle' });
+      });
+      if (step === 4) {
+        svgLine(svg, 140, 85, 140, 35, { class: 'gl-guide' });
+        svgLine(svg, 30, 35, 140, 35, { class: 'gl-guide' });
+        graphSymbol(svg, 0, 140, 35);
+      }
+      if (step === 5) {
+        svg.append(svgNode('polyline', { points: '30,85 95,60 160,25', fill: 'none', stroke: lab.series[0].colour, 'stroke-width': 3 }));
+        [[30, 85], [95, 60], [160, 25]].forEach(([x, y]) => graphSymbol(svg, 0, x, y));
+      }
+    }
+  }
+
+  // Coalesce partial renders, so the Guide sees the completed DOM, never half a render.
+  function requestGuideUpdate() {
+    if (guideUpdateQueued) return;
+    guideUpdateQueued = true;
+    queueMicrotask(() => { guideUpdateQueued = false; if (state) updateGuide(); });
+  }
+  function guideAction() {
+    return nextAction({ ...state, introOpen: !dismissedIntros.has(state.step) }, lab);
+  }
+  function updateGuide() {
+    const action = guideAction();
+    const nextKey = `${action.key}:${action.selector}`;
+    const changed = guideActionKey !== nextKey;
+    if (changed) {
+      guideActionKey = nextKey;
+      clearDemonstrations();
+      $('gl-demo-message').hidden = true;
+      resetNudge();
+    }
+    document.querySelectorAll('.gl-next').forEach(node => node.classList.remove('gl-next'));
+    guideTarget = null;
+    $('gl-guide-toggle').textContent = saved.guide ? T.guide.on : T.guide.off;
+    $('gl-guide-toggle').setAttribute('aria-pressed', String(saved.guide));
+    $('gl-now').hidden = !saved.guide;
+    if (saved.guide) {
+      const text = format(T.guide.now, { prompt: action.prompt });
+      // Updating only changed text avoids repeated screen-reader announcements.
+      if ($('gl-now').dataset.prompt !== text) { rich($('gl-now'), text); $('gl-now').dataset.prompt = text; }
+      guideTarget = document.querySelector(action.selector);
+      if (guideTarget) { guideTarget.classList.add('gl-next'); if (changed) pulseGuide(); }
+    }
+    positionGuideArrow();
+    $('gl-show-me').hidden = state.step >= 8 || state.ready || (actionMistakes.get(action.key) || 0) < 2;
+  }
+  function pulseGuide() {
+    if (!guideTarget || !saved.guide || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    guideTarget.classList.remove('gl-guide-pulse');
+    void guideTarget.getBoundingClientRect();
+    guideTarget.classList.add('gl-guide-pulse');
+  }
+  function positionGuideArrow() {
+    const arrow = $('gl-guide-arrow');
+    arrow.hidden = true;
+    if (!guideTarget || !guideTarget.isConnected || document.hidden || pageAway || document.querySelector('dialog[open]')) return;
+    const box = guideTarget.getBoundingClientRect();
+    if (box.bottom <= 0 || box.top >= window.innerHeight || box.width === 0) return;
+    const above = box.top >= 32;
+    arrow.textContent = `${above ? '↓' : '↑'} ${T.guide[guideAction().verb]}`;
+    arrow.hidden = false;
+    const width = arrow.getBoundingClientRect().width;
+    arrow.style.left = `${Math.max(8, Math.min(box.left, window.innerWidth - width - 8))}px`;
+    arrow.style.top = `${above ? box.top - 29 : Math.min(box.bottom + 5, window.innerHeight - 30)}px`;
+  }
+  function hintText() {
+    if (state.step !== 3) return T.hints[state.step];
+    return `${T.hints[3]}\n${format(T.scaleHint, { x: lab.preferredScale[0], y: lab.preferredScale[1] })}\n${T.scaleBad}\n${T.scalePattern}`;
+  }
+  function clearNudge() {
+    if (nudgeTimer !== null) window.clearTimeout(nudgeTimer);
+    nudgeTimer = null;
+  }
+  function resetNudge() {
+    clearNudge();
+    if (!state || state.step >= 8 || document.hidden || pageAway || nudgedActions.has(guideActionKey)) return;
+    const key = guideActionKey;
+    nudgeTimer = window.setTimeout(() => {
+      nudgeTimer = null;
+      if (document.hidden || pageAway || state.step >= 8 || key !== guideActionKey) return;
+      nudgedActions.add(key);
+      rich($('gl-hint'), format(T.guide.needHelp, { hint: hintText() }));
+      $('gl-hint').hidden = false;
+      pulseGuide();
+    }, 20000);
+  }
+  function stopGuideWork() {
+    clearNudge();
+    clearDemonstrations();
+    $('gl-guide-arrow').hidden = true;
+    document.querySelectorAll('.gl-guide-pulse').forEach(node => node.classList.remove('gl-guide-pulse'));
+  }
+
+  // Demonstrations never write answers or advance state. Undo cannot restore a star.
+  function animateDemo(node, frames, options, cleanup) {
+    if (!node.animate) { cleanup(); return; }
+    const animation = node.animate(frames, options);
+    const item = { animation, cleanup };
+    demonstrations.add(item);
+    animation.onfinish = () => { demonstrations.delete(item); cleanup(); };
+  }
+  function clearDemonstrations() {
+    demonstrations.forEach(({ animation, cleanup }) => { animation.cancel(); cleanup(); });
+    demonstrations.clear();
+    plotExample = null;
+    const example = $('gl-plot-example');
+    if (example) example.remove();
+  }
+  function highlightExample(node) {
+    if (!node) return;
+    node.classList.add('gl-demo-highlight');
+    animateDemo(node, [{ opacity: 1 }, { opacity: 1 }], { duration: 2000 }, () => node.classList.remove('gl-demo-highlight'));
+  }
+  function cardNode(kind, value) {
+    return [...document.querySelectorAll(`#gl-${kind}-cards [data-card]`)].find(node => node.dataset.card === value);
+  }
+  function renderPlotExample(svg) {
+    const p = graphPosition(plotExample.x, plotExample.y);
+    const group = svgNode('g', { id: 'gl-plot-example', 'aria-hidden': 'true', 'pointer-events': 'none' });
+    const d = `M ${GRID.left} ${GRID.bottom} H ${p.x} V ${p.y}`;
+    // Reveal a dashed path through a mask; keep the dashes visible during the drawing.
+    const mask = svgNode('mask', { id: 'gl-example-mask', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: 600, height: 530 });
+    mask.append(svgNode('path', { id: 'gl-example-reveal', d, fill: 'none', stroke: '#fff', 'stroke-width': 8 }));
+    const path = svgNode('path', { id: 'gl-example-path', d, class: 'gl-demo-path', 'stroke-dasharray': '6 4', mask: 'url(#gl-example-mask)' });
+    group.append(mask, path, svgNode('circle', { cx: p.x, cy: p.y, r: 9, class: 'gl-demo-ghost' }));
+    svg.append(group);
+  }
+  function showExample() {
+    const action = nextAction({ ...state, introOpen: false }, lab);
+    if (state.step >= 8 || state.ready || (actionMistakes.get(action.key) || 0) < 2) return;
+    tries[state.step].shown = true;
+    clearDemonstrations();
+    let text = '';
+    if (state.step <= 1) {
+      const series = action.series === undefined ? state.series : action.series;
+      const row = action.row === undefined ? state.viewing[series] : action.row;
+      state.series = series;
+      state.viewing[series] = row;
+      if (lab.id === 'cooling') state.viewing = [row, row];
+      renderEquipment();
+      text = format(T.guide.look, { number: lab.series[series].values[row] });
+      highlightExample($('gl-zoom-view'));
+    } else if (state.step === 2) {
+      const task = labelTasks(lab).find(item => item.field === action.field);
+      if (!task) return;
+      const source = cardNode(task.kind, task.value);
+      const destination = document.querySelector(`[data-field="${task.field}"]`);
+      text = T.guide.cardDemo;
+      if (source && destination) {
+        highlightExample(source); highlightExample(destination);
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const from = source.getBoundingClientRect();
+          const to = destination.getBoundingClientRect();
+          const copy = element('div', 'gl-card gl-demo-card', task.value);
+          copy.setAttribute('aria-hidden', 'true');
+          copy.style.left = `${from.left}px`; copy.style.top = `${from.top}px`; copy.style.width = `${from.width}px`;
+          document.body.append(copy);
+          const move = `translate(${to.left - from.left}px, ${to.top - from.top}px)`;
+          animateDemo(copy, [{ transform: 'translate(0, 0)' }, { transform: move, offset: .65 }, { transform: 'translate(0, 0)' }],
+            { duration: 1200, easing: 'ease-in-out' }, () => copy.remove());
+        }
+      }
+    } else if (state.step === 3) {
+      const maximum = axisMaximum(action.axis || 'x');
+      const nice = DATA.scaleChoices.filter(number => number !== 3).find(number => validateScale(number, maximum) === 'ok');
+      text = format(T.guide.scaleDemo, { max: maximum, jump: round(maximum / 10), nice });
+    } else if (state.step === 4 && action.kind === 'plot') {
+      plotExample = { x: lab.xs[action.row], y: lab.series[action.series].values[action.row] };
+      renderGraph(state);
+      text = T.guide.plotDemo;
+      const path = $('gl-example-reveal');
+      if (path && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const length = Math.max(1, path.getTotalLength());
+        path.setAttribute('stroke-dasharray', `${length} ${length}`);
+        animateDemo(path, [{ strokeDashoffset: length }, { strokeDashoffset: 0 }], { duration: 1000, easing: 'linear' },
+          () => path.removeAttribute('stroke-dasharray'));
+      }
+    } else if (state.step === 5) {
+      text = T.guide.lineDemo;
+      highlightExample(document.querySelector(action.selector));
+    } else if (state.step === 6) {
+      const series = lab.series[action.series];
+      if (!series) return;
+      text = format(T.guide.legendDemo, { name: series.name });
+      highlightExample(cardNode('legend', series.name));
+      highlightExample(document.querySelector(`[data-field="legend-${action.series}"]`));
+    } else if (state.step === 7 && action.index !== undefined) {
+      const word = lab.claimAnswers[action.index];
+      text = format(T.guide.claimDemo, { word });
+      const select = document.querySelector(action.selector);
+      highlightExample(select);
+      // Native select options cannot be outlined while closed; show the same word beside it.
+      const example = element('span', 'gl-card gl-demo-highlight', word);
+      example.setAttribute('aria-hidden', 'true');
+      select.after(example);
+      animateDemo(example, [{ opacity: 1 }, { opacity: 1 }], { duration: 2000 }, () => example.remove());
+    }
+    rich($('gl-demo-message'), text);
+    $('gl-demo-message').hidden = !text;
+  }
+  function bindGuideEvents() {
+    $('gl-guide-toggle').addEventListener('click', () => {
+      saved.guide = !saved.guide; writeSave(); updateGuide();
+    });
+    $('gl-intro-start').addEventListener('click', () => {
+      dismissedIntros.add(state.step);
+      cancelSpeech(); renderIntro(); updateGuide();
+      const next = document.querySelector(guideAction().selector);
+      if (next && next.matches('button, input, select, svg')) next.focus({ preventScroll: true });
+    });
+    $('gl-intro-read').addEventListener('click', () => {
+      const intro = T.guide.intros[state.step];
+      if (intro) speak(`${intro.goal} ${intro.why}`);
+    });
+    $('gl-show-me').addEventListener('click', showExample);
+    document.addEventListener('close', requestGuideUpdate, true);
+    // Only one timeout exists. All real input postpones it; a used nudge stays used.
+    for (const type of ['pointerdown', 'pointerup', 'pointermove', 'keydown', 'input', 'change', 'click', 'dragstart', 'drop']) {
+      document.addEventListener(type, () => { resetNudge(); if (type !== 'pointermove') requestGuideUpdate(); }, { passive: true });
+    }
+    window.addEventListener('scroll', positionGuideArrow, { passive: true, capture: true });
+    window.addEventListener('resize', positionGuideArrow, { passive: true });
+    window.addEventListener('pagehide', () => { pageAway = true; stopGuideWork(); cancelSpeech(); });
+    window.addEventListener('pageshow', () => { pageAway = false; resetNudge(); requestGuideUpdate(); });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { stopGuideWork(); cancelSpeech(); }
+      else { resetNudge(); requestGuideUpdate(); }
+    });
   }
 
   // Word help is optional: missing glossary data never blocks the lab.
@@ -845,8 +1262,7 @@
     });
     $('gl-hint-button').addEventListener('click', () => {
       tries[state.step].hints++;
-      let text = T.hints[state.step];
-      if (state.step === 3) text = `${format(T.scaleHint, { x: lab.preferredScale[0], y: lab.preferredScale[1] })}\n${T.scaleBad}\n${T.scalePattern}`;
+      const text = hintText();
       rich($('gl-hint'), text);
       $('gl-hint').hidden = false;
     });
@@ -888,8 +1304,7 @@
         drawCursor();
       } else if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); placePoint(); }
     });
-    window.addEventListener('pagehide', cancelSpeech);
-    document.addEventListener('visibilitychange', () => { if (document.hidden) cancelSpeech(); });
+    bindGuideEvents();
   }
 
   document.querySelectorAll('[data-copy]').forEach(node => { node.textContent = T[node.dataset.copy]; });

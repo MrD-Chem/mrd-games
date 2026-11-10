@@ -1,10 +1,10 @@
 /* Mole Rush — Map 2, and the shared input/checking lifecycle for Maps 2–4.
    The track, equation, cancellation and worked math belong to setup-view.js. */
 
-import { el, clear, announce } from '../dom.js?v=20261110T0301';
-import { labelNode, labelText, stepKind } from '../bank.js?v=20261110T0301';
-import { formatStepValue, formatSig, formulaText } from '../chem.js?v=20261110T0301';
-import { problemHeader, buildTrack, revealNumbers, workedSolution, playCancel } from './setup-view.js?v=20261110T0301';
+import { el, clear, announce } from '../dom.js?v=20261110T0839';
+import { labelNode, labelText, stepKind } from '../bank.js?v=20261110T0839';
+import { formatStepValue, formatSig, formulaText } from '../chem.js?v=20261110T0839';
+import { problemHeader, buildTrack, revealNumbers, workedSolution, playCancel } from './setup-view.js?v=20261110T0839';
 
 export const kind = 'setup';
 

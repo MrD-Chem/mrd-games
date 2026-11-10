@@ -1,7 +1,7 @@
 /* Room snapshots -> canvas progress. The room remains the authority for places,
    ties and finish status; a correct answer is still exactly one visual step. */
-import { el } from '../dom.js?v=20261110T0301';
-import { createRace } from '../race/track.js?v=20261110T0301';
+import { el } from '../dom.js?v=20261110T0839';
+import { createRace } from '../race/track.js?v=20261110T0839';
 
 const COLORS = ['#6ee7cf', '#fcd779', '#c4b5fd', '#fda4af'];
 const ORD = ['th', 'st', 'nd', 'rd'];

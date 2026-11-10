@@ -12,13 +12,13 @@
   lobby is showing (school networks and the database both limit connections per device).
 */
 
-import { el, clear, announce } from '../dom.js?v=20261110T0301';
-import { signIn } from './firebase.js?v=20261110T0301';
-import { watchOpenRooms, createRoom, joinRoom, normalizeRoomCode } from './rooms.js?v=20261110T0301';
-import { checkNickname, loadNickname, saveNickname } from './nickname.js?v=20261110T0301';
-import { friendly } from './messages.js?v=20261110T0301';
-import { getMap } from '../maps/index.js?v=20261110T0301';
-import { MAP_RULES } from '../session.js?v=20261110T0301';
+import { el, clear, announce } from '../dom.js?v=20261110T0839';
+import { signIn } from './firebase.js?v=20261110T0839';
+import { watchOpenRooms, createRoom, joinRoom, normalizeRoomCode } from './rooms.js?v=20261110T0839';
+import { checkNickname, loadNickname, saveNickname } from './nickname.js?v=20261110T0839';
+import { friendly } from './messages.js?v=20261110T0839';
+import { getMap } from '../maps/index.js?v=20261110T0839';
+import { MAP_RULES } from '../session.js?v=20261110T0839';
 
 export const QUESTION_COUNT = 10;
 

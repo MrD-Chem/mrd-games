@@ -110,3 +110,33 @@
 /* Teacher fix: table cells line up in the middle; coach is first in the left column. */
 .gl-table th, .gl-table td { vertical-align: middle; }
 .gl-table th .gl-term { white-space: nowrap; }
+
+/* Guide: one next action, with no focus stealing or layout shifts. */
+.gl-intro { display: grid; grid-template-columns: minmax(0, 1fr) 160px; gap: 10px 16px; padding: 16px; margin-bottom: 18px; border: 2px solid var(--teal); border-radius: var(--radius-sm); background: var(--teal-soft); }
+.gl-intro h2 { font-size: 1.35rem; }
+.gl-intro p { margin: 8px 0; }
+.gl-intro > .gl-controls { grid-column: 1 / -1; margin: 0; }
+#gl-intro-picture { width: 100%; align-self: center; }
+.gl-now { padding: 8px 10px; border-inline-start: 3px solid var(--focus); background: var(--amber-soft); }
+.gl-next { outline: 4px solid var(--focus) !important; outline-offset: 3px; }
+.gl-point-target.gl-next { outline: none !important; stroke: var(--focus); stroke-width: 4; vector-effect: non-scaling-stroke; }
+.gl-guide-pulse { animation: gl-guide-pulse .7s ease-out 1; }
+@keyframes gl-guide-pulse { from { outline-offset: 9px; } to { outline-offset: 3px; } }
+.gl-point-target.gl-guide-pulse { animation-name: gl-point-pulse; }
+@keyframes gl-point-pulse { from { stroke-width: 7; } to { stroke-width: 4; } }
+.gl-guide-arrow { position: fixed; z-index: 5; max-width: calc(100vw - 24px); padding: 3px 8px; border-radius: 6px; background: var(--focus); color: var(--on-accent); font-size: .8rem; font-weight: 750; line-height: 1.4; pointer-events: none; }
+.gl-demo-highlight { box-shadow: 0 0 0 4px var(--violet); }
+.gl-point-target.gl-demo-highlight { stroke: var(--violet); stroke-width: 5; vector-effect: non-scaling-stroke; }
+#gl-zoom-view.gl-demo-highlight .gl-zoom { stroke: var(--violet); stroke-width: 5; }
+.gl-demo-card { position: fixed; z-index: 8; margin: 0; pointer-events: none; background: var(--bg-raised); border: 2px solid var(--violet); }
+.gl-demo-path { fill: none; stroke: var(--violet); stroke-width: 3; pointer-events: none; }
+.gl-demo-ghost { fill: var(--violet); opacity: .35; pointer-events: none; }
+#gl-demo-message { padding: 8px 10px; border-inline-start: 3px solid var(--violet); background: var(--violet-soft); }
+#gl-show-me { margin-top: 10px; border-color: var(--violet); }
+@media (max-width: 480px) {
+  .gl-intro { grid-template-columns: minmax(0, 1fr); }
+  #gl-intro-picture { width: 200px; justify-self: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gl-guide-pulse { animation: none; }
+}

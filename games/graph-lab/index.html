@@ -8,11 +8,11 @@
   <meta name="description" content="Graph Lab: measure springs and hot water, then build a graph step by step: labels, scale, points, lines and a legend. Word help in 6 languages.">
   <meta name="theme-color" content="#08090b">
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../assets/site.css?v=20261110T0301">
-  <link rel="stylesheet" href="style.css?v=20261110T0301">
-  <script src="labs.js?v=20261110T0301" defer></script>
-  <script src="glossary.js?v=20261110T0301" defer></script>
-  <script src="game.js?v=20261110T0301" defer></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=20261110T0839">
+  <link rel="stylesheet" href="style.css?v=20261110T0839">
+  <script src="labs.js?v=20261110T0839" defer></script>
+  <script src="glossary.js?v=20261110T0839" defer></script>
+  <script src="game.js?v=20261110T0839" defer></script>
 </head>
 <body class="gl-page">
   <header class="site-header">
@@ -22,6 +22,7 @@
         <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
         <span data-copy="brand"></span>
       </span>
+      <button type="button" class="gl-button" id="gl-guide-toggle" aria-pressed="true"></button>
       <button type="button" class="gl-button" id="gl-help" data-copy="wordHelp" hidden></button>
     </div>
   </header>
@@ -41,9 +42,12 @@
         <section class="gl-panel gl-coach" aria-labelledby="gl-coach-title">
           <div class="gl-panel-heading"><h2 id="gl-coach-title" data-copy="coach"></h2>
             <button type="button" class="gl-button" id="gl-read" data-copy="readAloud"></button></div>
+          <p id="gl-now" class="gl-now" role="status" aria-live="polite" aria-atomic="true"></p>
           <h3 id="gl-stage-title" tabindex="-1"></h3>
           <div id="gl-instruction"></div>
           <div id="gl-hint" hidden></div>
+          <button type="button" class="gl-button" id="gl-show-me" data-copy="showMe" hidden></button>
+          <p id="gl-demo-message" role="status" aria-live="polite" hidden></p>
           <p id="gl-feedback" class="gl-feedback" role="status" aria-live="polite" aria-atomic="true"></p>
         </section>
         <section class="gl-panel gl-table-panel" aria-labelledby="gl-table-title">
@@ -52,6 +56,15 @@
         </section>
       </div>
       <section class="gl-panel gl-right" aria-labelledby="gl-view-title">
+        <section id="gl-intro" class="gl-intro" aria-labelledby="gl-intro-title" hidden>
+          <div class="gl-intro-copy"><h2 id="gl-intro-title"></h2>
+            <p id="gl-intro-goal"></p><p id="gl-intro-why"></p></div>
+          <svg id="gl-intro-picture" viewBox="0 0 240 120" aria-hidden="true"></svg>
+          <div class="gl-controls">
+            <button type="button" class="gl-button gl-primary" id="gl-intro-start" data-copy="start"></button>
+            <button type="button" class="gl-button" id="gl-intro-read" data-copy="readAloud"></button>
+          </div>
+        </section>
         <h2 id="gl-view-title" class="gl-view-title"></h2>
         <div id="gl-equipment-controls" class="gl-controls"></div>
         <div id="gl-equipment"></div>
@@ -69,6 +82,7 @@
       <button type="button" class="gl-button gl-primary" id="gl-check" data-copy="check"></button>
     </div>
   </main>
+  <span id="gl-guide-arrow" class="gl-guide-arrow" aria-hidden="true" hidden></span>
   <dialog id="gl-words" class="gl-dialog" aria-labelledby="gl-words-title">
     <div class="gl-panel-heading"><h2 id="gl-words-title" data-copy="wordHelp"></h2><button type="button" class="gl-button" id="gl-close-words" data-copy="close"></button></div>
     <label for="gl-language" data-copy="chooseLanguage"></label>

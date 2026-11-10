@@ -1,7 +1,7 @@
 /* No Firebase/network dependency: room snapshots are fixtures, CPU rounds run
    through the real main.js hook and real map renderers under a fake clock. */
-import { createStandings } from '../js/online/standings.js?v=20261110T0301';
-import { fakeClock } from './fake-clock.js?v=20261110T0301';
+import { createStandings } from '../js/online/standings.js?v=20261110T0839';
+import { fakeClock } from './fake-clock.js?v=20261110T0839';
 
 const output = document.getElementById('test-results');
 const host = document.getElementById('adapter-host');

@@ -2,10 +2,10 @@
  * Fake clocks make CPU, countdown and animation checks immediate/reproducible.
  * Globals are restored after every test; no external requests are made.
  */
-import { fakeClock } from './fake-clock.js?v=20261110T0301';
-import { createRace } from '../js/race/track.js?v=20261110T0301';
-import { createCpu, CPU_DIFFICULTIES } from '../js/race/cpu.js?v=20261110T0301';
-import { countdownTo, countdownFor } from '../js/race/countdown.js?v=20261110T0301';
+import { fakeClock } from './fake-clock.js?v=20261110T0839';
+import { createRace } from '../js/race/track.js?v=20261110T0839';
+import { createCpu, CPU_DIFFICULTIES } from '../js/race/cpu.js?v=20261110T0839';
+import { countdownTo, countdownFor } from '../js/race/countdown.js?v=20261110T0839';
 
 const output = document.querySelector('#test-results');
 const canvas = document.querySelector('#track');

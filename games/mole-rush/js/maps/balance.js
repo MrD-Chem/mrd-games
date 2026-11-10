@@ -9,9 +9,9 @@
     -> { destroy(), focus(), check(), solve(), answerWrong(), state() }
 */
 
-import { el, clear, announce } from '../dom.js?v=20261110T0301';
-import { formulaNode } from '../bank.js?v=20261110T0301';
-import { checkBalance, formulaText } from '../chem.js?v=20261110T0301';
+import { el, clear, announce } from '../dom.js?v=20261110T0839';
+import { formulaNode } from '../bank.js?v=20261110T0839';
+import { checkBalance, formulaText } from '../chem.js?v=20261110T0839';
 
 export const kind = 'balance';
 
