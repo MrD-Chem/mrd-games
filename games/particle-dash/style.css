@@ -155,10 +155,26 @@
   .pd-check, .pd-next { width: 100%; }
 }
 
+/* ---------- Streak effects (particles, banners, card glow) ---------- */
+.pd-card { transition: box-shadow 0.4s ease, border-color 0.4s ease; }
+.pd-card--hot { border-color: rgba(251, 191, 36, 0.55); box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.35), 0 0 28px rgba(251, 191, 36, 0.22), 0 18px 40px rgba(0, 0, 0, 0.35); }
+.pd-card--hotter { border-color: rgba(251, 113, 133, 0.65); box-shadow: 0 0 0 1px rgba(251, 113, 133, 0.45), 0 0 40px rgba(251, 146, 60, 0.35), 0 18px 40px rgba(0, 0, 0, 0.35); }
+.pd-fx { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: visible; }
+.pd-particle { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: 50%; font: 800 13px/1 var(--sans); color: #1a1205; transform: translate(-50%, -50%); will-change: transform, opacity; }
+.pd-p { width: 20px; height: 20px; background: radial-gradient(circle at 35% 30%, #ffd1a6, #fb7185 60%, #e11d48); }
+.pd-n { width: 18px; height: 18px; background: radial-gradient(circle at 35% 30%, #f1f5f9, #94a3b8 65%, #64748b); }
+.pd-e { width: 11px; height: 11px; font-size: 10px; background: radial-gradient(circle at 35% 30%, #ccfbf1, var(--teal) 70%); box-shadow: 0 0 10px var(--teal); }
+.pd-banner { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); padding: 12px 22px; border-radius: 999px; white-space: nowrap; max-width: calc(100% - 16px); overflow: hidden; text-overflow: ellipsis;
+  font: 800 clamp(1.1rem, 0.9rem + 1.6vw, 1.7rem)/1.2 var(--sans); color: var(--on-accent); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); opacity: 0; }
+.pd-banner--hot { background: linear-gradient(90deg, #fbbf24, #fb923c); }
+.pd-banner--hotter { background: linear-gradient(90deg, #fb923c, #fb7185); }
+.pd-banner--max { background: linear-gradient(90deg, #a78bfa, #fb7185, #fbbf24); }
+.pd-banner--lost { background: var(--bg-raised); color: var(--muted); border: 1px solid var(--line-strong); font-size: 1rem; }
+
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   .pd-pop { animation: none; }
-  .pd-level, .pd-input { transition: none; }
+  .pd-level, .pd-input, .pd-card { transition: none; }
 }
 
 /* small notation (tables, review, answers): keep the A and Z numbers readable */

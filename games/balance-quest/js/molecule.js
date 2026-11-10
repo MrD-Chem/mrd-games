@@ -6,7 +6,7 @@
   spring layout. Lone-pair "ghosts" give water its bend and ammonia its pyramid.
 */
 
-import { parseFormulaTree, isMetal } from './chem.js?v=20261110T2309';
+import { parseFormulaTree, isMetal } from './chem.js?v=20261110T2320';
 
 // ---------- Colors (CPK-like) and sizes ----------
 

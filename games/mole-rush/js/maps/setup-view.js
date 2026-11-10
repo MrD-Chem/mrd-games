@@ -5,9 +5,9 @@
   Each map decides what goes in the track's cells (tiles, number boxes, blanks...).
 */
 
-import { el, reducedMotion } from '../dom.js?v=20261110T2309';
-import { equationNode, equationText, labelNode, molarMassBox, reactionFor, typeLabel, stepKind } from '../bank.js?v=20261110T2309';
-import { formatCalc, formatSig, formatStepValue, formulaText } from '../chem.js?v=20261110T2309';
+import { el, reducedMotion } from '../dom.js?v=20261110T2320';
+import { equationNode, equationText, labelNode, molarMassBox, reactionFor, typeLabel, stepKind } from '../bank.js?v=20261110T2320';
+import { formatCalc, formatSig, formatStepValue, formulaText } from '../chem.js?v=20261110T2320';
 
 /* Problem card. Returns { root, title } — focus `title` when the question appears. */
 export function problemHeader(bank, problem, { kicker, position }) {

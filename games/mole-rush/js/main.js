@@ -8,13 +8,13 @@
     turns the same code into the same questions on every device.
 */
 
-import { loadBank, formulaText } from './bank.js?v=20261110T2309';
-import { el, clear, announce } from './dom.js?v=20261110T2309';
-import { MAPS, getMap, isPlayable, rendererFor } from './maps/index.js?v=20261110T2309';
-import { createSession, buildSequence } from './session.js?v=20261110T2309';
-import { normalizeCode, randomCode, codeToSeed } from './rng.js?v=20261110T2309';
-import { initComputer } from './race/computer.js?v=20261110T2309';
-import { getBest, recordResult } from './storage.js?v=20261110T2309';
+import { loadBank, formulaText } from './bank.js?v=20261110T2320';
+import { el, clear, announce } from './dom.js?v=20261110T2320';
+import { MAPS, getMap, isPlayable, rendererFor } from './maps/index.js?v=20261110T2320';
+import { createSession, buildSequence } from './session.js?v=20261110T2320';
+import { normalizeCode, randomCode, codeToSeed } from './rng.js?v=20261110T2320';
+import { initComputer } from './race/computer.js?v=20261110T2320';
+import { getBest, recordResult } from './storage.js?v=20261110T2320';
 
 const $ = (id) => document.getElementById(id);
 
@@ -341,7 +341,7 @@ let onlineApi = null;
 
 function loadOnline() {
   if (!onlinePromise) {
-    onlinePromise = import('./online/online.js?v=20261110T2309')
+    onlinePromise = import('./online/online.js?v=20261110T2320')
       .then((mod) => {
         onlineApi = mod.initOnline({
           show,

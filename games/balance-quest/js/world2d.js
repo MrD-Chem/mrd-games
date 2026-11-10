@@ -3,8 +3,8 @@
   Gates open in order, just like on the walkway.
 */
 
-import { el, clear, formulaNode, starText } from './dom.js?v=20261110T2309';
-import { yieldsArrow } from './arrow.js?v=20261110T2309';
+import { el, clear, formulaNode, starText } from './dom.js?v=20261110T2320';
+import { yieldsArrow } from './arrow.js?v=20261110T2320';
 
 function capitalize(s) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';

@@ -416,7 +416,7 @@
     var screens = { start: $('pd-start'), play: $('pd-play'), end: $('pd-end') };
     var el = {
       levels: $('pd-levels'), hudLevel: $('pd-hud-level'), hudQ: $('pd-hud-q'), hudScore: $('pd-hud-score'),
-      hudStreak: $('pd-hud-streak'), hudStreakBox: $('pd-hud-streak-box'), hudTime: $('pd-hud-time'),
+      hudStreak: $('pd-hud-streak'), card: $('pd-card'), fx: $('pd-fx'), hudStreakBox: $('pd-hud-streak-box'), hudTime: $('pd-hud-time'),
       hudTimeLabel: $('pd-hud-time-label'), prompt: $('pd-prompt'), display: $('pd-display'),
       form: $('pd-form'), fields: $('pd-fields'), options: $('pd-options'), check: $('pd-check'),
       next: $('pd-next'), feedback: $('pd-feedback'), formula: $('pd-formula'), helperBtn: $('pd-helper-btn'),
@@ -500,9 +500,82 @@
       el.hudStreak.textContent = s.streak + (m > 1 ? ' ×' + m : '');
       el.hudStreakBox.classList.toggle('pd-hot', s.streak >= 3);
       el.hudStreakBox.classList.toggle('pd-hotter', s.streak >= 6);
+      // The question card glows while a streak is going (static glow, no loop).
+      el.card.classList.toggle('pd-card--hot', s.streak >= 3);
+      el.card.classList.toggle('pd-card--hotter', s.streak >= 6);
       el.hudTimeLabel.textContent = s.def.seconds ? T.hudTimeLeft : T.hudTime;
       tick();
     }
+    /* ---- streak effects ----
+       A burst of protons (+), neutrons and electrons (−) flies out of the symbol for every
+       correct answer from 2 in a row on (bigger streak = bigger burst). At 3, 6, 10 and then
+       every 5 in a row, a banner pops up. Everything removes itself when its animation ends,
+       and nothing moves for students who turn on "reduce motion". */
+    var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function streakBanner(n) {
+      if (n === 3) return fill(T.streak3, { n: n });
+      if (n === 6) return fill(T.streak6, { n: n });
+      if (n === 10) return fill(T.streak10, { n: n });
+      if (n > 10 && n % 5 === 0) return fill(T.streakMore, { n: n });
+      return '';
+    }
+    function burst(n) {
+      if (calm || !el.fx.animate) return;
+      var card = el.card.getBoundingClientRect(), box = el.display.getBoundingClientRect();
+      var ox = box.left - card.left + box.width / 2, oy = box.top - card.top + box.height / 2;
+      var count = Math.min(10 + n * 3, 40), reach = Math.min(card.width / 2, 120 + n * 18);
+      var kinds = ['pd-p', 'pd-n', 'pd-e'], marks = ['+', '', '−'];
+      for (var i = 0; i < count; i++) {
+        var k = i % 3, dot = h('span', 'pd-particle ' + kinds[k], marks[k]);
+        dot.style.left = ox + 'px'; dot.style.top = oy + 'px';
+        el.fx.appendChild(dot);
+        var angle = Math.random() * Math.PI * 2;
+        var dist = reach * (k === 2 ? 0.75 + Math.random() * 0.45 : 0.35 + Math.random() * 0.45);
+        var dx = Math.cos(angle) * dist, dy = Math.sin(angle) * dist * 0.7;
+        dot.animate([
+          { transform: 'translate(-50%, -50%) scale(0.3)', opacity: 1 },
+          { transform: 'translate(calc(-50% + ' + dx * 0.7 + 'px), calc(-50% + ' + dy * 0.7 + 'px)) scale(1.15)', opacity: 1, offset: 0.6 },
+          { transform: 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px)) scale(0.6)', opacity: 0 }
+        ], { duration: 750 + Math.random() * 450, easing: 'cubic-bezier(.15,.7,.3,1)' }).onfinish = (function (d) {
+          return function () { d.remove(); };
+        })(dot);
+      }
+    }
+    function showBanner(text, kind) {
+      var old = el.fx.querySelector('.pd-banner'); if (old) old.remove();
+      var b = h('div', 'pd-banner pd-banner--' + kind, text);
+      // Sit on the symbol (lower half), so it never covers the answer boxes.
+      var card = el.card.getBoundingClientRect(), box = el.display.getBoundingClientRect();
+      b.style.top = (box.top - card.top + box.height * 0.72) + 'px';
+      el.fx.appendChild(b);
+      var frames = calm
+        ? [{ opacity: 0 }, { opacity: 1, offset: 0.1 }, { opacity: 1, offset: 0.85 }, { opacity: 0 }]
+        : [{ opacity: 0, transform: 'translate(-50%, -50%) scale(0.4) rotate(-6deg)' },
+           { opacity: 1, transform: 'translate(-50%, -50%) scale(1.12) rotate(2deg)', offset: 0.15 },
+           { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.25 },
+           { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.8 },
+           { opacity: 0, transform: 'translate(-50%, -80%) scale(0.95)' }];
+      if (b.animate) b.animate(frames, { duration: 1800, easing: 'ease-out' }).onfinish = function () { b.remove(); };
+      else setTimeout(function () { b.remove(); }, 1800);
+    }
+    function celebrate(n) {
+      if (n >= 2) burst(n);
+      var text = streakBanner(n);
+      if (text) {
+        showBanner(text, n >= 10 ? 'max' : n >= 6 ? 'hotter' : 'hot');
+        // Screen readers hear the milestone too (the banner itself is decorative).
+        el.feedback.appendChild(h('p', 'sr-only', text));
+      }
+    }
+    function streakLost(was) {
+      if (was < 3) return;
+      showBanner(T.streakLost, 'lost');
+      if (!calm && el.hudStreakBox.animate) {
+        el.hudStreakBox.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' },
+          { transform: 'translateX(6px)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(0)' }], { duration: 400 });
+      }
+    }
+
     function addScore(pts) {
       state.score += pts; el.hudScore.textContent = String(state.score); pop(el.hudScore);
     }
@@ -694,9 +767,10 @@
         }
         addScore(pts); updateHud();
         setFeedback('good', msg); appendAnswer(); endQuestion();
+        if (first) celebrate(s.streak);
         return;
       }
-      if (first) { s.missed.push(s.q); s.streak = 0; }
+      if (first) { s.missed.push(s.q); streakLost(s.streak); s.streak = 0; }
       s.attempts++; updateHud();
       if (sprint || s.attempts >= 2) {
         setFeedback('bad', sprint ? T.feedbackWrongSprint : T.feedbackReveal);

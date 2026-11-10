@@ -115,6 +115,12 @@
     // Feedback
     feedbackCorrect: 'Correct! +{pts} points',
     feedbackCorrectBonus: 'Correct! +{pts} points (streak ×{mult})',
+    // Streak banners. {n} = how many in a row. The game shows them at 3, 6, 10, then every 5.
+    streak3: '🔥 {n} in a row! Points ×1.5',
+    streak6: '⚡ {n} in a row! Points ×2',
+    streak10: '💥 {n} in a row! Unstoppable!',
+    streakMore: '🚀 {n} in a row!',
+    streakLost: 'Streak lost — start a new one!',
     feedbackRetryCorrect: 'Correct on the second try. +{pts} points',
     feedbackWrong: 'Not quite. Try once more for 50 points.',
     feedbackWrongSprint: 'Not correct. See the answer below.',
