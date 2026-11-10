@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Isotope Mixer — Mr. D's Chemistry Games</title>
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css?v=20261110T2309">
+  <link rel="stylesheet" href="style.css?v=20261110T2309">
+  <script src="data.js?v=20261110T2309" defer></script>
+  <script src="game.js?v=20261110T2309" defer></script>
+</head>
+<body class="im-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../chemistry/">← Chemistry</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span data-copy="brand"></span>
+      </span>
+    </div>
+  </header>
+  <main class="wrap im-main">
+    <div class="im-heading">
+      <div><p class="im-eyebrow" data-copy="unit"></p><h1 data-copy="title"></h1></div>
+      <p class="im-tagline" data-copy="tagline"></p>
+    </div>
+    <div class="im-tabs" role="tablist" id="im-tabs">
+      <button class="btn btn-sm" id="im-sandbox-tab" type="button" role="tab" aria-controls="im-workspace" data-tab="sandbox" data-copy="sandbox"></button>
+      <button class="btn btn-sm" id="im-challenges-tab" type="button" role="tab" aria-controls="im-workspace" data-tab="challenges" data-copy="challenges"></button>
+    </div>
+    <div id="im-workspace" role="tabpanel" aria-labelledby="im-sandbox-tab">
+      <section class="panel im-challenge" id="im-challenge" hidden>
+        <div class="im-challenge-top">
+          <label for="im-challenge-picker" data-copy="chooseChallenge"></label>
+          <select id="im-challenge-picker"></select>
+          <span id="im-progress" class="im-muted"></span>
+        </div>
+        <p class="im-eyebrow" id="im-challenge-type"></p>
+        <h2 id="im-prompt"></h2>
+        <p id="im-instructions" class="im-muted"></p>
+        <div id="im-answer-area"></div>
+        <div class="im-actions">
+          <button type="button" class="btn btn-primary" id="im-check" data-copy="check"></button>
+          <button type="button" class="btn btn-ghost btn-sm" id="im-retry" data-copy="retry" hidden></button>
+          <button type="button" class="btn btn-ghost btn-sm" id="im-next" data-copy="next"></button>
+        </div>
+        <p id="im-feedback" class="im-feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+      </section>
+      <section id="im-complete" class="panel im-complete" hidden>
+        <h2 data-copy="allDone"></h2>
+        <button type="button" class="btn btn-ghost btn-sm" id="im-start-over" data-copy="startOver"></button>
+      </section>
+      <div class="im-grid">
+        <section class="panel im-picture-panel" aria-labelledby="im-picture-title">
+          <div class="im-panel-heading"><h2 id="im-picture-title" data-copy="pictureTitle"></h2><span class="im-bag" id="im-bag"></span></div>
+          <p id="im-visual-note" class="im-muted im-note"></p>
+          <svg id="im-picture" viewBox="0 0 720 440" role="img" aria-labelledby="im-svg-title" aria-describedby="im-summary"></svg>
+          <p id="im-summary" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+          <div id="im-guess-controls" hidden>
+            <label for="im-guess" class="im-guess-label"><span data-copy="yourGuess"></span><output id="im-guess-value" for="im-guess"></output></label>
+            <input type="range" id="im-guess" step="0.01">
+            <p class="im-muted im-note" data-copy="dragHelp"></p>
+          </div>
+          <label class="im-compare" id="im-compare-label"><input type="checkbox" id="im-compare"><span data-copy="compare"></span></label>
+        </section>
+        <div class="im-side">
+          <section class="panel im-controls" aria-labelledby="im-controls-title">
+            <div class="im-panel-heading"><h2 id="im-controls-title" data-copy="controlsTitle"></h2><span id="im-readonly" class="im-muted" hidden data-copy="fixedSample"></span></div>
+            <div class="im-element-row"><label for="im-element" data-copy="element"></label><select id="im-element"></select></div>
+            <div id="im-isotopes"></div>
+            <div class="im-actions" id="im-mix-actions">
+              <button type="button" class="btn btn-ghost btn-sm" id="im-natural" data-copy="natural"></button>
+              <button type="button" class="btn btn-ghost btn-sm" id="im-empty" data-copy="empty"></button>
+            </div>
+            <p class="im-muted im-note" id="im-sample-note"></p>
+          </section>
+          <section class="panel im-math-panel" aria-labelledby="im-math-title">
+            <h2 id="im-math-title" data-copy="mathTitle"></h2>
+            <div id="im-math"></div>
+            <p id="im-periodic" class="im-periodic"></p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="wrap"><p data-copy="footer"></p></div></footer>
+</body>
+</html>

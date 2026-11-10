@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Particle Count Dash — Mr. D's Chemistry Games</title>
+  <meta name="description" content="Particle Count Dash: count protons, neutrons and electrons in atoms and ions, build isotope symbols, and compare particles.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css?v=20261110T2309">
+  <link rel="stylesheet" href="style.css?v=20261110T2309">
+  <script src="data.js?v=20261110T2309" defer></script>
+  <script src="game.js?v=20261110T2309" defer></script>
+</head>
+<body class="pd-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../chemistry/">← Chemistry</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span data-copy="brand">Mr. D's Chemistry Games</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap pd-main" id="main">
+    <noscript><p class="pd-noscript">This game needs JavaScript. Please turn it on.</p></noscript>
+
+    <!-- Start screen -->
+    <section id="pd-start" aria-labelledby="pd-title">
+      <h1 id="pd-title" class="pd-title" tabindex="-1" data-focus data-copy="title">Particle Count Dash</h1>
+      <p class="lead pd-lead" data-copy="intro"></p>
+      <h2 class="pd-h2" data-copy="chooseLevel"></h2>
+      <ul class="pd-levels" id="pd-levels"></ul>
+      <p class="pd-small" data-copy="howToStars"></p>
+    </section>
+
+    <!-- Play screen -->
+    <section id="pd-play" hidden aria-label="Game">
+      <div class="pd-hud panel">
+        <div class="pd-hud-item"><span class="pd-hud-label" data-copy="hudLevel"></span><span class="pd-hud-value" id="pd-hud-level"></span></div>
+        <div class="pd-hud-item"><span class="pd-hud-label" data-copy="hudQLabel"></span><span class="pd-hud-value" id="pd-hud-q"></span></div>
+        <div class="pd-hud-item"><span class="pd-hud-label" data-copy="hudScore"></span><span class="pd-hud-value" id="pd-hud-score">0</span></div>
+        <div class="pd-hud-item pd-streak" id="pd-hud-streak-box"><span class="pd-hud-label" data-copy="hudStreak"></span><span class="pd-hud-value"><span class="pd-flame" aria-hidden="true">🔥</span> <span id="pd-hud-streak">0</span></span></div>
+        <div class="pd-hud-item"><span class="pd-hud-label" id="pd-hud-time-label"></span><span class="pd-hud-value" id="pd-hud-time">0:00</span></div>
+        <button type="button" class="btn btn-ghost btn-sm pd-leave" id="pd-leave" data-copy="leave"></button>
+      </div>
+
+      <div class="pd-card panel">
+        <p class="pd-prompt" id="pd-prompt"></p>
+        <div class="pd-display" id="pd-display"></div>
+        <form id="pd-form" novalidate>
+          <div class="pd-fields" id="pd-fields"></div>
+          <button type="submit" class="btn btn-primary pd-check" id="pd-check" data-copy="check"></button>
+        </form>
+        <div class="pd-options" id="pd-options" role="group" aria-labelledby="pd-prompt" hidden></div>
+        <div class="pd-feedback" id="pd-feedback" role="status" aria-live="polite" aria-atomic="true"></div>
+        <button type="button" class="btn btn-primary pd-next" id="pd-next" hidden></button>
+      </div>
+
+      <div class="pd-bottom">
+        <p class="pd-formula" id="pd-formula"></p>
+        <button type="button" class="btn btn-ghost btn-sm" id="pd-helper-btn" data-copy="helper" hidden></button>
+      </div>
+    </section>
+
+    <!-- End screen -->
+    <section id="pd-end" hidden aria-labelledby="pd-end-title">
+      <div class="pd-endcard panel">
+        <h1 class="pd-title" id="pd-end-title" tabindex="-1" data-focus></h1>
+        <p class="pd-end-label" data-copy="endScore"></p>
+        <p class="pd-end-score" id="pd-end-score"></p>
+        <p class="pd-end-stars" id="pd-end-stars" role="img"></p>
+        <p class="pd-end-first" id="pd-end-first"></p>
+        <p class="pd-newbest" id="pd-end-best" hidden data-copy="newBest"></p>
+        <div class="pd-end-actions">
+          <button type="button" class="btn btn-primary" id="pd-again" data-copy="playAgain"></button>
+          <button type="button" class="btn btn-ghost" id="pd-choose" data-copy="chooseLevelBtn"></button>
+        </div>
+      </div>
+      <h2 class="pd-h2" id="pd-review-title"></h2>
+      <ul class="pd-review" id="pd-review"></ul>
+    </section>
+  </main>
+
+  <dialog id="pd-pt" class="pd-dialog" aria-labelledby="pd-pt-title">
+    <div class="pd-dialog-head">
+      <h2 id="pd-pt-title" data-copy="helperTitle"></h2>
+      <button type="button" class="btn btn-ghost btn-sm" id="pd-pt-close" data-copy="close"></button>
+    </div>
+    <p class="pd-small" data-copy="helperHint"></p>
+    <p class="pd-pt-readout" id="pd-pt-readout" aria-live="polite"></p>
+    <div class="pd-pt-scroll"><div class="pd-pt-grid" id="pd-pt-grid" role="group" aria-label="Periodic table"></div></div>
+  </dialog>
+
+  <footer class="site-footer"><div class="wrap"><p data-copy="footer"></p></div></footer>
+</body>
+</html>

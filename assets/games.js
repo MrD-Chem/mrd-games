@@ -119,6 +119,31 @@ window.SUBJECTS = [
     accent: "teal",
     units: [
       {
+        id: "atomic-structure",
+        title: "Atomic Structure",
+        blurb: "Protons, neutrons and electrons; atoms, ions and isotopes; and average atomic mass.",
+        games: [
+          {
+            id: "particle-dash",
+            title: "Particle Count Dash",
+            blurb: "Read the symbol, count the protons, neutrons and electrons, and keep your streak alive.",
+            path: "games/particle-dash/",
+            status: "ready",
+            icon: "⚛️",
+            accent: "amber"
+          },
+          {
+            id: "isotope-mixer",
+            title: "Isotope Mixer",
+            blurb: "Fill a sample with isotopes and watch the balance point show the average atomic mass.",
+            path: "games/isotope-mixer/",
+            status: "ready",
+            icon: "🧪",
+            accent: "violet"
+          }
+        ]
+      },
+      {
         id: "chemical-reactions",
         title: "Chemical Reactions",
         blurb: "Balancing equations and the law of conservation of mass.",
