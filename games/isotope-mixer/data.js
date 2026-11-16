@@ -3,7 +3,7 @@
 "use strict";
 window.ISOTOPE_MIXER_DATA = {
   text: {
-    brand: "Mr. D's Chemistry Games", title: "Isotope Mixer",
+    brand: "Mr. D Chemistry", title: "Isotope Mixer",
     unit: "Atomic structure · Pages 13–15",
     tagline: "Average atomic mass is the balance point of the atoms’ masses.",
     footer: "No accounts. No tracking. Scores stay on this device.",

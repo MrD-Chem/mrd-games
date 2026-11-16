@@ -3,9 +3,9 @@
    {name} is a value supplied by the game. Keep those placeholders. */
 window.GRAPH_LAB_DATA = {
   ui: {
-    appName: 'Graph Lab', pageTitle: "Graph Lab — Mr. D’s Chemistry Games",
+    appName: 'Graph Lab', pageTitle: "Graph Lab — Mr. D Chemistry",
     description: 'Measure. Make a table. Build a graph.',
-    back: '← Physical Science', brand: "Mr. D’s Chemistry Games",
+    back: '← Physical Science', brand: "Mr. D Chemistry",
     footer: 'No accounts. No tracking. Scores stay on this device.',
     chooseLab: 'Choose lab', startOver: 'Start over', wordHelp: 'Word help',
     chooseLanguage: 'Choose your language.', english: 'English', allWords: 'All words',

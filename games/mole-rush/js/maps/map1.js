@@ -17,11 +17,11 @@
   onResult({ correct, revealed, tries, final }) runs after every Check / "Show me".
 */
 
-import { el, clear, announce } from '../dom.js?v=20261110T2320';
-import { labelNode, labelText, reactionFor, reactionFormulas, stepKind, molarMass } from '../bank.js?v=20261110T2320';
-import { formulaText } from '../chem.js?v=20261110T2320';
-import { mulberry32, seededShuffle } from '../rng.js?v=20261110T2320';
-import { problemHeader, buildTrack, playCancel, revealNumbers, workedSolution } from './setup-view.js?v=20261110T2320';
+import { el, clear, announce } from '../dom.js?v=20261116T0337';
+import { labelNode, labelText, reactionFor, reactionFormulas, stepKind, molarMass } from '../bank.js?v=20261116T0337';
+import { formulaText } from '../chem.js?v=20261116T0337';
+import { mulberry32, seededShuffle } from '../rng.js?v=20261116T0337';
+import { problemHeader, buildTrack, playCancel, revealNumbers, workedSolution } from './setup-view.js?v=20261116T0337';
 
 export const kind = 'setup';
 

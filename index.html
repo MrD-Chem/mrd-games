@@ -4,44 +4,46 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
-  <title>Mr. D's Chemistry Games</title>
-  <meta name="description" content="Free physical science and chemistry practice games from Mr. D — play in the browser on a Chromebook, iPad, or phone. No accounts, no tracking.">
-  <meta name="theme-color" content="#08090b">
+  <title>Games — Mr. D Chemistry</title>
+  <meta name="description" content="Free chemistry and physical science practice games from Mr. D — play in the browser on a Chromebook, iPad, or phone. No accounts, no tracking.">
+  <meta name="theme-color" content="#070a13">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/site.css?v=20261110T2320">
-  <script src="assets/games.js?v=20261110T2320" defer></script>
-  <script src="assets/home.js?v=20261110T2320" defer></script>
+  <link rel="stylesheet" href="assets/site.css?v=20261116T0337">
+  <link rel="stylesheet" href="assets/site-bar.css?v=20261116T0337">
+  <script src="assets/games.js?v=20261116T0337" defer></script>
+  <script src="assets/home.js?v=20261116T0337" defer></script>
 </head>
-<body>
-  <header class="site-header">
-    <div class="wrap site-header-inner">
-      <h1 class="brand">
-        <img class="brand-mark" src="assets/favicon.svg" alt="" width="40" height="40">
-        <span>Mr. D's Chemistry Games</span>
-      </h1>
-      <a class="header-link" href="https://mrdchemistry.com">← mrdchemistry.com</a>
+<body class="has-site-bar">
+  <header class="site-bar-wrap">
+    <div class="wrap">
+      <div class="site-bar">
+        <a class="site-bar-brand" href="https://mrdchemistry.com/">
+          <img src="assets/favicon.svg" alt="" width="40" height="40">
+          <span>Mr. D Chemistry</span>
+        </a>
+        <nav class="site-bar-nav" aria-label="Site">
+          <a class="nav-games" href="https://games.mrdchemistry.com/" aria-current="page">Games</a>
+          <a class="nav-pathways" href="https://mrdchemistry.com/pathways/">Pathways</a>
+          <a class="nav-notes" href="https://notes.mrdchemistry.com/">Notes</a>
+        </nav>
+      </div>
     </div>
   </header>
 
   <main id="main" class="wrap">
-    <section class="intro" aria-label="Introduction">
-      <p class="eyebrow">Science made fun and easy</p>
-      <p class="lead">Quick science games — pick your subject, then play right in your browser, on a Chromebook, iPad, or phone.</p>
+    <section class="intro" aria-labelledby="page-title">
+      <h1 class="page-title" id="page-title">Games</h1>
+      <p class="lead">Quick science games you can play right in your browser, on a Chromebook, iPad, or phone. Pick a subject, then a game.</p>
     </section>
 
-    <ul class="subject-grid" id="subject-grid" data-root="" aria-label="Subjects"></ul>
+    <!-- The tabs, units and game cards are drawn here from the list in assets/games.js. Without data-subject, the tab used last (or Chemistry) is selected. -->
+    <div id="games-app" data-root=""></div>
 
     <noscript>
-      <p class="panel notice">The game list needs JavaScript turned on. Subjects:
-        <a href="physical-science/">Physical Science</a> ·
-        <a href="chemistry/">Chemistry</a></p>
+      <p class="panel notice">The game list needs JavaScript turned on. Subjects: <a href="chemistry/">Chemistry</a> · <a href="physical-science/">Physical Science</a></p>
     </noscript>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap">
-      <p>No accounts, no tracking — scores are saved only on this device.</p>
-    </div>
-  </footer>
+  <footer class="site-foot"><div class="wrap"><p>© 2026 Mr. D Chemistry · No accounts, no ads, no tracking · Scores are saved only on this device</p></div></footer>
 </body>
 </html>

@@ -5,7 +5,7 @@
   into a custom world.
 */
 
-import { balance, check, parseEquationLine, tryParseFormula } from './chem.js?v=20261110T2320';
+import { balance, check, parseEquationLine, tryParseFormula } from './chem.js?v=20261116T0337';
 
 export const MAX_COEFFICIENT = 12;
 const MAX_CUSTOM = 20;

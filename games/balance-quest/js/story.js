@@ -9,8 +9,8 @@
   Everything is built with DOM APIs (el / rich), never innerHTML.
 */
 
-import { el, clear, rich } from './dom.js?v=20261110T2320';
-import { WORLDS } from './data.js?v=20261110T2320';
+import { el, clear, rich } from './dom.js?v=20261116T0337';
+import { WORLDS } from './data.js?v=20261116T0337';
 
 const ART = {
   scale: 'art/great-scale.svg',

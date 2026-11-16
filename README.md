@@ -1,4 +1,4 @@
-# Mr. D's Chemistry Games
+# Mr. D Chemistry — Games
 
 A small website of science games for students. It is plain web pages (HTML, CSS and
 JavaScript), so there is nothing to install or "build": GitHub Pages serves the files
@@ -14,36 +14,43 @@ browser.
 
 ## How the site is organised
 
-The site works like a binder: **subjects**, then **units**, then **games**.
+One page, two tabs. The games page shows the tabs **Chemistry | Physical Science**,
+and under them that subject's **units** (headings) and **games** (cards).
 
 ```
-Home page            two big buttons: Physical Science and Chemistry
-├── Physical Science
-│   └── Unit: Experimental Design
-│       └── Experimental Design Variable Dash   (ready to play)
-└── Chemistry
-    └── Unit: Chemical Reactions
-        └── Balance Quest                        (coming soon)
+Games page           tabs: Chemistry | Physical Science
+├── Chemistry tab
+│   ├── Unit: Atomic Structure       Particle Count Dash, Isotope Mixer
+│   └── Unit: Chemical Reactions     Balance Quest, Mole Rush
+└── Physical Science tab
+    ├── Unit: Experimental Design    Experimental Design Variable Dash
+    └── Unit: Graphing Data          Graph Lab
 ```
 
-- The **home page** shows one big button per subject, with how many games it has.
-- Each **subject page** (for example `chemistry/`) shows a heading for every unit and
-  a card for every game in that unit.
-- Every game page has a "←" link back to its subject page.
+- `index.html` is the games page. It remembers the last tab a student used (in that
+  student's browser only).
+- `chemistry/` and `physical-science/` are older addresses that teachers have already
+  shared. They show the **same page** with that tab pre-selected (the tab is chosen by
+  `data-subject` on the page), so those links keep working.
+- Each **game card** is one big link: it has a cover picture, the title, a sentence, and
+  a **Play →** label. If the student has played, the card also shows their saved progress
+  (for example "5 of 13 challenges done"). That line is read from what each game already
+  saved in the browser; see `PROGRESS_READERS` in `assets/home.js`. The page never
+  changes those saves.
+- Every game page has a "←" link back to its subject (`../../chemistry/` or
+  `../../physical-science/`), which opens the games page on the right tab.
 
-All of the buttons and cards are drawn from **one list**, `assets/games.js`. To add,
+All of the tabs and cards are drawn from **one list**, `assets/games.js`. To add,
 rename, move or hide a game, that is the file you edit.
 
 ## What's in the folder
 
 ```
 mrd-games/
-├── index.html            Home page – the big subject buttons
-├── physical-science/
-│   └── index.html        Physical Science page – its units and games
-├── chemistry/
-│   └── index.html        Chemistry page – its units and games
-├── 404.html              "Page not found" page
+├── index.html            Games page (tabs, units, cards)
+├── chemistry/index.html  Same page, Chemistry tab pre-selected
+├── physical-science/index.html   Same page, Physical Science tab pre-selected
+├── 404.html              "Page not found" page (self-contained: styles are built in)
 ├── CNAME                 Holds games.mrdchemistry.com (leave it alone)
 ├── .nojekyll             Tells GitHub Pages to serve the files as they are (leave it alone)
 ├── README.md             This file
@@ -51,13 +58,24 @@ mrd-games/
 │   └── stamp_version.py  Run it after changing any file (see "After changing any file")
 ├── assets/
 │   ├── games.js          THE LIST of subjects, units and games – edit this one
-│   ├── home.js           Draws the buttons and cards from that list (no need to edit)
-│   ├── site.css          Shared colours, fonts and layout for every page
+│   ├── home.js           Draws the tabs and cards, and reads saved progress (no need to edit,
+│   │                     except to add a progress reader for a new game)
+│   ├── site.css          Shared colours, fonts and layout, and the tabs and cards
+│   ├── site-bar.css      The shared top bar, background and footer (see below)
+│   ├── covers/           One 16:9 cover picture per game, <game id>.svg
 │   └── favicon.svg       Little flask icon shown in the browser tab
-└── games/                One folder per game
-    ├── quiz-dash/        Experimental Design Variable Dash
-    └── balance-quest/    Balance Quest (coming soon)
+└── games/                One folder per game (quiz-dash, graph-lab, particle-dash,
+                          isotope-mixer, balance-quest, mole-rush)
 ```
+
+### The shared bar (`assets/site-bar.css`)
+
+The top bar (Mr. D Chemistry · Games · Pathways · Notes), the dark background and the
+footer are shared by all three Mr. D Chemistry sites. `assets/site-bar.css` is a copy of
+`shared/site-bar.css` (in the folder above this repo) and **must stay identical to it**:
+never edit it here. Change the shared file and copy it over. The games page and 404 page
+use it; the game-play pages keep their own compact header (back link + small brand).
+The 404 page holds a pasted copy of the same CSS, because it cannot link to files.
 
 Experimental Design Variable Dash used to be called "Quiz Dash". Its folder is still
 `games/quiz-dash/` on purpose: that keeps old links working and keeps students' saved
@@ -67,24 +85,31 @@ best scores. Students only ever see the new name.
 
 1. **Make a folder for it** inside `games/`, for example `games/mole-match/`, with an
    `index.html` inside. The easiest start is to copy the `quiz-dash` folder and
-   rename it.
+   rename it. In the page, the brand text is `Mr. D Chemistry` and the `<title>` is
+   `Mole Match — Mr. D Chemistry`.
 2. **Point its back link at its subject.** Near the top of the game's `index.html`
    is a link like `<a class="header-link" href="../../physical-science/">← Physical Science</a>`.
    Change it to the subject the game belongs to, for example
    `href="../../chemistry/">← Chemistry`.
-3. **Add it to the list.** Open `assets/games.js` and find the unit it belongs in.
+3. **Draw a cover.** A 16:9 picture, `assets/covers/mole-match.svg` (the existing ones use
+   a 320 x 180 canvas, `viewBox="0 0 320 180"`). Without it the card shows the game's
+   emoji instead, so nothing breaks.
+4. **Add it to the list.** Open `assets/games.js` and find the unit it belongs in.
    Inside that unit's `games: [ ... ]`, copy one game (from `{` to `},`), paste it
-   after the last game and change the words. The instructions at the top of that file
-   explain each line. Use `"ready"` to show a **Play** button, or `"coming-soon"` to
-   show a grey "Coming soon" badge (no link, so it is fine if the folder isn't
-   finished yet).
-4. **Run the version stamp:** `python3 tools/stamp_version.py` (see
+   after the last game and change the words, including `cover: "assets/covers/mole-match.svg"`.
+   The instructions at the top of that file explain each line. Use `"ready"` to make the
+   card a link to the game, or `"coming-soon"` to show a grey "Coming soon" badge (no
+   link, so it is fine if the folder isn't finished yet).
+5. **Optional: show progress on the card.** In `assets/home.js`, add an entry for the
+   game's `id` to `PROGRESS_READERS` that reads the game's saved data and returns a short
+   text (copy one of the others). Return `''` when there is nothing to show.
+6. **Run the version stamp:** `python3 tools/stamp_version.py` (see
    [After changing any file](#after-changing-any-file-run-the-version-stamp)).
-5. **Upload / commit** the changes to GitHub. The site updates within a minute or two
+7. **Upload / commit** the changes to GitHub. The site updates within a minute or two
    (refresh the page if you don't see it).
 
 Paths in `games.js` are always written from the top of the site, like
-`games/mole-match/` – even though the cards appear on a subject page. The site adds
+`games/mole-match/` – even though the page may be one folder down. The site adds
 the rest by itself.
 
 ## How to add a unit
@@ -96,27 +121,22 @@ change its `id` (short, lowercase-with-dashes, e.g. `"stoichiometry"`), its `tit
 in its `games: [ ... ]` list. If you leave the list empty (`games: []`), the unit
 still shows, with the note "Games for this unit are on the way."
 
-Units appear on the subject page in the same order as in the list.
+Units appear under the tab in the same order as in the list.
 
-## How to add a subject
+## How to add a subject (a new tab)
 
 1. **Copy the `chemistry` folder** (it holds just one `index.html`) and rename it,
-   for example `biology`. In the new `index.html` change four things:
-   - the `<title>` line: `Chemistry — Mr. D's Chemistry Games` → `Biology — Mr. D's Chemistry Games`
+   for example `biology`. In the new `index.html` change:
+   - the `<title>` line: `Chemistry games — Mr. D Chemistry` → `Biology games — Mr. D Chemistry`
    - the `<meta name="description" ...>` line: `Free chemistry practice games ...` →
      `Free biology practice games ...` (search engines show this text)
-   - the big heading: `<h1 ...>Chemistry</h1>` → `<h1 ...>Biology</h1>`
    - `data-subject="chemistry"` → `data-subject="biology"` (this must match the `id`
      in the next step)
-
-   Leave the name "Mr. D's Chemistry Games" in the header as it is: that is the name
-   of the whole site, not of the subject.
 2. **Add it to the list.** In `assets/games.js`, copy a whole subject (from its `{`
-   to the matching `},`), paste it where its button should appear on the home page,
-   and change `id` (`"biology"`, the same as the folder name), `title`, `blurb`,
-   `path` (`"biology/"`), `icon`, `accent` and its units.
-3. Optional: on the home page (`index.html`) there is a short note for computers with
-   JavaScript turned off that links to each subject. Add the new subject there too.
+   to the matching `},`), paste it where its tab should appear (tabs follow the order of
+   the list), and change `id` (`"biology"`, the same as the folder name), `title`,
+   `blurb`, `path` (`"biology/"`), `icon`, `accent` (the colour of the selected tab) and
+   its units.
 
 ## After changing any file: run the version stamp
 

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">
+  <title>A balanced see-saw with a tall stack of teal isotopes and a short stack of amber ones</title>
+  <defs>
+    <linearGradient id="im-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1840"/><stop offset="1" stop-color="#070a13"/></linearGradient>
+    <radialGradient id="im-glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#a78bfa" stop-opacity="0.5"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0"/></radialGradient>
+    <path id="im-sp" d="M0-6 1.8-1.8 6 0 1.8 1.8 0 6-1.8 1.8-6 0-1.8-1.8z"/>
+  </defs>
+  <rect width="320" height="180" fill="url(#im-bg)"/>
+  <ellipse cx="160" cy="110" rx="130" ry="80" fill="url(#im-glow)"/>
+  <!-- background mass-spectrum bars -->
+  <g opacity="0.7">
+    <path d="M196 80h56" stroke="#94a3b8" stroke-width="2.500" stroke-linecap="round"/>
+    <rect x="206" y="42" width="11" height="38" rx="2" fill="#2dd4bf"/>
+    <rect x="228" y="64" width="11" height="16" rx="2" fill="#fbbf24"/>
+  </g>
+  <!-- stacks -->
+  <g fill="#2dd4bf" stroke="#99f6e4" stroke-width="2">
+    <circle cx="108" cy="113" r="7.500"/><circle cx="108" cy="97" r="7.500"/><circle cx="108" cy="81" r="7.500"/><circle cx="108" cy="65" r="7.500"/><circle cx="108" cy="49" r="7.500"/>
+  </g>
+  <g fill="#fbbf24" stroke="#fde68a" stroke-width="2">
+    <circle cx="212" cy="113" r="7.500"/><circle cx="212" cy="97" r="7.500"/>
+  </g>
+  <g fill="#fff" opacity="0.8"><circle cx="105" cy="46" r="2"/><circle cx="209" cy="94" r="2"/></g>
+  <!-- fulcrum -->
+  <path d="M140 128 118 160h44z" fill="#7c3aed" stroke="#a78bfa" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M60 160h200" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-opacity="0.7"/>
+  <!-- beam -->
+  <rect x="76" y="120" width="170" height="10" rx="5" fill="#f1f5f9"/>
+  <circle cx="140" cy="125" r="5" fill="#a78bfa"/>
+  <!-- ticks -->
+  <g stroke="#cbd5e1" stroke-width="2" stroke-linecap="round">
+    <path d="M90 134v6M104 134v6M118 134v6M162 134v6M176 134v6M190 134v6M204 134v6M218 134v6M232 134v6"/>
+  </g>
+  <g fill="#fde68a"><use href="#im-sp" transform="translate(40 36)"/><use href="#im-sp" transform="translate(286 30) scale(0.8)"/><use href="#im-sp" transform="translate(282 150) scale(0.6)"/><use href="#im-sp" transform="translate(32 140) scale(0.7)"/></g>
+</svg>

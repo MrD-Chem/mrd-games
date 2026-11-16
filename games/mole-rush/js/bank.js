@@ -7,8 +7,8 @@
   formulaNode(), which builds real <sub> elements with DOM APIs.
 */
 
-import { el } from './dom.js?v=20261110T2320';
-import { formulaParts, formulaText, tryCountAtoms, computeMolarMass, checkBalance, formatSig } from './chem.js?v=20261110T2320';
+import { el } from './dom.js?v=20261116T0337';
+import { formulaParts, formulaText, tryCountAtoms, computeMolarMass, checkBalance, formatSig } from './chem.js?v=20261116T0337';
 
 export const UNITS = ['mol', 'g'];
 const TYPES = ['mol-mol', 'g-mol', 'mol-g', 'g-g'];

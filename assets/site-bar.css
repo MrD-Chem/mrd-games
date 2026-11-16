@@ -1,0 +1,235 @@
+/*
+  Mr. D Chemistry — shared site bar, page background and heading style.
+  ONE copy of this file lives in each site's assets/ folder (games, notes, and the
+  homepage repo for Pathways). Keep the copies identical: edit shared/site-bar.css,
+  then copy it over the others.
+
+  Use:  <body class="has-site-bar"> and the header markup in shared/SPEC.md.
+  Needs the variables from site.css (--text, --muted, --teal, --violet, --serif, --sans).
+*/
+
+:root {
+  --field: #070a13;
+  --pink: #f472b6;
+}
+
+/* ---------- Page background: the homepage's colour field, turned down ---------- */
+
+body.has-site-bar {
+  background-color: var(--field);
+  background-image:
+    radial-gradient(60rem 34rem at 92% -8rem, rgba(167, 139, 250, 0.30), transparent 70%),
+    radial-gradient(52rem 32rem at -8% 4rem, rgba(45, 212, 191, 0.22), transparent 70%),
+    radial-gradient(44rem 26rem at 50% 108%, rgba(244, 114, 182, 0.13), transparent 70%);
+  background-repeat: no-repeat;
+}
+
+/* ---------- Headings: bold sans everywhere; serif is for the brand name only ---------- */
+
+body.has-site-bar h1,
+body.has-site-bar h2,
+body.has-site-bar h3 {
+  font-family: var(--sans);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- The bar ---------- */
+
+.site-bar-wrap {
+  position: relative;
+  z-index: 20;
+  padding: 14px 0 0;
+}
+
+.site-bar {
+  display: flex;
+  align-items: center;
+  width: -webkit-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px 18px 6px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background-color: rgba(10, 14, 28, 0.86);
+  background-image: radial-gradient(120% 90% at 0% 0%, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 55%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 12px 20px -16px rgba(255, 255, 255, 0.42),
+    0 22px 44px -20px rgba(0, 0, 0, 0.8),
+    0 2px 8px rgba(0, 0, 0, 0.22);
+}
+
+.site-bar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text);
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.site-bar-brand:hover {
+  color: #fff;
+}
+
+.site-bar-brand img {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Phones: Games / Pathways / Notes float in a tab bar at the bottom of the screen */
+.site-bar-nav {
+  position: fixed;
+  z-index: 30;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+  width: min(420px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background-color: rgba(10, 14, 28, 0.94);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 22px 44px -20px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.site-bar-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.site-bar-nav a::before {
+  content: "";
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 10px rgba(45, 212, 191, 0.8);
+}
+
+.site-bar-nav .nav-pathways::before {
+  background: var(--pink);
+  box-shadow: 0 0 10px rgba(244, 114, 182, 0.8);
+}
+
+.site-bar-nav .nav-notes::before {
+  background: var(--violet);
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.8);
+}
+
+.site-bar-nav a:hover,
+.site-bar-nav a:active,
+.site-bar-nav a[aria-current="page"] {
+  background-color: rgba(255, 255, 255, 0.13);
+  color: #fff;
+}
+
+/* room at the bottom of the page so the phone tab bar never covers the last line */
+@media (max-width: 719px) {
+  body.has-site-bar {
+    padding-bottom: 84px;
+  }
+
+  html {
+    scroll-padding-bottom: 84px;
+  }
+}
+
+/* 720px and up: one bar across the top, brand left, links right; it stays put while scrolling */
+@media (min-width: 720px) {
+  html {
+    scroll-padding-top: 86px;
+  }
+
+  .site-bar-wrap {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    padding-top: 12px;
+  }
+
+  .site-bar {
+    justify-content: space-between;
+    gap: 16px;
+    width: auto;
+    padding: 6px 6px 6px 8px;
+  }
+
+  .site-bar-brand {
+    font-size: 1.375rem;
+  }
+
+  .site-bar-brand img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .site-bar-nav {
+    position: static;
+    display: flex;
+    gap: 4px;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .site-bar-nav a {
+    min-height: 44px;
+    padding: 0 16px;
+  }
+}
+
+/* ---------- Footer: name and promise only (no links; the bar has them) ---------- */
+
+.site-foot {
+  margin-top: 56px;
+  border-top: 1px solid var(--line);
+  padding: 20px 0 28px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.site-foot p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-bar-nav a {
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .site-bar,
+  .site-bar-nav {
+    background-color: #0b0f1d;
+    border-color: var(--muted);
+  }
+}

@@ -1,6 +1,9 @@
 /*
-  Mr. D's Chemistry Games — shared styles
-  Used by the home page, the subject pages and every game page.
+  Mr. D Chemistry (games) — shared styles
+  Used by the games page and by every game page, so changes to the general rules
+  (reset, buttons, .panel, header/footer) also reach the games. The games page's own
+  tabs and cards are in the "Games page" section below; the top bar, page background and
+  footer of the games page come from site-bar.css.
   Colours live in the :root block below; change them there and the whole site follows.
 */
 
@@ -289,25 +292,111 @@ main {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 40px rgba(0, 0, 0, 0.35);
 }
 
-/* ---------- Game cards (subject pages; the home page's subject buttons build on these) ---------- */
+/* ---------- Games page (index.html, chemistry/, physical-science/) ----------
+   These classes are used only by the games page, never by the game-play pages. */
 
+.page-title {
+  margin: 0 0 10px;
+  font-size: clamp(2rem, 1.6rem + 2vw, 2.75rem);
+}
+
+/* Subject tabs: the selected one is filled with that subject's colour */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 32px;
+}
+
+.tab {
+  --accent: var(--teal);
+  flex: 1 1 140px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 8px 22px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--glass);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.tab[data-accent="amber"] { --accent: var(--amber); }
+.tab[data-accent="violet"] { --accent: var(--violet); }
+
+.tab:hover {
+  background: var(--glass-strong);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.tab[aria-selected="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+@media (min-width: 600px) {
+  .tab {
+    flex: 0 0 auto;
+    min-width: 200px;
+  }
+}
+
+/* One section per unit */
+.units {
+  display: grid;
+  gap: 44px;
+}
+
+.unit-header {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.unit-title {
+  margin: 0;
+  font-size: clamp(1.4rem, 1.25rem + 0.8vw, 1.75rem);
+}
+
+.unit-blurb {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+/* Compact cards: picture on the left, words on the right (like the homepage).
+   One per row on phones, two per row from 720px. */
 .game-grid {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
 }
 
-.card {
+@media (min-width: 720px) {
+  .game-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+/* The whole card is one link (the title); see .card-link::after */
+.game-card {
   --accent: var(--teal);
   --accent-soft: var(--teal-soft);
   position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 20px;
   overflow: hidden;
   background:
     radial-gradient(120% 70% at 50% 125%, var(--accent-soft), transparent 70%),
@@ -318,85 +407,102 @@ main {
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-/* thin "meniscus" line of colour along the top edge */
-.card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 20px;
-  right: 20px;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0.7;
-}
-
-.card[data-accent="amber"] {
+.game-card[data-accent="amber"] {
   --accent: var(--amber);
   --accent-soft: var(--amber-soft);
 }
 
-.card[data-accent="violet"] {
+.game-card[data-accent="violet"] {
   --accent: var(--violet);
   --accent-soft: var(--violet-soft);
 }
 
+/* Picture: the 16:9 cover is cropped to its centre (where the subject is drawn);
+   the emoji tile is the fallback if it cannot load */
+.card-media {
+  position: relative;
+  flex: none;
+  align-self: flex-start;
+  width: 96px;
+  height: 96px;
+  margin: 14px 0 14px 14px;
+  overflow: hidden;
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+/* wider screens: the picture fills the left side of the card, edge to edge */
+@media (min-width: 720px) {
+  .card-media {
+    align-self: stretch;
+    width: 190px;
+    height: auto;
+    min-height: 168px;
+    margin: 0;
+    border: 0;
+    border-right: 1px solid var(--line);
+    border-radius: 0;
+  }
+}
+
+.card-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
 .card-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: grid;
   place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: var(--accent-soft);
-  border: 1px solid var(--line-strong);
-  font-size: 28px;
+  font-size: 56px;
   line-height: 1;
 }
 
+.card-media:not(.is-fallback) .card-icon {
+  visibility: hidden;
+}
+
+.game-card[data-status="coming-soon"] .card-media {
+  filter: grayscale(0.7);
+  opacity: 0.8;
+}
+
+.card-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 16px;
+}
+
 .card-title {
-  margin: 4px 0 0;
-  font-size: 1.375rem;
-}
-
-.card-blurb {
   margin: 0;
-  color: var(--muted);
+  font-size: 1.25rem;
+  line-height: 1.2;
 }
 
-.card-actions {
-  margin-top: auto;
-  padding-top: 8px;
+.card-link {
+  color: var(--text);
+  text-decoration: none;
 }
 
-.card .btn-play {
-  background: var(--accent);
-  color: var(--on-accent);
+.card-link:hover {
+  color: var(--text);
 }
 
-/* Only on devices that really hover (mouse/trackpad): phones and iPads keep
-   :hover stuck on whatever was tapped last. */
-@media (hover: hover) {
-  .card[data-status="ready"]:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
-
-  .card .btn-play:hover {
-    background: var(--text);
-    color: var(--on-accent);
-  }
-}
-
-/* No transform while pressed: a transform would shrink the card-sized ::after
-   overlay below down to the button mid-click, so clicks on the card body would
-   be lost. Show the press with a shadow instead. */
-.card .btn-play:active {
-  transform: none;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
-}
-
-/* make the whole card tappable, while the Play link stays the one real link */
-.card .btn-play::after {
+/* stretched link: this invisible layer makes the whole card clickable */
+.card-link::after {
   content: "";
   position: absolute;
   top: 0;
@@ -406,9 +512,59 @@ main {
   border-radius: var(--radius);
 }
 
-.card[data-status="coming-soon"] .card-icon {
-  filter: grayscale(0.6);
-  opacity: 0.85;
+/* focus ring around the whole card (drawn inside, because the card clips its edges) */
+.card-link:focus-visible {
+  outline: none;
+}
+
+.card-link:focus-visible::after {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+
+.card-blurb {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+/* the student's saved progress, e.g. "5 of 13 challenges done" */
+.card-progress {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.card-foot {
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+/* a label, not a second link: the card itself is the link */
+.play-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 700;
+  transition: background-color 0.15s ease;
+}
+
+/* Only on devices that really hover (mouse/trackpad): phones and iPads keep
+   :hover stuck on whatever was tapped last. */
+@media (hover: hover) {
+  .game-card[data-status="ready"]:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+
+  .game-card[data-status="ready"]:hover .play-pill {
+    background: var(--text);
+  }
 }
 
 .badge {
@@ -425,117 +581,6 @@ main {
 
 .notice {
   padding: 20px;
-  color: var(--muted);
-}
-
-/* ---------- Subject buttons (home page) ---------- */
-
-.subject-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 20px;
-}
-
-.card--subject {
-  gap: 14px;
-  padding: 28px 24px 24px;
-}
-
-.card--subject .card-icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 18px;
-  font-size: 40px;
-}
-
-.card--subject .card-title {
-  font-size: clamp(1.75rem, 1.45rem + 1.2vw, 2.25rem);
-}
-
-.card--subject .card-blurb {
-  font-size: 1.0625rem;
-}
-
-.card-meta {
-  margin: 0;
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--accent);
-}
-
-.card--subject .btn-play {
-  width: 100%;
-}
-
-/* Phones: icon beside the name, so both subject buttons fit on one screen */
-@media (max-width: 599px) {
-  .card--subject {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: 10px 14px;
-    padding: 20px;
-  }
-
-  .card--subject > :not(.card-icon):not(.card-title) {
-    grid-column: 1 / -1;
-  }
-
-  .card--subject .card-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 15px;
-    font-size: 32px;
-  }
-
-  .card--subject .card-title {
-    margin: 0;
-  }
-
-  .card--subject .card-actions {
-    padding-top: 4px;
-  }
-}
-
-.btn-arrow {
-  transition: transform 0.15s ease;
-}
-
-@media (hover: hover) {
-  .card--subject[data-status="ready"]:hover .btn-arrow {
-    transform: translateX(3px);
-  }
-}
-
-/* ---------- Subject pages: one section per unit ---------- */
-
-.page-title {
-  margin: 0 0 10px;
-  font-size: clamp(2rem, 1.6rem + 2vw, 2.75rem);
-}
-
-.units {
-  display: grid;
-  gap: 40px;
-}
-
-.unit-header {
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--line);
-}
-
-.unit-title {
-  margin: 0;
-  font-size: clamp(1.4rem, 1.25rem + 0.8vw, 1.75rem);
-}
-
-.unit-blurb {
-  margin: 4px 0 0;
   color: var(--muted);
 }
 
@@ -591,7 +636,7 @@ kbd {
     scroll-behavior: auto !important;
   }
 
-  .card[data-status="ready"]:hover,
+  .game-card[data-status="ready"]:hover,
   .btn:active {
     transform: none;
   }

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">
+  <title>A graph with a best-fit line, a hanging spring and a pencil</title>
+  <defs>
+    <linearGradient id="gl-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0c2a30"/><stop offset="1" stop-color="#070a13"/></linearGradient>
+    <radialGradient id="gl-glow" cx="0.65" cy="0.45" r="0.5"><stop offset="0" stop-color="#2dd4bf" stop-opacity="0.35"/><stop offset="1" stop-color="#2dd4bf" stop-opacity="0"/></radialGradient>
+    <path id="gl-sp" d="M0-6 1.8-1.8 6 0 1.8 1.8 0 6-1.8 1.8-6 0-1.8-1.8z"/>
+  </defs>
+  <rect width="320" height="180" fill="url(#gl-bg)"/>
+  <rect width="320" height="180" fill="url(#gl-glow)"/>
+  <!-- paper -->
+  <rect x="106" y="20" width="146" height="142" rx="8" fill="#0f1a30" stroke="#5eead4" stroke-opacity="0.5" stroke-width="2"/>
+  <g stroke="#5eead4" stroke-opacity="0.18" stroke-width="1">
+    <path d="M122 26v130M138 26v130M154 26v130M170 26v130M186 26v130M202 26v130M218 26v130M234 26v130M112 40h134M112 56h134M112 72h134M112 88h134M112 104h134M112 120h134M112 136h134"/>
+  </g>
+  <!-- axes -->
+  <path d="M122 28v118h120" fill="none" stroke="#cbd5e1" stroke-width="3.500" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- best fit line -->
+  <path d="M128 136 236 52" stroke="#fbbf24" stroke-width="3.500" stroke-linecap="round"/>
+  <!-- points -->
+  <g fill="#2dd4bf" stroke="#0f1a30" stroke-width="1.500">
+    <circle cx="140" cy="130" r="5.500"/><circle cx="160" cy="112" r="5.500"/><circle cx="180" cy="104" r="5.500"/><circle cx="202" cy="78" r="5.500"/><circle cx="224" cy="68" r="5.500"/>
+  </g>
+  <!-- pencil -->
+  <g transform="translate(232 56) rotate(-58) scale(0.72)">
+    <path d="M0 0l12-5v10z" fill="#fde68a"/><path d="M0 0l4-1.700v3.400z" fill="#334155"/>
+    <rect x="12" y="-5" width="34" height="10" fill="#fb7185"/>
+    <rect x="12" y="-5" width="34" height="3" fill="#fda4af"/>
+    <rect x="46" y="-5" width="6" height="10" fill="#94a3b8"/>
+    <rect x="52" y="-5" width="7" height="10" rx="2.500" fill="#f9a8d4"/>
+  </g>
+  <!-- spring and weight -->
+  <rect x="68" y="20" width="36" height="7" rx="3.500" fill="#94a3b8"/>
+  <path d="M86 27v8l11 5-22 8 22 8-22 8 22 8-22 8 22 8-11 5v8" fill="none" stroke="#5eead4" stroke-width="3.500" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M86 108v8" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M74 120h24l4 28q0 4-4 4H74q-4 0-4-4z" fill="#fbbf24"/>
+  <circle cx="86" cy="118" r="4" fill="none" stroke="#94a3b8" stroke-width="2.500"/>
+  <path d="M77 126v18" stroke="#fde68a" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  <g fill="#fde68a"><use href="#gl-sp" transform="translate(36 30)"/><use href="#gl-sp" transform="translate(286 40) scale(0.8)"/><use href="#gl-sp" transform="translate(284 150) scale(0.6)"/></g>
+  <g fill="#99f6e4"><circle cx="24" cy="100" r="1.500"/><circle cx="298" cy="100" r="1.500"/><circle cx="40" cy="160" r="1.300"/></g>
+</svg>

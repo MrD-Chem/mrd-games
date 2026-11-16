@@ -49,7 +49,7 @@
   });
 
   var TEXT = {
-    brand: "Mr. D's Chemistry Games",
+    brand: "Mr. D Chemistry",
     back: '← Chemistry',
     footer: 'No accounts. No tracking. Scores stay on this device.',
     title: 'Particle Count Dash',
