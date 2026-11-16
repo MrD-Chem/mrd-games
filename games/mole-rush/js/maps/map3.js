@@ -1,8 +1,8 @@
 /* Mole Rush — Map 3: two or three blanks, stable for the same item id. */
 
-import { NumberBoard } from './map2.js?v=20261116T0337';
-import { makeTiles } from './map1.js?v=20261116T0337';
-import { hashString, mulberry32, seededShuffle } from '../rng.js?v=20261116T0337';
+import { NumberBoard } from './map2.js?v=20261116T0406';
+import { makeTiles } from './map1.js?v=20261116T0406';
+import { hashString, mulberry32, seededShuffle } from '../rng.js?v=20261116T0406';
 
 export const kind = 'setup';
 

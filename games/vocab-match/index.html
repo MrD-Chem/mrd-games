@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Unit 4 Vocab Match — Mr. D Chemistry</title>
+  <meta name="description" content="Unit 4 Vocab Match: match atom and light words to their meanings, then take a quick quiz.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css?v=20261116T0406">
+  <link rel="stylesheet" href="style.css?v=20261116T0406">
+  <script src="data.js?v=20261116T0406" defer></script>
+  <script src="game.js?v=20261116T0406" defer></script>
+</head>
+<body class="vm-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../chemistry/">← Chemistry</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span data-copy="brand">Mr. D Chemistry</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap vm-main" id="main">
+    <noscript><p class="vm-noscript">This game needs JavaScript. Please turn it on.</p></noscript>
+
+    <!-- Start screen -->
+    <section id="vm-start" aria-labelledby="vm-title">
+      <h1 id="vm-title" class="vm-title" tabindex="-1" data-copy="title"></h1>
+      <p class="lead vm-lead" data-copy="intro"></p>
+      <h2 class="vm-h2" data-copy="chooseMode"></h2>
+      <ul class="vm-modes" id="vm-modes"></ul>
+      <p class="vm-small vm-total" id="vm-total" aria-live="polite"></p>
+      <p class="vm-small" data-copy="howToStars"></p>
+      <p class="vm-small">
+        <button type="button" class="btn btn-ghost btn-sm vm-reset" id="vm-reset" data-copy="startOver"></button>
+      </p>
+      <p class="vm-small" id="vm-reset-note" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- Play screen -->
+    <section id="vm-play" hidden aria-label="Game">
+      <div class="vm-hud panel">
+        <div class="vm-hud-item"><span class="vm-hud-label" data-copy="hudMode"></span><span class="vm-hud-value" id="vm-hud-mode"></span></div>
+        <div class="vm-hud-item"><span class="vm-hud-label" data-copy="hudProgress"></span><span class="vm-hud-value" id="vm-hud-progress"></span></div>
+        <div class="vm-hud-item"><span class="vm-hud-label" id="vm-hud-mist-label" data-copy="hudMistakes"></span><span class="vm-hud-value" id="vm-hud-mist">0</span></div>
+        <div class="vm-hud-item"><span class="vm-hud-label" data-copy="hudPoints"></span><span class="vm-hud-value" id="vm-hud-points">0</span></div>
+        <div class="vm-hud-item" id="vm-hud-streak-box" hidden><span class="vm-hud-label" data-copy="hudStreak"></span><span class="vm-hud-value" id="vm-hud-streak">0</span></div>
+        <button type="button" class="btn btn-ghost btn-sm vm-leave" id="vm-leave" data-copy="leave"></button>
+      </div>
+
+      <div class="vm-card panel">
+        <p class="vm-prompt" id="vm-prompt" tabindex="-1"></p>
+
+        <div class="vm-match" id="vm-match" hidden>
+          <div class="vm-col">
+            <h2 class="vm-col-title" data-copy="colWords"></h2>
+            <div class="vm-list" id="vm-terms"></div>
+          </div>
+          <div class="vm-col">
+            <h2 class="vm-col-title" data-copy="colDefs"></h2>
+            <div class="vm-list" id="vm-defs"></div>
+          </div>
+        </div>
+
+        <div class="vm-quiz" id="vm-quiz" hidden>
+          <p class="vm-word" id="vm-word"></p>
+          <div class="vm-options" id="vm-options" role="group" aria-labelledby="vm-prompt"></div>
+        </div>
+
+        <div class="vm-feedback" id="vm-feedback" role="status" aria-live="polite" aria-atomic="true"></div>
+        <button type="button" class="btn btn-primary vm-next" id="vm-next" hidden></button>
+      </div>
+    </section>
+
+    <!-- End screen -->
+    <section id="vm-end" hidden aria-labelledby="vm-end-title">
+      <div class="vm-endcard panel">
+        <h1 class="vm-title" id="vm-end-title" tabindex="-1"></h1>
+        <p class="vm-end-label" data-copy="endPoints"></p>
+        <p class="vm-end-score" id="vm-end-score"></p>
+        <p class="vm-end-stars" id="vm-end-stars" role="img"></p>
+        <p class="vm-end-detail" id="vm-end-detail"></p>
+        <p class="vm-newbest" id="vm-end-best" hidden data-copy="newBest"></p>
+        <h2 class="vm-h2" data-copy="recapTitle"></h2>
+        <ul class="vm-recap" id="vm-recap"></ul>
+        <div class="vm-end-actions">
+          <button type="button" class="btn btn-primary" id="vm-again" data-copy="playAgain"></button>
+          <button type="button" class="btn btn-ghost" id="vm-choose" data-copy="chooseModeBtn"></button>
+        </div>
+      </div>
+      <h2 class="vm-h2" data-copy="reviewTitle"></h2>
+      <ul class="vm-review" id="vm-review"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap"><p data-copy="footer"></p></div></footer>
+</body>
+</html>

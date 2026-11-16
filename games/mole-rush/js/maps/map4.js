@@ -1,8 +1,8 @@
 /* Mole Rush — Map 4: final answer only, with hints for recognizable mistakes. */
 
-import { NumberBoard, within } from './map2.js?v=20261116T0337';
-import { reactionFor, reactionFormulas, molarMass, stepKind } from '../bank.js?v=20261116T0337';
-import { formulaText } from '../chem.js?v=20261116T0337';
+import { NumberBoard, within } from './map2.js?v=20261116T0406';
+import { reactionFor, reactionFormulas, molarMass, stepKind } from '../bank.js?v=20261116T0406';
+import { formulaText } from '../chem.js?v=20261116T0406';
 
 export const kind = 'setup';
 

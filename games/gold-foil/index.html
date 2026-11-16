@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Gold Foil Shooter — Mr. D Chemistry</title>
+  <meta name="description" content="Gold Foil Shooter: run Rutherford's gold foil experiment, use the evidence to choose between two atom models, and put the main atomic models in time order.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css?v=20261116T0406">
+  <link rel="stylesheet" href="style.css?v=20261116T0406">
+  <script src="data.js?v=20261116T0406" defer></script>
+  <script src="game.js?v=20261116T0406" defer></script>
+</head>
+<body class="gf-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../chemistry/">← Chemistry</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span data-copy="brand">Mr. D Chemistry</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap gf-main" id="main">
+    <noscript><p class="gf-noscript">This game needs JavaScript. Please turn it on.</p></noscript>
+
+    <!-- Start screen -->
+    <section id="gf-start" aria-labelledby="gf-title">
+      <h1 id="gf-title" class="gf-title" tabindex="-1" data-copy="title">Gold Foil Shooter</h1>
+      <p class="lead gf-lead" data-copy="intro"></p>
+      <div class="gf-start-actions">
+        <button type="button" class="btn btn-primary btn-lg" id="gf-go"></button>
+        <span class="gf-total" id="gf-start-total"></span>
+      </div>
+      <h2 class="gf-h2" data-copy="levelsTitle"></h2>
+      <ul class="gf-levels" id="gf-levels"></ul>
+      <p class="gf-small" data-copy="howToStars"></p>
+      <div class="gf-reset">
+        <button type="button" class="btn btn-ghost btn-sm" id="gf-reset" data-copy="startOver"></button>
+        <span id="gf-reset-ask" hidden>
+          <span data-copy="startOverConfirm"></span>
+          <button type="button" class="btn btn-ghost btn-sm" id="gf-reset-yes" data-copy="yes"></button>
+          <button type="button" class="btn btn-ghost btn-sm" id="gf-reset-no" data-copy="no"></button>
+        </span>
+      </div>
+    </section>
+
+    <!-- Play screen -->
+    <section id="gf-play" hidden aria-label="Game">
+      <div class="gf-bar panel">
+        <nav aria-label="Levels"><ol class="gf-chips" id="gf-chips"></ol></nav>
+        <span class="gf-total" id="gf-total"></span>
+        <button type="button" class="btn btn-ghost btn-sm" id="gf-home" data-copy="allLevels"></button>
+      </div>
+
+      <div class="gf-grid" id="gf-grid">
+        <section class="panel gf-card" id="gf-card" aria-labelledby="gf-card-title">
+          <p class="gf-eyebrow" id="gf-eyebrow"></p>
+          <h2 class="gf-card-title" id="gf-card-title" tabindex="-1"></h2>
+          <div id="gf-step"></div>
+          <div class="gf-feedback" id="gf-feedback" role="status" aria-live="polite" aria-atomic="true"></div>
+          <div class="gf-actions">
+            <button type="button" class="btn btn-primary" id="gf-next" hidden></button>
+            <button type="button" class="btn btn-ghost btn-sm" id="gf-replay" hidden data-copy="replay"></button>
+          </div>
+        </section>
+
+        <section class="panel gf-ctrl" id="gf-ctrl" aria-label="Experiment settings">
+          <p class="gf-alpha" data-copy="alphaNote"></p>
+          <div class="gf-toggles">
+            <div class="gf-toggle-group" role="group" aria-labelledby="gf-foil-label">
+              <span class="gf-toggle-label" id="gf-foil-label" data-copy="foilLabel"></span>
+              <div class="gf-toggle-row" id="gf-foils"></div>
+            </div>
+            <div class="gf-toggle-group" role="group" aria-labelledby="gf-zoom-label">
+              <span class="gf-toggle-label" id="gf-zoom-label" data-copy="zoomLabel"></span>
+              <div class="gf-toggle-row" id="gf-zooms"></div>
+            </div>
+          </div>
+          <p class="gf-small gf-zoom-note" id="gf-zoom-note"></p>
+        </section>
+
+        <section class="panel gf-lab" id="gf-lab" aria-label="Experiment picture">
+          <div class="gf-canvas-wrap">
+            <canvas id="gf-canvas" width="480" height="480" role="img" aria-describedby="gf-labsum"></canvas>
+          </div>
+          <p class="gf-sr" id="gf-labsum" aria-live="polite" aria-atomic="true"></p>
+          <div class="gf-fire" id="gf-fire-row" role="group" aria-labelledby="gf-fire-label">
+            <span class="gf-toggle-label" id="gf-fire-label" data-copy="fireLabel"></span>
+            <div class="gf-toggle-row">
+              <button type="button" class="btn btn-primary" data-n="1" id="gf-fire1" data-copy="fire1"></button>
+              <button type="button" class="btn btn-primary" data-n="20" id="gf-fire20" data-copy="fire20"></button>
+              <button type="button" class="btn btn-primary" data-n="100" id="gf-fire100" data-copy="fire100"></button>
+            </div>
+            <p class="gf-small" id="gf-keys" data-copy="keysHint"></p>
+            <p class="gf-small gf-locked" id="gf-locked" hidden data-copy="fireLocked"></p>
+          </div>
+          <div class="gf-aim" id="gf-aim-row" hidden>
+            <label for="gf-aim" class="gf-aim-label"><span data-copy="aimLabel"></span> <output id="gf-aim-out" for="gf-aim"></output></label>
+            <input type="range" id="gf-aim" min="-100" max="100" step="0.5" value="40">
+            <p class="gf-small" data-copy="aimHelp"></p>
+            <button type="button" class="btn btn-primary" id="gf-aim-fire" data-copy="aimFire"></button>
+          </div>
+        </section>
+
+        <section class="panel gf-tally" id="gf-tally-box" aria-label="Tally">
+          <div class="gf-tally-head">
+            <h3 class="gf-h3" data-copy="tallyTitle"></h3>
+            <span class="gf-small" id="gf-tally-for"></span>
+            <button type="button" class="btn btn-ghost btn-sm" id="gf-tally-reset" data-copy="resetTally"></button>
+          </div>
+          <ul class="gf-bins" id="gf-bins"></ul>
+          <p class="gf-small" id="gf-fired"></p>
+        </section>
+      </div>
+    </section>
+
+    <!-- End screen -->
+    <section id="gf-end" hidden aria-labelledby="gf-end-title">
+      <div class="gf-endcard panel">
+        <h1 class="gf-title" id="gf-end-title" tabindex="-1" data-copy="endTitle"></h1>
+        <p class="gf-end-stars" id="gf-end-stars"></p>
+        <h2 class="gf-h2" data-copy="endRecapTitle"></h2>
+        <ul class="gf-recap" id="gf-recap"></ul>
+        <p class="gf-small" data-copy="endRealNote"></p>
+        <button type="button" class="btn btn-primary" id="gf-end-back" data-copy="endAgain"></button>
+      </div>
+      <h2 class="gf-h2" data-copy="endReviewTitle"></h2>
+      <ul class="gf-review" id="gf-review"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap"><p data-copy="footer"></p></div></footer>
+</body>
+</html>

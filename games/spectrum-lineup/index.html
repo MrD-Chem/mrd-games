@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Spectrum Line-Up — Mr. D Chemistry</title>
+  <meta name="description" content="Spectrum Line-Up: put the regions of the electromagnetic spectrum in order of wavelength, frequency and energy, match each region to its uses, and race to compare them.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css?v=20261116T0406">
+  <link rel="stylesheet" href="style.css?v=20261116T0406">
+  <script src="data.js?v=20261116T0406" defer></script>
+  <script src="game.js?v=20261116T0406" defer></script>
+</head>
+<body class="sl-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../chemistry/">← Chemistry</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span data-copy="brand">Mr. D Chemistry</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap sl-main" id="main">
+    <noscript><p class="sl-noscript">This game needs JavaScript. Please turn it on.</p></noscript>
+
+    <!-- Start screen -->
+    <section id="sl-start" aria-labelledby="sl-title">
+      <h1 id="sl-title" class="sl-title" tabindex="-1" data-focus data-copy="title">Spectrum Line-Up</h1>
+      <p class="lead sl-lead" data-copy="intro"></p>
+      <p class="sl-lead sl-words" data-copy="wordsIntro"></p>
+      <p class="sl-lead sl-words" data-copy="truth"></p>
+      <p class="sl-start-actions"><button type="button" class="btn btn-primary btn-lg" id="sl-start-btn"></button></p>
+      <h2 class="sl-h2" data-copy="chooseLevel"></h2>
+      <ul class="sl-levels" id="sl-levels"></ul>
+      <p class="sl-small" data-copy="howToStars"></p>
+      <p class="sl-small sl-reset-row">
+        <button type="button" class="btn btn-ghost btn-sm" id="sl-reset" data-copy="startOver"></button>
+        <span id="sl-reset-note" role="status"></span>
+      </p>
+    </section>
+
+    <!-- Play screen -->
+    <section id="sl-play" hidden aria-label="Game">
+      <div class="sl-hud panel">
+        <div class="sl-hud-item sl-hud-wide"><span class="sl-hud-label" data-copy="hudLevel"></span><span class="sl-hud-value" id="sl-hud-level"></span></div>
+        <div class="sl-hud-item"><span class="sl-hud-label" id="sl-hud-q-label"></span><span class="sl-hud-value" id="sl-hud-q"></span></div>
+        <div class="sl-hud-item"><span class="sl-hud-label" id="sl-hud-score-label"></span><span class="sl-hud-value" id="sl-hud-score">0</span></div>
+        <div class="sl-hud-item sl-streak" id="sl-hud-streak-item"><span class="sl-hud-label" data-copy="hudStreak"></span><span class="sl-hud-value"><span class="sl-flame" aria-hidden="true">🔥</span> <span id="sl-hud-streak">0</span></span></div>
+        <div class="sl-hud-item" id="sl-hud-time-item"><span class="sl-hud-label" data-copy="hudTimeLeft"></span><span class="sl-hud-value" id="sl-hud-time">1:00</span></div>
+        <button type="button" class="btn btn-ghost btn-sm sl-leave" id="sl-leave" data-copy="leave"></button>
+      </div>
+
+      <!-- Screen-reader announcements (moves, picks, drops, streaks) -->
+      <div class="sr-only" id="sl-announce" aria-live="polite" aria-atomic="true"></div>
+
+      <!-- Levels 1 to 4: ordering cards -->
+      <div id="sl-order-panel" class="sl-order-panel panel">
+        <h2 class="sl-prompt" id="sl-order-prompt" tabindex="-1"></h2>
+        <p class="sl-note" id="sl-order-note"></p>
+        <p class="sl-small sl-howto" data-copy="howToMove"></p>
+        <div class="sl-order">
+          <p class="sl-end sl-end--a"><span class="sl-end-arrow sl-end-arrow--row" aria-hidden="true">←</span><span class="sl-end-arrow sl-end-arrow--col" aria-hidden="true">↓</span> <span id="sl-end-a"></span></p>
+          <ol class="sl-row" id="sl-row"></ol>
+          <p class="sl-end sl-end--b"><span id="sl-end-b"></span> <span class="sl-end-arrow sl-end-arrow--row" aria-hidden="true">→</span><span class="sl-end-arrow sl-end-arrow--col" aria-hidden="true">↑</span></p>
+        </div>
+        <div class="sl-feedback" id="sl-feedback" role="status" aria-live="polite"></div>
+        <div class="sl-actions">
+          <button type="button" class="btn btn-primary sl-check" id="sl-check" data-copy="check"></button>
+          <button type="button" class="btn btn-primary sl-check" id="sl-finish" data-copy="finishLevel" hidden></button>
+        </div>
+        <div id="sl-banner-host"></div>
+      </div>
+
+      <!-- Levels 5 and 6: clue / compare questions -->
+      <div id="sl-quiz" class="sl-quiz panel" hidden>
+        <div class="sl-fx" id="sl-fx" aria-hidden="true"></div>
+        <p class="sl-q-prompt" id="sl-q-prompt" tabindex="-1"></p>
+        <p class="sl-q-body" id="sl-q-body"></p>
+        <div class="sl-options" id="sl-options" role="group"></div>
+        <div class="sl-feedback" id="sl-q-feedback" role="status" aria-live="polite"></div>
+        <button type="button" class="btn btn-primary sl-next" id="sl-q-next" hidden></button>
+      </div>
+    </section>
+
+    <!-- End screen -->
+    <section id="sl-end" hidden aria-labelledby="sl-end-title">
+      <div class="sl-endcard panel">
+        <h1 class="sl-title" id="sl-end-title" tabindex="-1" data-focus></h1>
+        <p class="sl-end-label" id="sl-end-score-label"></p>
+        <p class="sl-end-score" id="sl-end-score"></p>
+        <p class="sl-end-stars" id="sl-end-stars" role="img"></p>
+        <p class="sl-end-first" id="sl-end-first"></p>
+        <p class="sl-end-solved" id="sl-end-solved"></p>
+        <p class="sl-newbest" id="sl-end-best" hidden data-copy="newBest"></p>
+        <div class="sl-end-actions">
+          <button type="button" class="btn btn-primary" id="sl-next-level" data-copy="nextLevel"></button>
+          <button type="button" class="btn btn-ghost" id="sl-again" data-copy="playAgain"></button>
+          <button type="button" class="btn btn-ghost" id="sl-choose" data-copy="chooseLevelBtn"></button>
+        </div>
+      </div>
+      <h2 class="sl-h2" data-copy="recapTitle"></h2>
+      <ul class="sl-recap" id="sl-recap"></ul>
+      <h2 class="sl-h2" data-copy="reviewTitle"></h2>
+      <ul class="sl-review" id="sl-review"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap"><p data-copy="footer">No accounts. No tracking. Progress stays on this device.</p></div></footer>
+</body>
+</html>

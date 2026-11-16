@@ -7,8 +7,8 @@
     ctx.onLeave()   Leave
 */
 
-import { el, clear, reducedMotion } from '../dom.js?v=20261116T0337';
-import { mapLabel, modeLabel } from './lobby.js?v=20261116T0337';
+import { el, clear, reducedMotion } from '../dom.js?v=20261116T0406';
+import { mapLabel, modeLabel } from './lobby.js?v=20261116T0406';
 
 export const MIN_PLAYERS = 2;
 

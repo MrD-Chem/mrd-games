@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Spectral Detective — Mr. D Chemistry</title>
+  <meta name="description" content="Match atomic line patterns, identify mixtures, and read the light from stars in twelve spectral detective cases.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css?v=20261116T0406">
+  <link rel="stylesheet" href="style.css?v=20261116T0406">
+  <script src="data.js?v=20261116T0406" defer></script>
+  <script src="game.js?v=20261116T0406" defer></script>
+</head>
+<body class="sd-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../chemistry/">← Chemistry</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span>Mr. D Chemistry</span>
+      </span>
+    </div>
+  </header>
+  <main class="wrap sd-main">
+    <noscript><p>This game needs JavaScript. Please turn it on.</p></noscript>
+    <div class="sd-heading">
+      <div><p class="sd-eyebrow" data-copy="unit"></p><h1 data-copy="title"></h1></div>
+      <span class="sd-badge" id="sd-total"></span>
+    </div>
+    <section id="sd-start" aria-labelledby="sd-start-title">
+      <div class="panel sd-intro">
+        <p class="sd-eyebrow" data-copy="assignment"></p>
+        <h2 id="sd-start-title" tabindex="-1" data-copy="introTitle"></h2>
+        <p class="sd-lead" data-copy="intro"></p>
+        <p class="sd-muted" data-copy="definition"></p>
+        <div class="sd-actions"><button class="btn btn-primary btn-lg" id="sd-begin" type="button" data-copy="start"></button><span class="sd-muted" data-copy="duration"></span></div>
+      </div>
+      <div class="sd-section-heading"><h2 data-copy="files"></h2><span class="sd-muted" data-copy="unlocked"></span></div>
+      <div class="sd-files" id="sd-files"></div>
+      <p class="sd-muted sd-note" data-copy="scoring"></p>
+    </section>
+    <section id="sd-play" hidden aria-labelledby="sd-prompt">
+      <div class="sd-toolbar">
+        <label for="sd-picker" data-copy="caseLabel"></label><select id="sd-picker"></select>
+        <button type="button" class="btn btn-ghost btn-sm" id="sd-files-button" data-copy="files"></button>
+      </div>
+      <div class="sd-brief">
+        <p class="sd-eyebrow" id="sd-category"></p>
+        <h2 id="sd-prompt" tabindex="-1"></h2>
+        <p class="sd-muted" id="sd-instructions"></p>
+      </div>
+      <section class="panel sd-lab" aria-labelledby="sd-evidence-heading">
+        <div class="sd-section-heading"><h3 id="sd-evidence-heading" data-copy="evidence"></h3><span class="sd-badge" id="sd-mode"></span></div>
+        <div class="sd-measure-controls">
+          <label for="sd-ruler" data-copy="measuringLine"></label><output id="sd-reading" for="sd-ruler"></output>
+          <input id="sd-ruler" type="range" min="380" max="750" step="1" value="550" aria-describedby="sd-ruler-help">
+        </div>
+        <p class="sd-muted sd-note" id="sd-ruler-help" data-copy="rulerHelp"></p>
+        <p class="sd-muted sd-note" data-copy="scaleHelp"></p>
+        <div class="sd-spectra" id="sd-spectra"></div>
+        <p class="sd-match-key" id="sd-match-key" hidden data-copy="matchKey"></p>
+        <p class="sd-muted sd-note" data-copy="modelNote"></p>
+      </section>
+      <form class="panel sd-answer" id="sd-form" novalidate>
+        <fieldset id="sd-answer-fields"><legend id="sd-answer-title"></legend><div id="sd-answer-area"></div></fieldset>
+        <div class="sd-actions"><button type="submit" class="btn btn-primary" id="sd-check" data-copy="check"></button><span class="sd-muted" id="sd-tries"></span></div>
+      </form>
+      <div class="sd-feedback" id="sd-feedback" role="status" aria-live="polite" aria-atomic="true"></div>
+      <div class="sd-actions sd-next-actions" id="sd-next-actions" hidden><button type="button" class="btn btn-primary" id="sd-next"></button></div>
+    </section>
+    <section id="sd-end" hidden aria-labelledby="sd-end-title">
+      <div class="panel sd-intro">
+        <p class="sd-eyebrow" data-copy="report"></p><h2 id="sd-end-title" tabindex="-1"></h2>
+        <p class="sd-end-score" id="sd-end-score"></p>
+        <ul class="sd-recap" id="sd-recap"></ul>
+        <button type="button" class="btn btn-primary" id="sd-return" data-copy="returnFiles"></button>
+      </div>
+      <h2 class="sd-review-title" data-copy="reviewTitle"></h2><div id="sd-review"></div>
+    </section>
+    <div class="sd-bottom"><button type="button" class="btn btn-ghost btn-sm" id="sd-report" data-copy="viewReport"></button><button type="button" class="btn btn-ghost btn-sm" id="sd-reset" data-copy="startOver"></button></div>
+  </main>
+  <footer class="site-footer"><div class="wrap"><p>No accounts. No tracking. Progress stays on this device.</p></div></footer>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">
+  <title>A colour-changing light wave that gets tighter as the wavelength shortens, with a tuning slider</title>
+  <defs>
+    <linearGradient id="wt-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f2a33"/><stop offset="1" stop-color="#070a13"/></linearGradient>
+    <radialGradient id="wt-glow" cx="0.5" cy="0.45" r="0.5"><stop offset="0" stop-color="#2dd4bf" stop-opacity="0.4"/><stop offset="1" stop-color="#2dd4bf" stop-opacity="0"/></radialGradient>
+    <linearGradient id="wt-rb" gradientUnits="userSpaceOnUse" x1="40" y1="0" x2="280" y2="0"><stop offset="0" stop-color="#ef4444"/><stop offset="0.25" stop-color="#fbbf24"/><stop offset="0.5" stop-color="#4ade80"/><stop offset="0.75" stop-color="#38bdf8"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+    <path id="wt-sp" d="M0-6 1.8-1.8 6 0 1.8 1.8 0 6-1.8 1.8-6 0-1.8-1.8z"/>
+    <path id="wt-w" d="M40 72.0L42 67.5L44 63.1L46 58.9L48 55.0L50 51.6L52 48.7L54 46.4L56 44.9L58 44.1L60 44.1L62 45.0L64 46.6L66 49.1L68 52.2L70 56.0L72 60.4L74 65.1L76 70.1L78 75.2L80 80.3L82 85.0L84 89.4L86 93.2L88 96.3L90 98.5L92 99.7L94 100.0L96 99.1L98 97.2L100 94.3L102 90.5L104 85.9L106 80.8L108 75.1L110 69.4L112 63.6L114 58.2L116 53.4L118 49.4L120 46.4L122 44.5L124 44.0L126 44.8L128 47.0L130 50.5L132 55.1L134 60.7L136 66.9L138 73.4L140 79.9L142 86.1L144 91.4L146 95.7L148 98.6L150 99.9L152 99.5L154 97.3L156 93.5L158 88.1L160 81.6L162 74.4L164 67.0L166 59.8L168 53.4L170 48.4L172 45.2L174 44.0L176 45.1L178 48.4L180 53.8L182 60.8L184 68.9L186 77.4L188 85.4L190 92.3L192 97.3L194 99.8L196 99.4L198 96.2L200 90.2L202 82.2L204 72.9L206 63.3L208 54.7L210 48.1L212 44.5L214 44.5L216 48.2L218 55.3L220 65.0L222 75.9L224 86.3L226 94.6L228 99.3L230 99.5L232 94.8L234 85.9L236 74.3L238 62.0L240 51.5L242 45.1L244 44.5L246 50.0L248 60.8L250 74.5L252 87.9L254 97.3L256 99.9L258 94.6L260 82.3L262 66.6L264 52.4L266 44.5L268 46.4L270 58.0L272 75.5L274 91.8L276 99.9L278 95.1L280 78.9"/>
+  </defs>
+  <rect width="320" height="180" fill="url(#wt-bg)"/>
+  <ellipse cx="160" cy="80" rx="135" ry="80" fill="url(#wt-glow)"/>
+  <path d="M30 72H290" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 6" stroke-opacity="0.5"/>
+  <use href="#wt-w" fill="none" stroke="url(#wt-rb)" stroke-width="13" stroke-opacity="0.22" stroke-linecap="round" stroke-linejoin="round"/>
+  <use href="#wt-w" fill="none" stroke="url(#wt-rb)" stroke-width="5.500" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- slider -->
+  <rect x="86" y="136" width="148" height="9" rx="4.500" fill="#1e2a4a"/>
+  <rect x="86" y="136" width="100" height="9" rx="4.500" fill="#2dd4bf"/>
+  <g stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-opacity="0.7"><path d="M110 152v5M135 152v5M160 152v5M185 152v5M210 152v5"/></g>
+  <circle cx="186" cy="140.500" r="14" fill="#5eead4" fill-opacity="0.3"/>
+  <circle cx="186" cy="140.500" r="10.500" fill="#f1f5f9" stroke="#2dd4bf" stroke-width="3"/>
+  <circle cx="182.500" cy="137" r="2.500" fill="#fff"/>
+  <g fill="#fde68a"><use href="#wt-sp" transform="translate(38 30)"/><use href="#wt-sp" transform="translate(286 26) scale(0.8)"/><use href="#wt-sp" transform="translate(282 150) scale(0.6)"/><use href="#wt-sp" transform="translate(32 140) scale(0.7)"/></g>
+  <g fill="#99f6e4"><circle cx="20" cy="90" r="1.500"/><circle cx="302" cy="110" r="1.500"/><circle cx="62" cy="12" r="1.300"/></g>
+</svg>

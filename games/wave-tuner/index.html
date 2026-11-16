@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Wave Tuner — Mr. D Chemistry</title>
+  <meta name="description" content="Wave Tuner: tune a light wave to see how wavelength, frequency, amplitude and photon energy are linked.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css?v=20261116T0406">
+  <link rel="stylesheet" href="style.css?v=20261116T0406">
+  <script src="data.js?v=20261116T0406" defer></script>
+  <script src="game.js?v=20261116T0406" defer></script>
+</head>
+<body class="wt-page">
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="header-link" href="../../chemistry/">← Chemistry</a>
+      <span class="brand brand--small">
+        <img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28">
+        <span data-copy="brand">Mr. D Chemistry</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="wrap wt-main" id="main">
+    <noscript><p class="wt-noscript">This game needs JavaScript. Please turn it on.</p></noscript>
+
+    <!-- Start screen -->
+    <section id="wt-start" aria-labelledby="wt-title">
+      <p class="wt-eyebrow" data-copy="unit"></p>
+      <h1 id="wt-title" class="wt-h1" tabindex="-1" data-copy="title">Wave Tuner</h1>
+      <p class="lead wt-lead" data-copy="tagline"></p>
+      <section class="panel wt-learn" aria-labelledby="wt-learn-h">
+        <h2 id="wt-learn-h" class="wt-h2" data-copy="startHeading"></h2>
+        <ul id="wt-learn-list"></ul>
+      </section>
+      <p class="wt-small" id="wt-saved"></p>
+      <div class="wt-row">
+        <button type="button" class="btn btn-primary btn-lg" id="wt-go"></button>
+        <button type="button" class="btn btn-ghost btn-lg" id="wt-go-tuner" data-copy="tunerBtn"></button>
+        <button type="button" class="btn btn-ghost btn-sm" id="wt-reset-start" data-copy="startOver"></button>
+      </div>
+    </section>
+
+    <!-- Play screen -->
+    <section id="wt-play" hidden aria-label="Game">
+      <div class="wt-bar">
+        <div class="wt-tabs" role="group" id="wt-tabs">
+          <button type="button" class="btn btn-sm" id="wt-tab-explore" data-copy="tabExplore"></button>
+          <button type="button" class="btn btn-sm" id="wt-tab-challenges" data-copy="tabChallenges"></button>
+        </div>
+        <span class="wt-bar-gap"></span>
+        <button type="button" class="btn btn-ghost btn-sm" id="wt-recap-btn" data-copy="recapBtn"></button>
+        <button type="button" class="btn btn-ghost btn-sm" id="wt-reset-play" data-copy="startOver"></button>
+      </div>
+
+      <section class="panel wt-challenge" id="wt-challenge" aria-labelledby="wt-prompt">
+        <div class="wt-chips" id="wt-chips" role="group"></div>
+        <p class="wt-eyebrow" id="wt-eyebrow"></p>
+        <h2 class="wt-prompt" id="wt-prompt"></h2>
+        <p class="wt-muted" id="wt-instr"></p>
+        <form id="wt-form" novalidate>
+          <div id="wt-answer"></div>
+          <div class="wt-row">
+            <button type="submit" class="btn btn-primary" id="wt-check" data-copy="check"></button>
+            <button type="button" class="btn btn-primary" id="wt-next" hidden></button>
+          </div>
+        </form>
+        <p class="wt-feedback" id="wt-feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+      </section>
+
+      <div class="wt-grid" id="wt-grid">
+        <div class="wt-col">
+          <section class="panel wt-pic-panel" id="wt-pic-panel" aria-labelledby="wt-pic-h">
+            <div class="wt-panel-head">
+              <h2 class="wt-h2" id="wt-pic-h" data-copy="pictureTitle"></h2>
+              <div class="wt-row wt-pic-tools" id="wt-pic-tools">
+                <label class="wt-check-label"><input type="checkbox" id="wt-labels"><span data-copy="showLabels"></span></label>
+                <button type="button" class="btn btn-ghost btn-sm" id="wt-pause" aria-pressed="false"></button>
+              </div>
+            </div>
+            <svg id="wt-picture" role="img" aria-labelledby="wt-svg-title" aria-describedby="wt-summary"><title id="wt-svg-title">Wave picture</title></svg>
+            <p class="wt-sr" id="wt-summary"></p>
+            <p class="wt-small" id="wt-caption"></p>
+          </section>
+          <section class="panel wt-controls" id="wt-controls" aria-labelledby="wt-ctl-h">
+            <h2 class="wt-h2" id="wt-ctl-h" data-copy="controlsTitle"></h2>
+            <div class="wt-field">
+              <div class="wt-field-top">
+                <label for="wt-nm-range" data-copy="wlLabel"></label>
+                <input type="number" class="wt-box" id="wt-nm-box" min="380" max="750" step="1" inputmode="numeric" aria-label="Wavelength in nanometres (nm)">
+              </div>
+              <input type="range" class="wt-range" id="wt-nm-range" min="380" max="750" step="1">
+            </div>
+            <div class="wt-field">
+              <div class="wt-field-top">
+                <label for="wt-amp-range" data-copy="ampLabel"></label>
+                <span class="wt-muted wt-ends"><span data-copy="ampDim"></span> ↔ <span data-copy="ampBright"></span></span>
+              </div>
+              <input type="range" class="wt-range wt-range-amp" id="wt-amp-range" min="10" max="100" step="1">
+            </div>
+            <p class="wt-note" id="wt-note"></p>
+            <p class="wt-sr" id="wt-live" role="status" aria-live="polite"></p>
+          </section>
+        </div>
+        <div class="wt-col" id="wt-readouts">
+          <section class="panel wt-read" aria-labelledby="wt-read-h">
+            <h2 class="wt-h2" id="wt-read-h" data-copy="readoutsTitle"></h2>
+            <dl class="wt-dl">
+              <div><dt data-copy="rWavelength"></dt><dd id="wt-r-nm"></dd></div>
+              <div><dt data-copy="rFrequency"></dt><dd id="wt-r-freq"></dd></div>
+              <div><dt data-copy="rColour"></dt><dd><span class="wt-swatch" id="wt-swatch"></span><span id="wt-r-colour"></span></dd></div>
+            </dl>
+            <div class="wt-meter-block" id="wt-energy-block">
+              <div class="wt-meter-top"><span data-copy="rEnergy"></span><strong id="wt-e-num"></strong></div>
+              <div class="wt-meter" id="wt-e-meter" role="meter" aria-label="Energy of each photon" aria-valuemin="0" aria-valuemax="100"><span class="wt-fill wt-fill-teal" id="wt-e-fill"></span></div>
+              <div class="wt-meter-ends"><span data-copy="eLow"></span><span data-copy="eHigh"></span></div>
+            </div>
+            <div class="wt-meter-block" id="wt-bright-block">
+              <div class="wt-meter-top"><span data-copy="rBrightness"></span><strong id="wt-b-num"></strong></div>
+              <div class="wt-meter" id="wt-b-meter" role="meter" aria-label="Brightness" aria-valuemin="0" aria-valuemax="100"><span class="wt-fill wt-fill-amber" id="wt-b-fill"></span></div>
+              <div class="wt-meter-ends"><span data-copy="bDim"></span><span data-copy="bBright"></span></div>
+            </div>
+            <p class="wt-formula" id="wt-formula"></p>
+            <p class="wt-small" data-copy="formulaNote"></p>
+          </section>
+          <details class="panel wt-words" id="wt-words">
+            <summary data-copy="wordsTitle"></summary>
+            <dl id="wt-words-list"></dl>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- End screen -->
+    <section id="wt-end" hidden aria-labelledby="wt-end-title">
+      <div class="panel wt-endcard">
+        <h1 class="wt-h1" id="wt-end-title" tabindex="-1" data-copy="endTitle"></h1>
+        <p class="wt-end-score" id="wt-end-score"></p>
+        <h2 class="wt-h2" data-copy="recapHeading"></h2>
+        <ol class="wt-recap" id="wt-recap"></ol>
+        <div class="wt-row">
+          <button type="button" class="btn btn-primary" id="wt-end-back" data-copy="backToChallenges"></button>
+          <button type="button" class="btn btn-ghost btn-sm" id="wt-reset-end" data-copy="startOver"></button>
+        </div>
+      </div>
+      <h2 class="wt-h2" data-copy="reviewHeading"></h2>
+      <ul class="wt-review" id="wt-review"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap"><p data-copy="footer"></p></div></footer>
+</body>
+</html>

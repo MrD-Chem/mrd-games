@@ -48,6 +48,14 @@
     return JSON.parse(window.localStorage.getItem(key));
   }
 
+  // Newer games need no reader of their own: each saves { ..., card: "short text" } under
+  // the key "mrd-<game id>", and that text is shown as it is (see shared/GAME-RULES.md).
+  function readCard(id) {
+    var data = readJson('mrd-' + id);
+    var text = data && typeof data.card === 'string' ? data.card.trim() : '';
+    return text.length <= 40 ? text : '';
+  }
+
   var PROGRESS_READERS = {
     // Experimental Design Variable Dash: key "mrd-games:quiz-dash:best" holds the best
     // score as a plain number (games/quiz-dash/game.js, storageSet('best')).
@@ -130,8 +138,7 @@
   };
 
   function showProgress(game) {
-    var reader = PROGRESS_READERS[game.id];
-    if (typeof reader !== 'function') return '';
+    var reader = PROGRESS_READERS[game.id] || function () { return readCard(game.id); };
     try {
       var text = reader();
       return typeof text === 'string' ? text : '';

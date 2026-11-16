@@ -88,6 +88,16 @@ window.SUBJECTS = [
         blurb: "Protons, neutrons and electrons; atoms, ions and isotopes; and average atomic mass.",
         games: [
           {
+            id: "gold-foil",
+            title: "Gold Foil Shooter",
+            blurb: "Fire alpha particles at gold foil and use the evidence to choose the right model of the atom.",
+            path: "games/gold-foil/",
+            cover: "assets/covers/gold-foil.svg",
+            status: "ready",
+            icon: "🎯",
+            accent: "amber"
+          },
+          {
             id: "particle-dash",
             title: "Particle Count Dash",
             blurb: "Read the symbol, count the protons, neutrons and electrons, and keep your streak alive.",
@@ -106,6 +116,63 @@ window.SUBJECTS = [
             status: "ready",
             icon: "🧪",
             accent: "violet"
+          }
+        ]
+      },
+      {
+        id: "light-and-spectra",
+        title: "Light and Atomic Spectra",
+        blurb: "Waves, the electromagnetic spectrum, and how atoms give off and absorb light.",
+        games: [
+          {
+            id: "wave-tuner",
+            title: "Wave Tuner",
+            blurb: "Change a light wave's wavelength and brightness and see what happens to its frequency and energy.",
+            path: "games/wave-tuner/",
+            cover: "assets/covers/wave-tuner.svg",
+            status: "ready",
+            icon: "🌊",
+            accent: "teal"
+          },
+          {
+            id: "spectrum-lineup",
+            title: "Spectrum Line-Up",
+            blurb: "Put radio waves, visible light, X-rays and the rest in order by wavelength, frequency and energy.",
+            path: "games/spectrum-lineup/",
+            cover: "assets/covers/spectrum-lineup.svg",
+            status: "ready",
+            icon: "🌈",
+            accent: "violet"
+          },
+          {
+            id: "electron-jump",
+            title: "Electron Jump Lab",
+            blurb: "Move an electron between energy levels and watch the atom give off or take in light.",
+            path: "games/electron-jump/",
+            cover: "assets/covers/electron-jump.svg",
+            status: "ready",
+            icon: "💡",
+            accent: "amber"
+          },
+          {
+            id: "spectral-detective",
+            title: "Spectral Detective",
+            blurb: "Read the coloured lines in a spectrum to work out which elements are in a gas, a flame or a star.",
+            path: "games/spectral-detective/",
+            cover: "assets/covers/spectral-detective.svg",
+            status: "ready",
+            icon: "🔍",
+            accent: "violet"
+          },
+          {
+            id: "vocab-match",
+            title: "Unit 4 Vocab Match",
+            blurb: "Match the words from the atomic structure and light unit to what they mean.",
+            path: "games/vocab-match/",
+            cover: "assets/covers/vocab-match.svg",
+            status: "ready",
+            icon: "🗂️",
+            accent: "teal"
           }
         ]
       },

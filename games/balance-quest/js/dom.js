@@ -3,7 +3,7 @@
   innerHTML), so equation data can't inject markup.
 */
 
-import { formulaParts } from './chem.js?v=20261116T0337';
+import { formulaParts } from './chem.js?v=20261116T0406';
 
 /* el('p', { class: 'x', text: 'Hi', 'aria-label': '...' }, child, 'text') */
 export function el(tag, attrs, ...children) {

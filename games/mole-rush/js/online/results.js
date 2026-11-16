@@ -12,9 +12,9 @@
   average per player instead, so a smaller team is not punished.
 */
 
-import { el, clear } from '../dom.js?v=20261116T0337';
-import { ordinal } from './standings.js?v=20261116T0337';
-import { mapLabel } from './lobby.js?v=20261116T0337';
+import { el, clear } from '../dom.js?v=20261116T0406';
+import { ordinal } from './standings.js?v=20261116T0406';
+import { mapLabel } from './lobby.js?v=20261116T0406';
 
 export function formatMs(ms) {
   const total = Math.max(0, Math.round((ms || 0) / 1000));

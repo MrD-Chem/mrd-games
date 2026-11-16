@@ -100,9 +100,11 @@ best scores. Students only ever see the new name.
    The instructions at the top of that file explain each line. Use `"ready"` to make the
    card a link to the game, or `"coming-soon"` to show a grey "Coming soon" badge (no
    link, so it is fine if the folder isn't finished yet).
-5. **Optional: show progress on the card.** In `assets/home.js`, add an entry for the
-   game's `id` to `PROGRESS_READERS` that reads the game's saved data and returns a short
-   text (copy one of the others). Return `''` when there is nothing to show.
+5. **Optional: show progress on the card.** The easy way: have the game save its progress
+   under the key `mrd-<game id>` as JSON with a short `card` text, for example
+   `{"card": "4 of 10 challenges done"}` (40 characters or fewer). The games page shows
+   that text as it is; nothing else to edit. (Older games instead have an entry in
+   `PROGRESS_READERS` in `assets/home.js` that reads their saved data.)
 6. **Run the version stamp:** `python3 tools/stamp_version.py` (see
    [After changing any file](#after-changing-any-file-run-the-version-stamp)).
 7. **Upload / commit** the changes to GitHub. The site updates within a minute or two

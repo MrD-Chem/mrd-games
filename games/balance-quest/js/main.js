@@ -6,15 +6,15 @@
   The 3D engine (and Three.js) is only loaded when a 3D world is entered.
 */
 
-import * as chem from './chem.js?v=20261116T0337';
-import { loadEquations, parseCustom, WORLDS, PRACTICE_WORLD, PRACTICE_EXAMPLE } from './data.js?v=20261116T0337';
-import { Progress } from './progress.js?v=20261116T0337';
-import { PuzzlePanel, newGateState } from './puzzle.js?v=20261116T0337';
-import { Input } from './input.js?v=20261116T0337';
-import { Board2D } from './world2d.js?v=20261116T0337';
-import { createScaleSVG } from './scale2d.js?v=20261116T0337';
-import { el, clear, rich, starText } from './dom.js?v=20261116T0337';
-import { Story } from './story.js?v=20261116T0337';
+import * as chem from './chem.js?v=20261116T0406';
+import { loadEquations, parseCustom, WORLDS, PRACTICE_WORLD, PRACTICE_EXAMPLE } from './data.js?v=20261116T0406';
+import { Progress } from './progress.js?v=20261116T0406';
+import { PuzzlePanel, newGateState } from './puzzle.js?v=20261116T0406';
+import { Input } from './input.js?v=20261116T0406';
+import { Board2D } from './world2d.js?v=20261116T0406';
+import { createScaleSVG } from './scale2d.js?v=20261116T0406';
+import { el, clear, rich, starText } from './dom.js?v=20261116T0406';
+import { Story } from './story.js?v=20261116T0406';
 
 // ---------- Setup ----------
 
@@ -314,7 +314,7 @@ async function enter3D(token) {
   await pause(30);
   try {
     if (!state.engine) {
-      const mod = await import('./engine3d.js?v=20261116T0337');
+      const mod = await import('./engine3d.js?v=20261116T0406');
       if (token !== state.token) return false;
       state.engine = new mod.Engine({
         canvas: ui.canvas,

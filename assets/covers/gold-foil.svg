@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">
+  <title>Alpha particles streaming through a thin gold foil, one bouncing back from a nucleus</title>
+  <defs>
+    <linearGradient id="gf-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2012"/><stop offset="1" stop-color="#070a13"/></linearGradient>
+    <radialGradient id="gf-glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fbbf24" stop-opacity="0.45"/><stop offset="1" stop-color="#fbbf24" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gf-fl" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fde68a" stop-opacity="1"/><stop offset="1" stop-color="#fbbf24" stop-opacity="0"/></radialGradient>
+    <linearGradient id="gf-foil" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fde68a"/><stop offset="0.5" stop-color="#fbbf24"/><stop offset="1" stop-color="#b45309"/></linearGradient>
+    <path id="gf-sp" d="M0-6 1.8-1.8 6 0 1.8 1.8 0 6-1.8 1.8-6 0-1.8-1.8z"/>
+    <g id="gf-a"><circle r="9" fill="#5eead4" fill-opacity="0.3"/><circle r="5.500" fill="#2dd4bf" stroke="#ccfbf1" stroke-width="1.500"/><path d="M-2.500 0h5M0-2.500v5" stroke="#0d1326" stroke-width="1.600" stroke-linecap="round"/></g>
+  </defs>
+  <rect width="320" height="180" fill="url(#gf-bg)"/>
+  <ellipse cx="160" cy="90" rx="125" ry="90" fill="url(#gf-glow)"/>
+  <!-- curved detector screen -->
+  <path d="M205.500 11.200A91 91 0 0 1 205.500 168.800" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" stroke-opacity="0.55"/>
+  <path d="M205.500 11.200A91 91 0 0 1 205.500 168.800" fill="none" stroke="#e2e8f0" stroke-width="1.500" stroke-linecap="round" stroke-opacity="0.5"/>
+  <!-- foil -->
+  <rect x="153" y="22" width="14" height="136" rx="3" fill="url(#gf-foil)"/>
+  <rect x="156" y="26" width="2.500" height="128" rx="1.200" fill="#fff" fill-opacity="0.55"/>
+  <!-- tracks -->
+  <g fill="none" stroke="#5eead4" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9">
+    <path d="M44 40H236M44 54H243M44 124H244M44 138H237"/>
+    <path d="M44 72H146Q170 72 180 58L236 40"/>
+    <path d="M44 94H154Q148 104 98 112"/>
+    </g>
+  <use href="#gf-a" x="72" y="40"/><use href="#gf-a" x="72" y="54"/><use href="#gf-a" x="72" y="124"/><use href="#gf-a" x="72" y="138"/>
+  <use href="#gf-a" x="72" y="72"/><use href="#gf-a" x="72" y="94"/>
+  <use href="#gf-a" x="104" y="111"/>
+  <!-- nucleus -->
+  <circle cx="160" cy="94" r="14" fill="url(#gf-fl)"/>
+  <circle cx="160" cy="94" r="4" fill="#fff"/>
+  <!-- flash -->
+  <circle cx="236" cy="40" r="14" fill="url(#gf-fl)"/>
+  <use href="#gf-sp" transform="translate(236 40) scale(1.700)" fill="#fffbeb"/>
+  <g fill="#fde68a"><use href="#gf-sp" transform="translate(40 30)"/><use href="#gf-sp" transform="translate(288 150) scale(0.7)"/><use href="#gf-sp" transform="translate(284 30) scale(0.6)"/></g>
+  <g fill="#fcd34d"><circle cx="22" cy="100" r="1.500"/><circle cx="302" cy="92" r="1.500"/><circle cx="52" cy="160" r="1.300"/></g>
+</svg>

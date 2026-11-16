@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Electron Jump Lab — Mr. D Chemistry</title>
+  <meta name="description" content="Explore hydrogen’s energy levels and discover how electron jumps absorb and emit photons with exact energies and colours.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/site.css?v=20261116T0406">
+  <link rel="stylesheet" href="style.css?v=20261116T0406">
+  <script src="data.js?v=20261116T0406" defer></script>
+  <script src="game.js?v=20261116T0406" defer></script>
+</head>
+<body class="ej-page">
+  <header class="site-header"><div class="wrap site-header-inner">
+    <a class="header-link" href="../../chemistry/">← Chemistry</a>
+    <span class="brand brand--small"><img class="brand-mark" src="../../assets/favicon.svg" alt="" width="28" height="28"><span data-copy="brand"></span></span>
+  </div></header>
+  <main class="wrap ej-main">
+    <noscript><p>This game needs JavaScript. Please turn it on.</p></noscript>
+    <div class="ej-heading"><div><p class="ej-eyebrow" data-copy="unit"></p><h1 data-copy="title"></h1></div><p class="ej-muted" data-copy="tagline"></p></div>
+    <section id="ej-start" class="panel ej-start">
+      <p class="ej-intro" data-copy="intro"></p><p class="ej-muted" data-copy="time"></p>
+      <button id="ej-start-button" class="btn btn-primary btn-lg" data-copy="start"></button>
+    </section>
+    <div id="ej-lab" hidden>
+      <div class="ej-tabs" id="ej-tabs" role="tablist">
+        <button id="ej-explore-tab" class="btn" role="tab" aria-controls="ej-workspace" data-tab="explore" data-copy="explore"></button>
+        <button id="ej-challenges-tab" class="btn" role="tab" aria-controls="ej-workspace" data-tab="challenges" data-copy="challenges"></button>
+      </div>
+      <div id="ej-workspace" role="tabpanel">
+        <!-- Wide screens: controls on the left; the atom, ladder and spectrum stay in view on the right. -->
+        <div class="ej-cols">
+          <div class="ej-left">
+        <section id="ej-challenge" class="panel ej-section" hidden>
+          <div class="ej-row"><label for="ej-picker" data-copy="choose"></label><select id="ej-picker"></select><span id="ej-progress" class="ej-badge"></span></div>
+          <h2 id="ej-prompt" tabindex="-1"></h2><p id="ej-instructions" class="ej-muted"></p>
+          <div id="ej-answers" class="ej-answers"></div><p id="ej-observed" class="ej-muted"></p>
+          <div class="ej-row"><button id="ej-check" class="btn btn-primary" data-copy="check"></button><button id="ej-retry" class="btn btn-ghost" data-copy="retry" hidden></button><button id="ej-next" class="btn btn-ghost"></button></div>
+          <p id="ej-feedback" class="ej-feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+        </section>
+        <section class="panel ej-section">
+          <div class="ej-row"><div class="ej-switch" id="ej-mode"><button id="ej-emit" class="btn btn-sm" data-mode="emit" data-copy="emit"></button><button id="ej-absorb" class="btn btn-sm" data-mode="absorb" data-copy="absorb"></button></div><span id="ej-level" class="ej-badge"></span></div>
+          <p id="ej-help" class="ej-muted"></p>
+          <div class="ej-row" id="ej-emit-controls"><button id="ej-give" class="btn btn-ghost" data-copy="give"></button></div>
+          <div id="ej-absorb-controls" hidden>
+            <div class="ej-row"><label for="ej-start-level" data-copy="startLevel"></label><select id="ej-start-level"><option value="1" data-copy="startOne"></option><option value="2" selected data-copy="startTwo"></option></select><button id="ej-reset-atom" class="btn btn-ghost" data-copy="resetAtom"></button><button id="ej-fall" class="btn btn-ghost" data-copy="fall"></button></div>
+            <div id="ej-photons" class="ej-photons"></div>
+          </div>
+          <p id="ej-status" class="ej-status" role="status" aria-live="polite" aria-atomic="true"></p>
+        </section>
+        <p id="ej-jump" class="ej-readout"></p>
+        <p class="ej-muted ej-note" data-copy="scale"></p>
+          </div>
+          <div class="ej-right">
+        <div class="ej-pictures">
+          <section class="panel ej-picture-panel"><h2 data-copy="atom"></h2><svg id="ej-atom" viewBox="0 0 480 360" role="group" aria-labelledby="ej-atom-title" aria-describedby="ej-atom-summary"></svg><p id="ej-atom-summary" class="ej-sr"></p></section>
+          <section class="panel ej-picture-panel"><h2 data-copy="ladder"></h2><svg id="ej-ladder" viewBox="0 0 480 360" role="group" aria-labelledby="ej-ladder-title" aria-describedby="ej-ladder-summary"></svg><p id="ej-ladder-summary" class="ej-sr"></p></section>
+        </div>
+        <section class="panel ej-section">
+          <div class="ej-row ej-between"><h2 data-copy="spectrum"></h2><label class="ej-compare"><input id="ej-compare" type="checkbox"><span data-copy="compare"></span></label><button id="ej-clear" class="btn btn-ghost btn-sm" data-copy="clear"></button></div>
+          <p id="ej-compare-note" class="ej-muted ej-note" data-copy="compareNote" hidden></p>
+          <div id="ej-spectra"></div><div class="ej-zone-key ej-muted"><span data-copy="uvZone"></span><span data-copy="visible"></span><span data-copy="irZone"></span></div>
+          <h3 class="ej-small-heading" data-copy="collected"></h3><div id="ej-line-key" class="ej-line-key"></div>
+        </section>
+          </div>
+        </div>
+        <details class="panel ej-section"><summary data-copy="log"></summary><ol id="ej-log"></ol></details>
+        <p class="ej-muted ej-note" data-copy="model"></p><p class="ej-muted ej-note" data-copy="definitions"></p><p class="ej-muted ej-note" data-copy="precision"></p>
+      </div>
+    </div>
+    <section id="ej-end" class="panel ej-section" hidden><h2 id="ej-end-title" tabindex="-1" data-copy="recapTitle"></h2><p id="ej-end-progress"></p><ul id="ej-recap"></ul><h3 data-copy="reviewTitle"></h3><ul id="ej-review"></ul><button id="ej-back" class="btn btn-primary" data-copy="back"></button></section>
+    <div class="ej-bottom"><button id="ej-start-over" class="btn btn-ghost btn-sm" data-copy="startOver"></button></div>
+  </main>
+  <footer class="site-footer"><div class="wrap"><p data-copy="footer"></p></div></footer>
+</body>
+</html>

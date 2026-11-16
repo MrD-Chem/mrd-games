@@ -5,8 +5,8 @@
 */
 
 import * as THREE from '../vendor/three.module.min.js?v=r170';
-import { moleculeLayout, atomColor } from './molecule.js?v=20261116T0337';
-import { prettyFormula } from './chem.js?v=20261116T0337';
+import { moleculeLayout, atomColor } from './molecule.js?v=20261116T0406';
+import { prettyFormula } from './chem.js?v=20261116T0406';
 
 export const VISIBLE_CAP = 8;
 export const HALF_WIDTH = 2.6;
